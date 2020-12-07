@@ -46,7 +46,7 @@ List<Map<dynamic, dynamic>> subcategories = [
   },
   {
     'category': 'category 1',
-    'name': 'S',
+    'name': 'Subcategory2',
     'image': 'subcategory2.jpg',
   },
   {
