@@ -1,4 +1,4 @@
-var users = [
+List<Map<dynamic, dynamic>> users = [
   {
     'username': 'admin',
   },
@@ -13,9 +13,9 @@ var users = [
   },
 ];
 
-var orders = [];
+List<Map<dynamic, dynamic>> orders = [];
 
-var categories = [
+List<Map<dynamic, dynamic>> categories = [
   {
     'name': 'category 1',
     'image': 'category1.jpg',
@@ -38,7 +38,7 @@ var categories = [
   },
 ];
 
-var subcategories = [
+List<Map<dynamic, dynamic>> subcategories = [
   {
     'category': 'category 1',
     'name': 'Subcategory1',
@@ -46,7 +46,7 @@ var subcategories = [
   },
   {
     'category': 'category 1',
-    'name': 'Subcategory2',
+    'name': 'S',
     'image': 'subcategory2.jpg',
   },
   {
@@ -126,7 +126,7 @@ var subcategories = [
   },
 ];
 
-var properties = [
+List<Map<dynamic, dynamic>> properties = [
   {
     'name': 'Brand',
     'values': ['Diverse',  'FINIVO', 'GRITSTONES', 'BEING FAB', 'LEVIZO'],
@@ -149,7 +149,7 @@ var properties = [
   },
 ];
 
-var products = [
+List<Map<dynamic, dynamic>>  products = [
   {
     'subcategory' : 'subcategory 1',
     'name' : 'product 1',
