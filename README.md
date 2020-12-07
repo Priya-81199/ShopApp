@@ -1,4 +1,4 @@
-# lilly_app
+# new_app
 
 A new Flutter application.
 
