@@ -1,5 +1,6 @@
-
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:lilly_app/Screens/Components.dart';
 import 'package:lilly_app/mockData.dart';
 
 
@@ -148,16 +149,9 @@ class _homePageState extends State<homePage> {
     );
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Lilly',
-            style: TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
+        appBar: buildAppBar(context),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
@@ -168,8 +162,14 @@ class _homePageState extends State<homePage> {
                     Container(
                       width: 300,
                       child: TextFormField(
+                        style: TextStyle(
+                          color: Colors.indigo.shade900,
+                          decorationColor: Colors.indigo.shade900
+                        ),
                         decoration: InputDecoration(
+                          focusColor: Colors.indigo.shade900,
                           labelText: 'Search',
+                          labelStyle: TextStyle(color: Colors.indigo.shade900),
                         ),
                       ),
                     ),

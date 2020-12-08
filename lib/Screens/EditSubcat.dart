@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lilly_app/mockData.dart';
+import 'package:lilly_app/Screens/Components.dart';
 
 class EditSubcat extends StatefulWidget {
 
@@ -45,10 +46,7 @@ class _EditSubcatState extends State<EditSubcat> {
       );
     }
     return Scaffold(
-      appBar: AppBar(
-        title: Center(child: Text('Lilly Shop'),),
-        backgroundColor: Colors.indigo,
-      ),
+      appBar: buildAppBar(context),
       body: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
