@@ -15,6 +15,8 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
 
   final _auth = FirebaseAuth.instance;
+
+
   bool showSpinner = false;
   String email;
   String password;
@@ -83,13 +85,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   setState(() {
                     showSpinner = true;
                   });
-//                print(email);
-//                print(password);
+
+                print(email);
+                print(password);
                   try {
                     final newUser = await _auth.createUserWithEmailAndPassword(
                         email: email, password: password);
 
-                    if (newUser != null) {
+                    User user = FirebaseAuth.instance.currentUser;
+
+                    if (!user.emailVerified) {
+                      await user.sendEmailVerification();
+                    }
+
+                    if (newUser != null && user.emailVerified) {
                       Navigator.pushNamed(context, homePage.id);
                     }
                     setState(() {

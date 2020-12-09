@@ -6,6 +6,7 @@ import 'package:lilly_app/Screens/homePage.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 
+
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';
   @override
@@ -89,7 +90,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         final user = await _auth.signInWithEmailAndPassword(
                             email: email, password: password);
 
-                        if (user != null) {
+                        User user1 = FirebaseAuth.instance.currentUser;
+
+                        if (user != null && user1.emailVerified) {
                           Navigator.pushNamed(context, homePage.id);
                         }
                         setState(() {

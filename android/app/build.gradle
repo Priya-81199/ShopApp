@@ -33,6 +33,7 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+
     lintOptions {
         disable 'InvalidPackage'
     }
@@ -44,6 +45,7 @@ android {
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -63,4 +65,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation platform('com.google.firebase:firebase-bom:26.1.1')
     implementation 'com.google.firebase:firebase-analytics'
+    compile 'com.android.support:multidex:1.0.1' //enter the latest version
 }
