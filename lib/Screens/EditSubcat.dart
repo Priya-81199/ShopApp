@@ -23,8 +23,8 @@ class _EditSubcatState extends State<EditSubcat> {
         SizedBox(width: 50),
         Container(width:100,child: Text('Sub Category',style: TextStyle(fontWeight: FontWeight.w700),)),
         SizedBox(width: 50),
-        Container(width:100,child: Text('Sub Category Image',style: TextStyle(fontWeight: FontWeight.w700),)),
-        SizedBox(width: 50),
+        // Container(width:100,child: Text('Sub Category Image',style: TextStyle(fontWeight: FontWeight.w700),)),
+        // SizedBox(width: 50),
         Container(width:100,child: Text('Action',style: TextStyle(fontWeight: FontWeight.w700),)),
       ],
     ),);
@@ -38,8 +38,8 @@ class _EditSubcatState extends State<EditSubcat> {
               SizedBox(width: 50),
               Container(width:100,child: Text(subcategories[i]['name'])),
               SizedBox(width: 50),
-              Container(width:100,child:Image.asset('images/'+subcategories[i]['image'])),
-              SizedBox(width: 50),
+              // Container(width:100,child:Image.asset('images/'+subcategories[i]['image'])),
+              // SizedBox(width: 50),
               Container(width:100,child:Row(children :[ IconButton(icon: Icon(Icons.edit,)),IconButton(icon: Icon(Icons.delete,))]))
             ],
           )
