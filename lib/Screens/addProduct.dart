@@ -1,23 +1,66 @@
 import 'package:flutter/material.dart';
-import 'package:lilly_app/mockData.dart';
+//import 'package:lilly_app/mockData.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+
 
 class AddProduct extends StatefulWidget {
+
   static const String id = 'AddProduct';
   @override
   _AddProductState createState() => _AddProductState();
+
 }
 
+
+final _firestore = FirebaseFirestore.instance;
+
+
 class _AddProductState extends State<AddProduct> {
+
+
+  List<Map<dynamic, dynamic>> categories = [];
+  List<Map<dynamic, dynamic>> subcategories = [];
+  List<Map<dynamic, dynamic>> products = [];
+  List<Map<dynamic, dynamic>> properties = [];
+  List<Map<dynamic, dynamic>> propertyvalues = [];
+
+  void getData(String collection) {
+    _firestore.collection(collection).get().then((value) {
+      value.docs.forEach((result) {
+        if (collection == 'categories')
+          categories.add(result.data());
+        else if (collection == 'subcategories')
+          subcategories.add(result.data());
+        else if (collection == 'products')
+          products.add(result.data());
+        else if (collection == 'properties')
+          products.add(result.data());
+        else if (collection == 'propertyvalues')
+          products.add(result.data());
+      });
+    });
+  }
+    _AddProductState(){
+      getData('categories');
+      getData('subcategories');
+      getData('products');
+      getData('properties');
+      getData('propertyvalues');
+    }
 
   var category_default = 'category 1';
   var subcategory_default = 'Subcategory1';
   var property_default = 'Brand';
   var value_default = 'Diverse';
+
   List<Widget> addedProperties = [];
   var addedPropertiesOn = [];
 
   @override
   Widget build(BuildContext context) {
+    Firebase.initializeApp();
     var category = [];
     for(var i = 0 ; i < categories.length ; i++) {
       category.add(categories[i]['name']);
