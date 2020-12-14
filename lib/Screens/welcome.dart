@@ -77,12 +77,18 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               SizedBox(
                 height: 48.0,
               ),
-              RoundedButton(title: 'Log in',colour: Colors.indigoAccent,tag: 'login', onPressed: () {
-                Navigator.pushNamed(context, LoginScreen.id);
-              },),
-              RoundedButton(title: 'Register',colour: Colors.indigo, tag : 'register',onPressed: () {
-                Navigator.pushNamed(context, RegistrationScreen.id);
-              },),
+              Column(
+                children: [
+
+                  RoundedButton(title: 'Log in',colour: Colors.indigoAccent,tag: 'login', onPressed: () {
+                    Navigator.pushNamed(context, LoginScreen.id);
+                  },),
+                  RoundedButton(title: 'Register',colour: Colors.indigo, tag : 'register',onPressed: () {
+                    Navigator.pushNamed(context, RegistrationScreen.id);
+                  },),
+                ],
+              ),
+
             ],
           ),
         ),

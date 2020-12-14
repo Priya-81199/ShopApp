@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lilly_app/mockData.dart';
+//import 'package:lilly_app/mockData.dart';
 import 'package:lilly_app/Screens/Components.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class EditSubcat extends StatefulWidget {
 
@@ -9,8 +11,26 @@ class EditSubcat extends StatefulWidget {
 
   _EditSubcatState createState() => _EditSubcatState();
 }
+final _firestore = FirebaseFirestore.instance;
+
 
 class _EditSubcatState extends State<EditSubcat> {
+  List<Map<dynamic, dynamic>> categories = [];
+  List<Map<dynamic, dynamic>> subcategories = [];
+  void getData(String collection) {
+    _firestore.collection(collection).get().then((value) {
+      value.docs.forEach((result) {
+        if (collection == 'categories')
+          categories.add(result.data());
+        else if (collection == 'subcategories')
+          subcategories.add(result.data());
+      });
+    });
+  }
+  _EditSubcatState(){
+    getData('categories');
+    getData('subcategories');
+  }
   @override
 
   final subcategory = <Widget>[];

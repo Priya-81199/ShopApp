@@ -51,59 +51,70 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 48.0,
                 ),
-                TextField(
-                  style: TextStyle(
-                      color: Colors.indigo
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  textAlign: TextAlign.center,
-                  onChanged: (value) {
-                    //Do something with the user input.
-                    email = value;
-                  },
-                  decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your email'),
-                ),
-                SizedBox(
-                  height: 8.0,
-                ),
-                TextField(
-                  style: TextStyle(
-                      color: Colors.indigo
-                  ),
-                  obscureText: true,
-                  textAlign: TextAlign.center,
-                  onChanged: (value) {
-                    password = value;
-                    //Do something with the user input.
-                  },
-                  decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your password'),
-                ),
-                SizedBox(
-                  height: 24.0,
-                ),
-                RoundedButton(title: 'Log in',colour: Colors.indigoAccent,tag: 'login',
-                    onPressed: () async {
-                      setState(() {
-                        showSpinner = true;
-                      });
-                      try {
-                        final user = await _auth.signInWithEmailAndPassword(
-                            email: email, password: password);
+                Column(
+                  children: [
+                    SizedBox(
+                      width: 500,
+                      child: TextField(
+                        style: TextStyle(
+                            color: Colors.indigo
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        textAlign: TextAlign.center,
+                        onChanged: (value) {
+                          //Do something with the user input.
+                          email = value;
+                        },
+                        decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your email'),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8.0,
+                    ),
+                    SizedBox(
+                      width: 500,
+                      child: TextField(
+                        style: TextStyle(
+                            color: Colors.indigo
+                        ),
+                        obscureText: true,
+                        textAlign: TextAlign.center,
+                        onChanged: (value) {
+                          password = value;
+                          //Do something with the user input.
+                        },
+                        decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your password'),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 24.0,
+                    ),
+                    RoundedButton(title: 'Log in',colour: Colors.indigoAccent,tag: 'login',
+                        onPressed: () async {
+                          setState(() {
+                            showSpinner = true;
+                          });
+                          try {
+                            final user = await _auth.signInWithEmailAndPassword(
+                                email: email, password: password);
 
-                        User user1 = FirebaseAuth.instance.currentUser;
+                            User user1 = FirebaseAuth.instance.currentUser;
 
-                        if (user != null && user1.emailVerified) {
-                          Navigator.pushNamed(context, homePage.id);
+                            if (user != null && user1.emailVerified) {
+                              Navigator.pushNamed(context, homePage.id);
+                            }
+                            setState(() {
+                              showSpinner = false;
+                            });
+                          }
+                          catch (e) {
+                            print(e);
+                          }
                         }
-                        setState(() {
-                          showSpinner = false;
-                        });
-                      }
-                      catch (e) {
-                        print(e);
-                      }
-                    }
+                    ),
+                  ],
                 ),
+
               ],
             ),
 

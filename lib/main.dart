@@ -1,3 +1,4 @@
+import 'package:lilly_app/Screens/AddPhtotos.dart';
 import 'package:lilly_app/Screens/EditSubcat.dart';
 import 'package:lilly_app/Screens/new_mock.dart';
 import 'package:lilly_app/Screens/new_mock_data.dart';
@@ -10,8 +11,11 @@ import 'package:lilly_app/Screens/homePage.dart';
 import 'package:lilly_app/Screens/login.dart';
 import 'package:lilly_app/Screens/register.dart';
 import 'package:lilly_app/Screens/send_receive.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 class MyApp extends StatelessWidget {
@@ -19,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: homePage.id,
+      initialRoute: AddPhotos.id,
       routes: {
         AddProduct.id : (context) => AddProduct(),
         homePage.id : (context) => homePage(),
@@ -30,7 +34,7 @@ class MyApp extends StatelessWidget {
         SendReceive.id :(context) => SendReceive(),
         MockData.id : (context) => MockData(),
         ProductList.id : (context) => ProductList(),
-
+        AddPhotos.id : (context) => AddPhotos(),
       },
     );
   }

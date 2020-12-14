@@ -53,63 +53,74 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 SizedBox(
                   height: 48.0,
                 ),
-                TextField(
-                  style: TextStyle(
-                      color: Colors.indigo
-                  ),
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.emailAddress,
-                  onChanged: (value) {
-                    email = value;
-                  },
-                  decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your email'),
-                ),
+                Column(
+                  children: [
                 SizedBox(
-                  height: 8.0,
-                ),
-                TextField(
+                  width: 500,
+                  child: TextField(
                     style: TextStyle(
                         color: Colors.indigo
                     ),
                     textAlign: TextAlign.center,
-                    obscureText: true,
+                    keyboardType: TextInputType.emailAddress,
                     onChanged: (value) {
-                      password = value;
+                      email = value;
                     },
-                    decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your password')
+                    decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your email'),
+                  ),
+                ),
+                SizedBox(
+                  height: 8.0,
+                ),
+                SizedBox(
+                  width: 500,
+                  child: TextField(
+                      style: TextStyle(
+                          color: Colors.indigo
+                      ),
+                      textAlign: TextAlign.center,
+                      obscureText: true,
+                      onChanged: (value) {
+                        password = value;
+                      },
+                      decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your password')
+                  ),
                 ),
                 SizedBox(
                   height: 24.0,
                 ),
-                RoundedButton(title: 'Register',colour: Colors.indigo, tag : 'register',onPressed: () async {
-                  setState(() {
-                    showSpinner = true;
-                  });
 
-                print(email);
-                print(password);
-                  try {
-                    final newUser = await _auth.createUserWithEmailAndPassword(
-                        email: email, password: password);
+                    RoundedButton(title: 'Register',colour: Colors.indigo, tag : 'register',onPressed: () async {
+                      setState(() {
+                        showSpinner = true;
+                      });
 
-                    User user = FirebaseAuth.instance.currentUser;
+                    print(email);
+                    print(password);
+                      try {
+                        final newUser = await _auth.createUserWithEmailAndPassword(
+                            email: email, password: password);
 
-                    if (!user.emailVerified) {
-                      await user.sendEmailVerification();
+                        User user = FirebaseAuth.instance.currentUser;
+
+                        if (!user.emailVerified) {
+                          await user.sendEmailVerification();
+                        }
+
+                        if (newUser != null && user.emailVerified) {
+                          Navigator.pushNamed(context, homePage.id);
+                        }
+                        setState(() {
+                          showSpinner = false;
+                        });
+                      }
+                      catch(e){
+                        print(e);
+                      }
                     }
-
-                    if (newUser != null && user.emailVerified) {
-                      Navigator.pushNamed(context, homePage.id);
-                    }
-                    setState(() {
-                      showSpinner = false;
-                    });
-                  }
-                  catch(e){
-                    print(e);
-                  }
-                }
-                  ,),
+                      ,),
+                  ],
+                ),
               ],
             ),
           ),
