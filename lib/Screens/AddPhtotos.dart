@@ -1,10 +1,12 @@
+//import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:lilly_app/Screens/Components.dart';
 import 'package:lilly_app/mockData.dart';
 import 'dart:io';
 import 'dart:ui';
 import 'package:file_picker/file_picker.dart';
-
+import 'package:image/image.dart' as img;
 
 
 class AddPhotos extends StatefulWidget {
@@ -21,17 +23,18 @@ class _AddPhotosState extends State<AddPhotos> {
 
   void getImages() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
       type: FileType.custom,
       allowedExtensions: ['jpg', 'png', 'bmp'],
     );
 
     if(result != null) {
-
-      PlatformFile file = result.files.first;
+      List<PlatformFile> files = result.files;
       setState(() {
         avail = true;
-        images.add(Image.memory(file.bytes));
-        print(images);
+        for(int i = 0 ; i < files.length ; i++) {
+          images.add(Container(width: 30, child: Image.memory(files[i].bytes)));
+        }
       });
 
     } else {
