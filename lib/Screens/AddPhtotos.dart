@@ -1,5 +1,6 @@
 //import 'dart:html';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lilly_app/Screens/Components.dart';
 import 'package:lilly_app/mockData.dart';
@@ -33,7 +34,16 @@ class _AddPhotosState extends State<AddPhotos> {
       setState(() {
         avail = true;
         for(int i = 0 ; i < files.length ; i++) {
-          images.add(Container(width: 30, child: Image.memory(files[i].bytes)));
+          images.add(Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+                width: 200,
+                child: Image.memory(files[i].bytes),
+                decoration: BoxDecoration(
+                  boxShadow: [BoxShadow(color: Colors.indigo,spreadRadius: 2)],
+                ),
+            ),
+          ));
         }
       });
 
@@ -47,10 +57,15 @@ class _AddPhotosState extends State<AddPhotos> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(context),
-      body: avail? Container(
-        child: Row(
-          children: images,
-        )
+      body: avail? SingleChildScrollView(
+
+        child: Container(
+          child: Center(
+            child: Row(
+              children: images,
+            ),
+          )
+        ),
       )
       :
       Container(),

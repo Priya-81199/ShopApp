@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 //import 'package:lilly_app/mockData.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 
 
 
@@ -60,12 +60,11 @@ class _AddProductState extends State<AddProduct> {
 
   @override
   Widget build(BuildContext context) {
-    Firebase.initializeApp();
+    //Firebase.initializeApp();
     var category = [];
     for(var i = 0 ; i < categories.length ; i++) {
       category.add(categories[i]['name']);
     }
-
     var sub_category = [];
     for(var i = 0 ; i < subcategories.length ; i++) {
       if(subcategories[i]['category'] == category_default) {
@@ -105,9 +104,9 @@ class _AddProductState extends State<AddProduct> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  buildDropdownButton(category_default, category,'category'),
+                  //buildDropdownButton(category_default, category,'category'),
                   SizedBox(width: 30),
-                  buildDropdownButton(subcategory_default, sub_category,'subcategory'),
+                  //buildDropdownButton(subcategory_default, sub_category,'subcategory'),
                 ],
               ),
               SizedBox(height: 10),
@@ -167,9 +166,9 @@ class _AddProductState extends State<AddProduct> {
                  Row(
                    mainAxisAlignment: MainAxisAlignment.center,
                    children: [
-                     buildDropdownButton(property_default, property,'property'),
+                     //buildDropdownButton(property_default, property,'property'),
                      SizedBox(width: 30),
-                     buildDropdownButton(value_default, value,'value'),
+                     //buildDropdownButton(value_default, value,'value'),
                      SizedBox(width: 10),
                      Container(
                        width: 40,
@@ -248,10 +247,13 @@ class _AddProductState extends State<AddProduct> {
       else if(fieldname == 'value')
         value_default = names[0];
     });
+
     return names[0];
+
   }
 
   DropdownButton<dynamic> buildDropdownButton(dynamic default_name, List<dynamic> names, dynamic fieldname) {
+
     return DropdownButton<dynamic>(
       value:getValue(default_name, names,fieldname),
       icon: Icon(Icons.arrow_downward),
