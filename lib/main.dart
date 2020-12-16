@@ -1,6 +1,5 @@
 import 'package:lilly_app/Screens/AddPhtotos.dart';
 import 'package:lilly_app/Screens/EditSubcat.dart';
-import 'package:lilly_app/Screens/new_mock.dart';
 import 'package:lilly_app/Screens/new_mock_data.dart';
 import 'package:lilly_app/Screens/welcome.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +11,7 @@ import 'package:lilly_app/Screens/login.dart';
 import 'package:lilly_app/Screens/register.dart';
 import 'package:lilly_app/Screens/send_receive.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
