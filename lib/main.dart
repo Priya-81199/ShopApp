@@ -1,5 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:lilly_app/Screens/AddPhtotos.dart';
 import 'package:lilly_app/Screens/EditSubcat.dart';
+import 'package:lilly_app/Screens/ProductDetails.dart';
+import 'package:lilly_app/Screens/addProducts.dart';
 import 'package:lilly_app/Screens/new_mock_data.dart';
 import 'package:lilly_app/Screens/welcome.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +14,7 @@ import 'package:lilly_app/Screens/login.dart';
 import 'package:lilly_app/Screens/register.dart';
 import 'package:lilly_app/Screens/send_receive.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:lilly_app/app/route.gr.dart' as rg;
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +26,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: AddPhotos.id,
+      initialRoute: rg.Routes.startupView,
+                    //AddProducts.id,
       routes: {
         AddProduct.id : (context) => AddProduct(),
         homePage.id : (context) => homePage(),
@@ -35,7 +39,10 @@ class MyApp extends StatelessWidget {
         MockData.id : (context) => MockData(),
         ProductList.id : (context) => ProductList(),
         AddPhotos.id : (context) => AddPhotos(),
+        AddProducts.id : (context) => AddProducts(),
+        ProductDetails.id : (context) => ProductDetails(),
       },
+      onGenerateRoute: rg.Router(),
     );
   }
 }

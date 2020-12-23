@@ -35,11 +35,25 @@ dependencies:
   file_picker: ^2.1.4
   image: ^2.1.19
 
+  #state management
+  stacked : ^1.2.2
+
+  #services
+  firebase_storage: ^5.2.0
+
+  #navigation
+  auto_route:
+#  stacked_services:
+
+  path_provider: ^1.6.24
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  build_runner:
+  auto_route_generator:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
