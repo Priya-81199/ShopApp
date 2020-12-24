@@ -3,6 +3,7 @@ import 'package:lilly_app/Screens/rounded_button.dart';
 import 'package:lilly_app/Screens/Components.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lilly_app/Screens/homePage.dart';
+import 'package:lilly_app/app/route.gr.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 
@@ -101,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             User user1 = FirebaseAuth.instance.currentUser;
 
                             if (user != null && user1.emailVerified) {
-                              Navigator.pushNamed(context, homePage.id);
+                              Navigator.pushNamed(context, Routes.startupView);
                             }
                             setState(() {
                               showSpinner = false;

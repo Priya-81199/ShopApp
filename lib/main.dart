@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: rg.Routes.startupView,
+      initialRoute: rg.Routes.loginScreen,
                     //AddProducts.id,
       routes: {
         AddProduct.id : (context) => AddProduct(),
