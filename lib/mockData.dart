@@ -124,11 +124,6 @@ List<Map<String, dynamic>> properties = [
     'values' :  ['cotton',  'Wool', 'Silk', 'Rayon', 'Denim', 'Synthetic'],
   },
   {
-    'name': 'Size',
-    'select': 'multi',
-    'values':['4XS',  '3XS', '2XS', 'XS', 'S', 'M', 'L', 'XL'],
-  },
-  {
     'name': 'Occation',
     'select': 'single',
     'values' : ['Evening',  'ceremony', 'casual', 'Business'],
@@ -179,38 +174,6 @@ List<Map<String, dynamic>> propertyvalues = [
   {
     'property': 'Material',
     'name': 'Synthetic',
-  },
-  {
-    'property': 'Size',
-    'name': '4XS',
-  },
-  {
-    'property': 'Size',
-    'name': '3XS',
-  },
-  {
-    'property': 'Size',
-    'name': '2XS',
-  },
-  {
-    'property': 'Size',
-    'name': 'XS',
-  },
-  {
-    'property': 'Size',
-    'name': 'S',
-  },
-  {
-    'property': 'Size',
-    'name': 'M',
-  },
-  {
-    'property': 'Size',
-    'name': 'L',
-  },
-  {
-    'property': 'Size',
-    'name': 'XL',
   },
   {
     'property': 'Occation',
@@ -264,10 +227,6 @@ List<Map<String, dynamic>>  products = [
     ],
     'properties' : [
       {
-        'name':'Size',
-        'values':['L', 'S', '4XS', 'XS', '2XS', '3XS', 'XL', ],
-      },
-      {
         'name':'Brand',
         'values':'BEING FAB',
       },
@@ -298,10 +257,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['S', '2XS', 'M', ],
-      },
     ],
   },
   {
@@ -361,10 +316,6 @@ List<Map<String, dynamic>>  products = [
         'values':'ceremony',
       },
       {
-        'name':'Size',
-        'values':['S', '2XS', '4XS', ],
-      },
-      {
         'name':'Material',
         'values':'cotton',
       },
@@ -386,10 +337,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'Silk',
-      },
-      {
-        'name':'Size',
-        'values':['XS', '2XS', 'M', ],
       },
       {
         'name':'Brand',
@@ -446,10 +393,6 @@ List<Map<String, dynamic>>  products = [
     ],
     'properties' : [
       {
-        'name':'Size',
-        'values':['4XS', 'M', '2XS', 'S', 'L', 'XL', 'XS', '3XS', ],
-      },
-      {
         'name':'Material',
         'values':'Denim',
       },
@@ -476,10 +419,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['4XS', 'L', 'S', 'XS', '3XS', 'XL', 'M', '2XS', ],
-      },
       {
         'name':'Brand',
         'values':'BEING FAB',
@@ -565,10 +504,6 @@ List<Map<String, dynamic>>  products = [
         'name':'Brand',
         'values':'LEVIZO',
       },
-      {
-        'name':'Size',
-        'values':['XS', '4XS', 'S', ],
-      },
     ],
   },
   {
@@ -604,10 +539,6 @@ List<Map<String, dynamic>>  products = [
         'name':'Brand',
         'values':'FINIVO',
       },
-      {
-        'name':'Size',
-        'values':['XS', 'L', 'XL', ],
-      },
     ],
   },
   {
@@ -630,10 +561,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'Synthetic',
-      },
-      {
-        'name':'Size',
-        'values':['4XS', 'XS', 'XL', 'M', 'L', '2XS', 'S', '3XS', ],
       },
     ],
   },
@@ -681,10 +608,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['2XS', ],
-      },
     ],
   },
   {
@@ -708,10 +631,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['3XS', 'L', '4XS', ],
-      },
       {
         'name':'Brand',
         'values':'GRITSTONES',
@@ -756,10 +675,6 @@ List<Map<String, dynamic>>  products = [
         'values':'Denim',
       },
       {
-        'name':'Size',
-        'values':['L', 'XS', '4XS', ],
-      },
-      {
         'name':'Brand',
         'values':'Diverse',
       },
@@ -781,10 +696,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'Synthetic',
-      },
-      {
-        'name':'Size',
-        'values':['L', '2XS', '4XS', 'S', 'XS', '3XS', 'XL', ],
       },
       {
         'name':'Brand',
@@ -848,10 +759,6 @@ List<Map<String, dynamic>>  products = [
         'name':'Material',
         'values':'Synthetic',
       },
-      {
-        'name':'Size',
-        'values':['L', ],
-      },
     ],
   },
   {
@@ -882,10 +789,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'cotton',
-      },
-      {
-        'name':'Size',
-        'values':['S', 'XL', '2XS', '3XS', 'XS', ],
       },
       {
         'name':'Brand',
@@ -949,10 +852,6 @@ List<Map<String, dynamic>>  products = [
         'name':'Brand',
         'values':'LEVIZO',
       },
-      {
-        'name':'Size',
-        'values':['XS', '3XS', '4XS', '2XS', 'L', ],
-      },
     ],
   },
   {
@@ -1002,10 +901,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'Wool',
-      },
-      {
-        'name':'Size',
-        'values':['L', '2XS', 'M', 'S', ],
       },
     ],
   },
@@ -1068,10 +963,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['M', '2XS', 'L', 'XS', ],
-      },
     ],
   },
   {
@@ -1121,10 +1012,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Occation',
         'values':'ceremony',
-      },
-      {
-        'name':'Size',
-        'values':['4XS', 'L', 'XS', '3XS', 'XL', '2XS', ],
       },
       {
         'name':'Material',
@@ -1188,10 +1075,6 @@ List<Map<String, dynamic>>  products = [
         'name':'Material',
         'values':'Silk',
       },
-      {
-        'name':'Size',
-        'values':['S', '3XS', 'XS', 'L', '2XS', 'XL', '4XS', ],
-      },
     ],
   },
   {
@@ -1218,10 +1101,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'Denim',
-      },
-      {
-        'name':'Size',
-        'values':['S', 'L', 'XL', '3XS', 'M', '2XS', '4XS', 'XS', ],
       },
     ],
   },
@@ -1254,10 +1133,6 @@ List<Map<String, dynamic>>  products = [
         'name':'Material',
         'values':'Denim',
       },
-      {
-        'name':'Size',
-        'values':['XS', 'S', 'L', 'XL', 'M', ],
-      },
     ],
   },
   {
@@ -1277,10 +1152,6 @@ List<Map<String, dynamic>>  products = [
         'name':'Occation',
         'values':'casual',
       },
-      {
-        'name':'Size',
-        'values':['XS', ],
-      },
     ],
   },
   {
@@ -1296,10 +1167,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['S', 'M', ],
-      },
       {
         'name':'Occation',
         'values':'Business',
@@ -1342,10 +1209,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'Silk',
-      },
-      {
-        'name':'Size',
-        'values':['L', 'S', '3XS', 'XL', 'XS', '4XS', 'M', ],
       },
     ],
   },
@@ -1410,10 +1273,6 @@ List<Map<String, dynamic>>  products = [
         'values':'Wool',
       },
       {
-        'name':'Size',
-        'values':['S', '2XS', ],
-      },
-      {
         'name':'Occation',
         'values':'Evening',
       },
@@ -1439,10 +1298,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'Silk',
-      },
-      {
-        'name':'Size',
-        'values':['XS', 'S', 'L', '4XS', '2XS', '3XS', 'M', ],
       },
     ],
   },
@@ -1486,10 +1341,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['XS', 'XL', '4XS', '3XS', 'M', '2XS', 'L', 'S', ],
-      },
     ],
   },
   {
@@ -1513,10 +1364,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['S', '4XS', '3XS', 'XL', 'L', ],
-      },
       {
         'name':'Brand',
         'values':'LEVIZO',
@@ -1599,10 +1446,6 @@ List<Map<String, dynamic>>  products = [
     ],
     'properties' : [
       {
-        'name':'Size',
-        'values':['2XS', '4XS', 'S', '3XS', ],
-      },
-      {
         'name':'Brand',
         'values':'FINIVO',
       },
@@ -1637,10 +1480,6 @@ List<Map<String, dynamic>>  products = [
         'name':'Occation',
         'values':'ceremony',
       },
-      {
-        'name':'Size',
-        'values':['M', 'XS', 'S', '3XS', '2XS', '4XS', 'L', 'XL', ],
-      },
     ],
   },
   {
@@ -1664,10 +1503,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['M', '3XS', '2XS', 'XL', '4XS', 'S', 'XS', ],
-      },
     ],
   },
   {
@@ -1687,10 +1522,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['3XS', 'XL', ],
-      },
       {
         'name':'Occation',
         'values':'Business',
@@ -1719,10 +1550,6 @@ List<Map<String, dynamic>>  products = [
         'values':'FINIVO',
       },
       {
-        'name':'Size',
-        'values':['XL', '4XS', '2XS', ],
-      },
-      {
         'name':'Occation',
         'values':'casual',
       },
@@ -1741,10 +1568,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['M', 'XS', 'S', '2XS', ],
-      },
     ],
   },
   {
@@ -1771,10 +1594,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Occation',
         'values':'Business',
-      },
-      {
-        'name':'Size',
-        'values':['XL', '3XS', '2XS', 'M', ],
       },
     ],
   },
@@ -1857,10 +1676,6 @@ List<Map<String, dynamic>>  products = [
         'name':'Brand',
         'values':'BEING FAB',
       },
-      {
-        'name':'Size',
-        'values':['3XS', 'L', '2XS', 'S', '4XS', 'XL', ],
-      },
     ],
   },
   {
@@ -1884,10 +1699,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['4XS', '2XS', 'XS', 'L', 'XL', ],
-      },
       {
         'name':'Material',
         'values':'Rayon',
@@ -1943,10 +1754,6 @@ List<Map<String, dynamic>>  products = [
     ],
     'properties' : [
       {
-        'name':'Size',
-        'values':['M', 'L', '2XS', 'XL', 'S', 'XS', '4XS', ],
-      },
-      {
         'name':'Brand',
         'values':'FINIVO',
       },
@@ -1978,10 +1785,6 @@ List<Map<String, dynamic>>  products = [
         'values':'Rayon',
       },
       {
-        'name':'Size',
-        'values':['M', 'S', 'L', '3XS', '4XS', 'XL', ],
-      },
-      {
         'name':'Brand',
         'values':'LEVIZO',
       },
@@ -2004,10 +1807,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['XS', 'L', '3XS', '2XS', '4XS', 'XL', ],
-      },
     ],
   },
   {
@@ -2101,10 +1900,6 @@ List<Map<String, dynamic>>  products = [
         'values':'Denim',
       },
       {
-        'name':'Size',
-        'values':['4XS', 'S', 'M', '3XS', ],
-      },
-      {
         'name':'Brand',
         'values':'GRITSTONES',
       },
@@ -2130,10 +1925,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'Synthetic',
-      },
-      {
-        'name':'Size',
-        'values':['4XS', 'L', 'M', ],
       },
     ],
   },
@@ -2236,10 +2027,6 @@ List<Map<String, dynamic>>  products = [
     ],
     'properties' : [
       {
-        'name':'Size',
-        'values':['M', ],
-      },
-      {
         'name':'Brand',
         'values':'FINIVO',
       },
@@ -2294,10 +2081,6 @@ List<Map<String, dynamic>>  products = [
         'values':'cotton',
       },
       {
-        'name':'Size',
-        'values':['4XS', 'M', 'S', 'L', '2XS', 'XS', '3XS', 'XL', ],
-      },
-      {
         'name':'Brand',
         'values':'FINIVO',
       },
@@ -2335,10 +2118,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Brand',
         'values':'GRITSTONES',
-      },
-      {
-        'name':'Size',
-        'values':['XS', ],
       },
     ],
   },
@@ -2414,10 +2193,6 @@ List<Map<String, dynamic>>  products = [
         'values':'GRITSTONES',
       },
       {
-        'name':'Size',
-        'values':['M', ],
-      },
-      {
         'name':'Occation',
         'values':'Evening',
       },
@@ -2447,10 +2222,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Brand',
         'values':'BEING FAB',
-      },
-      {
-        'name':'Size',
-        'values':['L', 'S', '2XS', ],
       },
       {
         'name':'Material',
@@ -2546,10 +2317,6 @@ List<Map<String, dynamic>>  products = [
         'values':'Evening',
       },
       {
-        'name':'Size',
-        'values':['XL', 'M', 'S', '2XS', ],
-      },
-      {
         'name':'Material',
         'values':'Rayon',
       },
@@ -2568,10 +2335,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['2XS', '3XS', 'L', '4XS', 'S', 'M', ],
-      },
     ],
   },
   {
@@ -2626,10 +2389,6 @@ List<Map<String, dynamic>>  products = [
         'name':'Material',
         'values':'Denim',
       },
-      {
-        'name':'Size',
-        'values':['2XS', '3XS', 'S', 'XS', 'M', '4XS', 'L', ],
-      },
     ],
   },
   {
@@ -2680,10 +2439,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['XL', 'S', 'XS', '3XS', '2XS', ],
-      },
       {
         'name':'Material',
         'values':'Silk',
@@ -2743,10 +2498,6 @@ List<Map<String, dynamic>>  products = [
     ],
     'properties' : [
       {
-        'name':'Size',
-        'values':['M', ],
-      },
-      {
         'name':'Material',
         'values':'cotton',
       },
@@ -2781,10 +2532,6 @@ List<Map<String, dynamic>>  products = [
         'name':'Material',
         'values':'Rayon',
       },
-      {
-        'name':'Size',
-        'values':['3XS', 'L', 'S', '4XS', '2XS', ],
-      },
     ],
   },
   {
@@ -2812,10 +2559,6 @@ List<Map<String, dynamic>>  products = [
         'name':'Material',
         'values':'Wool',
       },
-      {
-        'name':'Size',
-        'values':['XL', ],
-      },
     ],
   },
   {
@@ -2835,10 +2578,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['XL', '4XS', ],
-      },
       {
         'name':'Material',
         'values':'Denim',
@@ -2862,10 +2601,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['L', 'XL', 'XS', '2XS', '3XS', ],
-      },
       {
         'name':'Occation',
         'values':'ceremony',
@@ -2927,10 +2662,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'Wool',
-      },
-      {
-        'name':'Size',
-        'values':['XL', 'M', '4XS', '3XS', 'L', ],
       },
       {
         'name':'Occation',
@@ -3021,10 +2752,6 @@ List<Map<String, dynamic>>  products = [
         'name':'Brand',
         'values':'Diverse',
       },
-      {
-        'name':'Size',
-        'values':['S', 'L', 'M', '3XS', ],
-      },
     ],
   },
   {
@@ -3048,10 +2775,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['2XS', 'M', '3XS', ],
-      },
     ],
   },
   {
@@ -3067,10 +2790,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['2XS', 'S', 'XL', 'M', ],
-      },
     ],
   },
   {
@@ -3097,10 +2816,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Brand',
         'values':'FINIVO',
-      },
-      {
-        'name':'Size',
-        'values':['M', 'S', 'XS', '3XS', '2XS', ],
       },
       {
         'name':'Material',
@@ -3152,10 +2867,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['XS', '4XS', 'M', 'XL', 'S', '2XS', 'L', ],
-      },
       {
         'name':'Material',
         'values':'Denim',
@@ -3221,10 +2932,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Brand',
         'values':'LEVIZO',
-      },
-      {
-        'name':'Size',
-        'values':['M', 'XS', '3XS', 'L', 'XL', '4XS', '2XS', ],
       },
       {
         'name':'Material',
@@ -3295,10 +3002,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'Wool',
-      },
-      {
-        'name':'Size',
-        'values':['L', '2XS', 'S', 'XS', 'M', '4XS', 'XL', ],
       },
     ],
   },
@@ -3408,10 +3111,6 @@ List<Map<String, dynamic>>  products = [
         'values':'FINIVO',
       },
       {
-        'name':'Size',
-        'values':['4XS', 'XS', '2XS', '3XS', 'M', 'L', 'S', 'XL', ],
-      },
-      {
         'name':'Material',
         'values':'Wool',
       },
@@ -3437,10 +3136,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'Rayon',
-      },
-      {
-        'name':'Size',
-        'values':['2XS', '4XS', 'M', 'XL', '3XS', ],
       },
       {
         'name':'Brand',
@@ -3472,10 +3167,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'Silk',
-      },
-      {
-        'name':'Size',
-        'values':['L', '4XS', ],
       },
     ],
   },
@@ -3519,10 +3210,6 @@ List<Map<String, dynamic>>  products = [
         'name':'Material',
         'values':'Rayon',
       },
-      {
-        'name':'Size',
-        'values':['XS', 'L', '4XS', '3XS', 'XL', ],
-      },
     ],
   },
   {
@@ -3549,10 +3236,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'Wool',
-      },
-      {
-        'name':'Size',
-        'values':['4XS', '2XS', '3XS', ],
       },
     ],
   },
@@ -3592,10 +3275,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['4XS', 'L', 'M', ],
-      },
       {
         'name':'Brand',
         'values':'GRITSTONES',
@@ -3650,10 +3329,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['2XS', '4XS', 'XL', 'M', 'L', ],
-      },
       {
         'name':'Material',
         'values':'Wool',
@@ -3721,10 +3396,6 @@ List<Map<String, dynamic>>  products = [
         'values':'Business',
       },
       {
-        'name':'Size',
-        'values':['L', 'S', '3XS', ],
-      },
-      {
         'name':'Material',
         'values':'Rayon',
       },
@@ -3743,10 +3414,6 @@ List<Map<String, dynamic>>  products = [
       },
     ],
     'properties' : [
-      {
-        'name':'Size',
-        'values':['XL', '4XS', 'S', 'L', '3XS', 'XS', 'M', ],
-      },
       {
         'name':'Material',
         'values':'Synthetic',
@@ -3787,10 +3454,6 @@ List<Map<String, dynamic>>  products = [
         'values':'Synthetic',
       },
       {
-        'name':'Size',
-        'values':['XL', 'S', '4XS', '3XS', 'XS', 'L', '2XS', ],
-      },
-      {
         'name':'Brand',
         'values':'BEING FAB',
       },
@@ -3820,10 +3483,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'Synthetic',
-      },
-      {
-        'name':'Size',
-        'values':['4XS', 'M', '3XS', ],
       },
     ],
   },
@@ -3880,10 +3539,6 @@ List<Map<String, dynamic>>  products = [
         'values':'Rayon',
       },
       {
-        'name':'Size',
-        'values':['3XS', 'S', 'XL', '2XS', '4XS', 'XS', 'L', 'M', ],
-      },
-      {
         'name':'Brand',
         'values':'FINIVO',
       },
@@ -3909,10 +3564,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Occation',
         'values':'Evening',
-      },
-      {
-        'name':'Size',
-        'values':['M', '2XS', '4XS', 'XL', 'L', '3XS', 'S', 'XS', ],
       },
       {
         'name':'Brand',
@@ -3980,10 +3631,6 @@ List<Map<String, dynamic>>  products = [
         'name':'Brand',
         'values':'GRITSTONES',
       },
-      {
-        'name':'Size',
-        'values':['S', ],
-      },
     ],
   },
   {
@@ -4023,10 +3670,6 @@ List<Map<String, dynamic>>  products = [
     ],
     'properties' : [
       {
-        'name':'Size',
-        'values':['L', 'XL', '3XS', '4XS', ],
-      },
-      {
         'name':'Occation',
         'values':'Business',
       },
@@ -4056,10 +3699,6 @@ List<Map<String, dynamic>>  products = [
       {
         'name':'Material',
         'values':'Synthetic',
-      },
-      {
-        'name':'Size',
-        'values':['M', 'XS', 'L', '3XS', 'XL', 'S', '2XS', ],
       },
       {
         'name':'Brand',

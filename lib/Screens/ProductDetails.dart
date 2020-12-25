@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:lilly_app/mockData.dart';
 

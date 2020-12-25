@@ -1,6 +1,6 @@
 // import 'dart:html';
 import 'package:flutter/material.dart';
-import 'package:lilly_app/mockData.dart';
+import 'package:lilly_app/mockData.dart'; //
 
 
 class ProductList extends StatefulWidget {
@@ -88,7 +88,7 @@ class _ProductListState extends State<ProductList> {
               children: [
                 Container(
                   height: 0.65*constraints.maxHeight,
-                  child: Image.asset('images/' + product['images'][0]['image']),
+                  child: Image.asset('images/' + product['images'][0]['image']),//TODO:Firebase storage se fetch karna
                 ),
                 Align(
                   alignment: Alignment.topLeft,
@@ -130,7 +130,7 @@ class _ProductListState extends State<ProductList> {
     //var subcategory = 'subcategory 1';
     var displayProducts = <Widget>[];
     //var x=1;
-    for(var i=0; i < products.length ; i++)
+    for(var i=0; i < products.length ; i++) //TODO : change products to productsDetails(Firebase)
     {
       // if(products[i]['subcategory'] != subcategory)
       //   continue;

@@ -3,8 +3,6 @@ import 'package:path_provider/path_provider.dart' as pp;
 
 class StorageService{
 
-
-
   static void storeFile() async{
     FirebaseStorage storage = FirebaseStorage.instance;
 
@@ -14,12 +12,18 @@ class StorageService{
 
     ListResult result = await storage.ref().listAll();
 
+    print(result);
+
+
     result.items.forEach((Reference ref) {
       print('Found file: $ref');
+      print(ref.getDownloadURL());
+
     });
 
     result.prefixes.forEach((Reference ref) {
       print('Found directory: $ref');
+
     });
 
   }

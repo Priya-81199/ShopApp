@@ -128,7 +128,7 @@ class _homePageState extends State<homePage> {
         subcategory.add(
           GestureDetector(
             onTap: () {
-              print(subcategories[i]['name']);
+              print(subcategories[i]['name']);//TODO:route to productList with these params
             },
             child: Container(
               child: ClipRRect(
