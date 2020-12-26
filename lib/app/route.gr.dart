@@ -18,9 +18,9 @@ import '../startup/startup_view.dart';
 class Routes {
   static const String startupView = '/startup-view';
   static const String storageView = '/storage-view';
-  static const String loginScreen = '/login-screen';
+  static const String loginScreen = '/';
   static const String addProductsDetails = '/add-products-details';
-  static const String productList = '/';
+  static const String productList = '/product-list';
   static const all = <String>{
     startupView,
     storageView,

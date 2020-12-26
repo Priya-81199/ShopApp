@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             User user1 = FirebaseAuth.instance.currentUser;
 
                             if (user != null && user1.emailVerified) {
-                              Navigator.pushNamed(context, Routes.startupView);
+                              Navigator.pushNamed(context, Routes.productList);
                             }
                             setState(() {
                               showSpinner = false;

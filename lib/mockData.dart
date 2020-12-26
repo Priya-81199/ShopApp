@@ -116,17 +116,17 @@ List<Map<String, dynamic>> properties = [
   {
     'name': 'Brand',
     'select': 'single',
-    'values' :  ['Diverse',  'FINIVO', 'GRITSTONES', 'BEING FAB', 'LEVIZO'],
+    'value' :  ['Diverse',  'FINIVO', 'GRITSTONES', 'BEING FAB', 'LEVIZO'],
   },
   {
     'name': 'Material',
     'select': 'single',
-    'values' :  ['cotton',  'Wool', 'Silk', 'Rayon', 'Denim', 'Synthetic'],
+    'value' :  ['cotton',  'Wool', 'Silk', 'Rayon', 'Denim', 'Synthetic'],
   },
   {
     'name': 'Occation',
     'select': 'single',
-    'values' : ['Evening',  'ceremony', 'casual', 'Business'],
+    'value' : ['Evening',  'ceremony', 'casual', 'Business'],
   },
 ];
 

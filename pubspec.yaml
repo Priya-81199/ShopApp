@@ -43,7 +43,11 @@ dependencies:
 
   #navigation
   auto_route:
-#  stacked_services:
+  stacked_services:
+
+  #inversion of control
+  get_it:
+  injectable:
 
   path_provider: ^1.6.24
 
@@ -54,6 +58,7 @@ dev_dependencies:
 
   build_runner:
   auto_route_generator:
+  injectable_generator:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

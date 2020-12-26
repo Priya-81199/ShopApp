@@ -9,7 +9,13 @@ class StorageView extends StatelessWidget {
         viewModelBuilder: () => StorageViewModel(),
       onModelReady: (model) => model.start,
       builder: (context, model, child) => Scaffold(
-        body: Center(child: Text("Inside the Storage View"),),
+        body: Center(child: Column(
+          children: [
+            Text("Inside the Storage View"),
+
+            Image.network(model.url)
+          ],
+        ),),
         floatingActionButton: FloatingActionButton(
           onPressed: model.start,
         ),

@@ -3,28 +3,32 @@ import 'package:path_provider/path_provider.dart' as pp;
 
 class StorageService{
 
-  static void storeFile() async{
+  static Future<String> getImageURL() async{
     FirebaseStorage storage = FirebaseStorage.instance;
 
     print("Inside the Storage Service");
-    // Directory appDocDir = await getApplicationDocumentsDirectory();
-    // File downloadToFile = File('${appDocDir.path}/download-logo.png');
+    final ref = storage.ref().child('dress4_2.jpeg');
 
-    ListResult result = await storage.ref().listAll();
+    var url = await ref.getDownloadURL();
+    print(url);
 
-    print(result);
+    return url;
+  }
+
+  static void storeFile() async{
+
+    //ListResult result = await storage.ref().listAll();
+
+    //print(result);
 
 
-    result.items.forEach((Reference ref) {
-      print('Found file: $ref');
-      print(ref.getDownloadURL());
-
-    });
-
-    result.prefixes.forEach((Reference ref) {
-      print('Found directory: $ref');
-
-    });
+    // result.items.forEach((Reference ref) {
+    //   print('Found file: $ref');
+    // });
+    //
+    // result.prefixes.forEach((Reference ref) {
+    //   print('Found directory: $ref');
+    // });
 
   }
 }
