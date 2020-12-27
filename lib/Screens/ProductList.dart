@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:lilly_app/mockData.dart'; //
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:lilly_app/app/route.gr.dart' as rg;
 
 FirebaseStorage storage = FirebaseStorage.instance;
 class ProductList extends StatefulWidget {
@@ -41,12 +41,18 @@ class _ProductListState extends State<ProductList> {
     final db = FirebaseFirestore.instance;
 
       db.collection('productDetails').get().then((value) {
+        var len = value.docs.length;
         value.docs.forEach((result) {
           productsDetails.add(result.data());
-          urls.add(storage.ref('dress4_2.jpeg').getDownloadURL().then((value) {
-            print(value);
-          })
-              .toString());
+          storage.ref('product_images/' + result.data()['images'][0]).getDownloadURL().then((value) {
+            //print(value);
+            urls.add(value);
+            if(len==urls.length){
+              setState(() {
+                image_set=true;
+              });
+            }
+          });
         });
       });
 
@@ -115,56 +121,63 @@ class _ProductListState extends State<ProductList> {
     }
 
     getProductCard(dynamic product,String url) {
-      print(url);
+      //print(url);
       return LayoutBuilder(
         builder: (context, constraints){
           var width = constraints.maxWidth;
           var NamefontSize = width/232*20;
           var PricefontSize = width/232*18;
           var DescriptionfontSize = width/232*14;
-          return Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-            child: Column(
-              children: [
-                Container(
-                  height: 0.65*constraints.maxHeight,
-                  child: Image.network(
-                      url
-                  )
-                      //getURL(product['images'][0]).toString()),//TODO:Firebase storage se fetch karna
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    product['name'],
-                    style: TextStyle(
-                      fontSize: NamefontSize,
-                      fontWeight: FontWeight.bold,
+          return GestureDetector(
+            onTap: (){
+              Navigator.pushNamed(
+                  context, rg.Routes.productDetails, arguments: {'product':product }
+                );
+              },
+            child: Container(
+              padding: EdgeInsets.all(10.0),
+              margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+              child: Column(
+                children: [
+                  Container(
+                    height: 0.65*constraints.maxHeight,
+                    child: Image.network(
+                        url
+                    )
+                        //getURL(product['images'][0]).toString()),//TODO:Firebase storage se fetch karna
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      product['name'],
+                      style: TextStyle(
+                        fontSize: NamefontSize,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'This is a smal description one line sentence',
-                    style: TextStyle(
-                      fontSize: DescriptionfontSize,
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'This is a smal description one line sentence',
+                      style: TextStyle(
+                        fontSize: DescriptionfontSize,
+                      ),
                     ),
                   ),
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    '₹ 2,300',
-                    style: TextStyle(
-                      fontSize: PricefontSize,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.pinkAccent,
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      '₹ 2,300',
+                      style: TextStyle(
+                        fontSize: PricefontSize,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.pinkAccent,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
@@ -174,6 +187,7 @@ class _ProductListState extends State<ProductList> {
     //var subcategory = 'subcategory 1';
     var displayProducts = <Widget>[];
     //var x=1;
+    //print(productsDetails.length);
     for(var i=0; i < productsDetails.length ; i++) //TODO : change products to productsDetails(Firebase)
     {
       // if(productsDetails[i]['subcategory'] != subcategory)
@@ -200,21 +214,14 @@ class _ProductListState extends State<ProductList> {
           }
         }
       }
-      if(flag) {
-        if(urls.length==products.length) {
+      //
+      //print(flag);
+      if(flag && image_set) {
+        //print(urls.length);
           displayProducts.add(getProductCard(product, urls[i]));
-        }
-        else
-          {
-            setState(() {
-              image_set=false;
-            });
-          }
       }
     }
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return  Scaffold(
         drawer: Drawer(
           child: Container(
             padding: EdgeInsets.all(32.0),
@@ -245,7 +252,7 @@ class _ProductListState extends State<ProductList> {
             );
           },
         ),
-      ),
-    );
+      );
+
   }
 }

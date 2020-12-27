@@ -1,22 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:lilly_app/mockData.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
+FirebaseStorage storage = FirebaseStorage.instance;
+
+class ProductDetailsArguments{
+  final Map<String, dynamic> product;
+  ProductDetailsArguments({this.product});
+  Map<String,dynamic> get Product{
+    return product;
+  }
+}
 
 
 class ProductDetails extends StatefulWidget {
   static const String id = 'ProductDetails';
+
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
+
+
 }
 
+
+
 class _ProductDetailsState extends State<ProductDetails> {
+
   var productIndex = 1;
   var selectedImageIndex = 0;
   var isImageZoomed = false;
   var size_default='L';
 
+
+
+
   @override
   Widget build(BuildContext context) {
+    //print(Product);
     var image = products[productIndex]['images'][selectedImageIndex]['image'];
     List<Widget> images = [];
     List<Widget> displayProperty = [];

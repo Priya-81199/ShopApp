@@ -38,7 +38,7 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
     FilePickerResult result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
       type: FileType.custom,
-      allowedExtensions: ['jpg', 'png', 'bmp'],
+      allowedExtensions: ['jpg', 'png', 'bmp','jpeg'],
     );
 
     void deselectImage(var index) {
