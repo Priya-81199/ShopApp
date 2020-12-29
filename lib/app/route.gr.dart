@@ -78,10 +78,21 @@ class Router extends RouterBase {
       );
     },
     ProductDetails: (data) {
+      final args = data.getArgs<ProductDetailsArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => ProductDetails(),
+        builder: (context) => ProductDetails(args.product),
         settings: data,
       );
     },
   };
+}
+
+/// ************************************************************************
+/// Arguments holder classes
+/// *************************************************************************
+
+/// ProductDetails arguments holder class
+class ProductDetailsArguments {
+  final dynamic product;
+  ProductDetailsArguments({@required this.product});
 }

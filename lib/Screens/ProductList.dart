@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:lilly_app/app/route.gr.dart' as rg;
 
+import 'ProductDetails.dart';
+
 FirebaseStorage storage = FirebaseStorage.instance;
 class ProductList extends StatefulWidget {
   static const String id = 'ProductList';
@@ -43,9 +45,9 @@ class _ProductListState extends State<ProductList> {
       db.collection('productDetails').get().then((value) {
         var len = value.docs.length;
         value.docs.forEach((result) {
-          productsDetails.add(result.data());
+
           storage.ref('product_images/' + result.data()['images'][0]).getDownloadURL().then((value) {
-            //print(value);
+            productsDetails.add(result.data());
             urls.add(value);
             if(len==urls.length){
               setState(() {
@@ -130,8 +132,8 @@ class _ProductListState extends State<ProductList> {
           var DescriptionfontSize = width/232*14;
           return GestureDetector(
             onTap: (){
-              Navigator.pushNamed(
-                  context, rg.Routes.productDetails, arguments: {'product':product }
+              Navigator.push(
+                  context, new MaterialPageRoute(builder: (BuildContext context) => new ProductDetails(product))
                 );
               },
             child: Container(
@@ -193,7 +195,7 @@ class _ProductListState extends State<ProductList> {
       // if(productsDetails[i]['subcategory'] != subcategory)
       //   continue;
       var flag=true;
-      var product=productsDetails[i];
+      var product = productsDetails[i];
       for (var j=0; j < product['properties'].length; j++)
       {
         var property = product['properties'][j];
@@ -217,7 +219,7 @@ class _ProductListState extends State<ProductList> {
       //
       //print(flag);
       if(flag && image_set) {
-        //print(urls.length);
+
           displayProducts.add(getProductCard(product, urls[i]));
       }
     }

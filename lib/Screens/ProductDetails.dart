@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lilly_app/mockData.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 FirebaseStorage storage = FirebaseStorage.instance;
+
+
 
 class ProductDetailsArguments{
   final Map<String, dynamic> product;
@@ -15,7 +16,8 @@ class ProductDetailsArguments{
 
 class ProductDetails extends StatefulWidget {
   static const String id = 'ProductDetails';
-
+  final dynamic product;
+   ProductDetails(this.product);
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
 
@@ -31,24 +33,45 @@ class _ProductDetailsState extends State<ProductDetails> {
   var isImageZoomed = false;
   var size_default='L';
 
+  var urls = [];
+  bool image_set=false;
+  var products;
+  @override
+  void initState() {
+    super.initState();
+    products = widget.product;
+    for (var i = 0; i < products['images'].length; i++) {
+      storage.ref('product_images/' + products['images'][i])
+          .getDownloadURL()
+          .then((value) {
+        urls.add(value);
+        if (products['images'].length == urls.length) {
+          setState(() {
+            image_set = true;
+          });
+        }
+      });
+    }
+  }
 
 
 
   @override
   Widget build(BuildContext context) {
-    //print(Product);
-    var image = products[productIndex]['images'][selectedImageIndex]['image'];
+    print(products);
+
+    var image = urls[selectedImageIndex];
     List<Widget> images = [];
     List<Widget> displayProperty = [];
-    var productName = products[productIndex]['name'];
-    var productDetail = products[productIndex]['detail'];
+    var productName = products['name'];
+    var productDetail = products['description'];
 
-    print(products[productIndex]['images'].length);
+
 
     images.add(
       SizedBox(width: 10),
     );
-    for(var i=0; i<products[productIndex]['images'].length; i++) {
+    for(var i=0; i<products['images'].length; i++) {
       double paddingSize = 0;
       if(i==selectedImageIndex)
         paddingSize=1;
@@ -63,7 +86,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           child: Container(
             color: Colors.black,
             padding: EdgeInsets.all(paddingSize),
-            child: Image.asset('images/'+products[productIndex]['images'][i]['image']),
+            child: Image.network(urls[i]),
           ),
         )
       );
@@ -72,27 +95,27 @@ class _ProductDetailsState extends State<ProductDetails> {
       );
     }
 
-    for(var i=0; i<products[productIndex]['properties'].length; i++) {
+    for(var i=0; i<products['properties'].length; i++) {
       displayProperty.add(
         Container(
           padding: EdgeInsets.all(5),
           child: Row(
             children: [
               Text(
-                products[productIndex]['properties'][i]['name'] + ': ',
+                products['properties'][i]['name'] + ': ',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                 ),
               ),
-              (products[productIndex]['properties'][i]['name'] != 'Size') ?
+              (products['properties'][i]['name'] != 'Size') ?
               Text(
-                products[productIndex]['properties'][i]['values'],
+                products['properties'][i]['value'],
                 style: TextStyle(
                   fontSize: 20,
                 ),
               ):
-              buildDropdownButton(size_default, products[productIndex]['properties'][i]['values']),
+              buildDropdownButton(size_default, products['properties'][i]['value']),
             ]
           ),
         ),
@@ -136,7 +159,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               constraints: BoxConstraints(
                                 maxHeight: height*17/20,
                               ),
-                              child: Image.asset('images/'+image),
+                              child: Image.network(image),
                             ),
                           ),
                           SizedBox(height: 20),
@@ -287,8 +310,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                       color: Colors.black.withOpacity(0.5),
                       height: height*0.95,
                       width: width*0.95,
-                      child: Image.asset(
-                        'images/'+image,
+                      child: Image.network(
+                        image,
                         fit: BoxFit.fitHeight,
                       ),
                     ),
@@ -315,7 +338,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               constraints: BoxConstraints(
                                 maxHeight: height*17/20,
                               ),
-                              child: Image.asset('images/'+image),
+                              child: Image.network(image),
                             ),
                           ),
                           SizedBox(height: 20),
@@ -453,8 +476,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                         color: Colors.black.withOpacity(0.5),
                         height: height*0.95,
                         width: width*0.95,
-                        child: Image.asset(
-                          'images/'+image,
+                        child: Image.network(
+                          image,
                           fit: BoxFit.fitWidth,
                         ),
                       ),
