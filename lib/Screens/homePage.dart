@@ -5,6 +5,8 @@ import 'package:lilly_app/Screens/Components.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 
+import 'package:lilly_app/Screens/ProductList.dart';
+
 
 class homePage extends StatefulWidget {
 
@@ -128,7 +130,10 @@ class _homePageState extends State<homePage> {
         subcategory.add(
           GestureDetector(
             onTap: () {
-              print(subcategories[i]['name']);//TODO:route to productList with these params
+              Navigator.push(
+                  context, new MaterialPageRoute(builder: (BuildContext context) => new ProductList(subcategories[i]['name']))
+              );
+              //print(subcategories[i]['name']);//TODO:route to productList with these params
             },
             child: Container(
               child: ClipRRect(

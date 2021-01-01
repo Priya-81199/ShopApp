@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import '../Screens/ProductDetails.dart';
 import '../Screens/ProductList.dart';
 import '../Screens/addProducts1.dart';
+import '../Screens/homePage.dart';
 import '../Screens/login.dart';
 import '../firebase_storage/storage_view.dart';
 import '../startup/startup_view.dart';
@@ -23,6 +24,7 @@ class Routes {
   static const String addProductsDetails = '/add-products-details';
   static const String productList = '/';
   static const String productDetails = '/product-details';
+  static const String homePage = '/home-page';
   static const all = <String>{
     startupView,
     storageView,
@@ -30,6 +32,7 @@ class Routes {
     addProductsDetails,
     productList,
     productDetails,
+    homePage,
   };
 }
 
@@ -43,6 +46,7 @@ class Router extends RouterBase {
     RouteDef(Routes.addProductsDetails, page: AddProductsDetails),
     RouteDef(Routes.productList, page: ProductList),
     RouteDef(Routes.productDetails, page: ProductDetails),
+    RouteDef(Routes.homePage, page: homePage),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -72,8 +76,9 @@ class Router extends RouterBase {
       );
     },
     ProductList: (data) {
+      final args = data.getArgs<ProductListArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => ProductList(),
+        builder: (context) => ProductList(args.subcategory),
         settings: data,
       );
     },
@@ -84,12 +89,24 @@ class Router extends RouterBase {
         settings: data,
       );
     },
+    homePage: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => homePage(),
+        settings: data,
+      );
+    },
   };
 }
 
 /// ************************************************************************
 /// Arguments holder classes
 /// *************************************************************************
+
+/// ProductList arguments holder class
+class ProductListArguments {
+  final dynamic subcategory;
+  ProductListArguments({@required this.subcategory});
+}
 
 /// ProductDetails arguments holder class
 class ProductDetailsArguments {

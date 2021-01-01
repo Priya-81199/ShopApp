@@ -55,22 +55,74 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
 
-
+  var selectedSize = -1;
   @override
   Widget build(BuildContext context) {
     print(products);
 
-    var image = urls[selectedImageIndex];
+    var image;
+    if(urls.length > selectedImageIndex)
+      image = urls[selectedImageIndex];
+    else
+      image = 'https://www.bluechipexterminating.com/wp-content/uploads/2020/02/loading-gif-png-5.gif';
     List<Widget> images = [];
     List<Widget> displayProperty = [];
     var productName = products['name'];
     var productDetail = products['description'];
+    var productPrice = products['price'];
+    var productAddPoints = products['points'];
+    //String addDetails = '';
+    var sizes = products['sizeCounts'];
+    List<bool> availableSizes = [false,false,false,false,false,false,false,false];
+    List<Widget> sizeWidgets = [];
+    List<String> sizeNames = ['4XS','3XS','2XS','XS','S','M','L','XL'];
 
+    // for(int i = 0; i < productAddPoints.length;i++){
+    //   addDetails = addDetails + productAddPoints[i];
+    // }
 
-
+    for(int i = 0; i < sizes.length;i++){
+      if(int.parse(sizes[i]) > 0){
+        availableSizes[i] = true;
+      }
+    }
+    //print(availableSizes);
     images.add(
       SizedBox(width: 10),
     );
+
+    for(var i=0; i<availableSizes.length; i++) {
+      if(availableSizes[i]) {
+        sizeWidgets.add(
+            GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedSize = i;
+                  });
+                },
+                child: Container(
+                    width: 60,
+                    height: 40,
+                    padding: EdgeInsets.all(5),
+                    child: Center(
+                        child: Text(sizeNames[i])
+                    ),
+                    decoration: BoxDecoration(
+                      color: (i==selectedSize)?Colors.orangeAccent:Colors.yellow,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15),
+                      ),
+                    ),
+                ),
+              ),
+        );
+        sizeWidgets.add(
+          SizedBox(
+            width: 20,
+          ),
+        );
+      }
+    }
     for(var i=0; i<products['images'].length; i++) {
       double paddingSize = 0;
       if(i==selectedImageIndex)
@@ -83,11 +135,12 @@ class _ProductDetailsState extends State<ProductDetails> {
               selectedImageIndex = i;
             });
           },
-          child: Container(
+          child: urls.length > i ?Container(
             color: Colors.black,
             padding: EdgeInsets.all(paddingSize),
-            child: Image.network(urls[i]),
-          ),
+            child:  Image.network(urls[i]),
+          )
+                :CircularProgressIndicator()
         )
       );
       images.add(
@@ -108,20 +161,35 @@ class _ProductDetailsState extends State<ProductDetails> {
                   fontSize: 20,
                 ),
               ),
-              (products['properties'][i]['name'] != 'Size') ?
+
               Text(
                 products['properties'][i]['value'],
                 style: TextStyle(
                   fontSize: 20,
                 ),
-              ):
-              buildDropdownButton(size_default, products['properties'][i]['value']),
+              )
             ]
           ),
         ),
       );
     }
-
+    for(var i=0; i<products['points'].length; i++) {
+      displayProperty.add(
+        Container(
+          padding: EdgeInsets.all(5),
+          child: Row(
+              children: [
+                Text(
+                  products['points'][i],
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                )
+              ]
+          ),
+        ),
+      );
+    }
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -209,7 +277,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              '₹ 530.00',
+                              '₹ $productPrice',
                               style: TextStyle(
                                 fontWeight: FontWeight.w300,
                                 fontSize: height/40,
@@ -240,10 +308,44 @@ class _ProductDetailsState extends State<ProductDetails> {
                             ),
                           ),
                           SizedBox(
-                              height: 50
+                            height: 20,
+                          ),
+                          // Container(
+                          //   padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                          //   child: Column(
+                          //     children:[
+                          //       Text(addDetails),
+                          //     ]
+                          //   ),
+                          // ),
+                          SizedBox(
+                              height: 20
                           ),
                           Container(
-                            height: height*0.18,
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Available Sizes',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: height/40,
+                              ),
+                            ),
+                          ),
+
+                          Container(
+                            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: sizeWidgets,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              height: 20
+                          ),
+                          Container(
+                            height: height*0.20,
                             width: width/5,
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -258,7 +360,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               children: [
                                 Container(
                                   width: width*0.1,
-                                  height: height/25,
+                                  height: height/20,
                                   margin: EdgeInsets.fromLTRB(height/32, height/32, height/32, height/64),
                                   padding: EdgeInsets.all(height/100),
                                   child: Center(
@@ -275,7 +377,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 ),
                                 Container(
                                   width: width*0.1,
-                                  height: height/25,
+                                  height: height/20,
                                   margin: EdgeInsets.fromLTRB(height/32, height/64, height/32, height/32),
                                   padding: EdgeInsets.all(height/100),
                                   child: Center(
@@ -379,7 +481,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             Container(
                               alignment: Alignment.topLeft,
                               child: Text(
-                                '₹ 530.00',
+                                  '₹ $productPrice',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize: height/40,
@@ -412,6 +514,30 @@ class _ProductDetailsState extends State<ProductDetails> {
                             SizedBox(
                                 height: 50
                             ),
+
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Available Sizes',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: height/40,
+                              ),
+                            ),
+                          ),
+
+                          Container(
+                            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: sizeWidgets,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              height: 20
+                          ),
                             Container(
                               height: height*0.2,
                               decoration: BoxDecoration(

@@ -2,16 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:lilly_app/mockData.dart'; //
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:math';
 import 'package:lilly_app/app/route.gr.dart' as rg;
 
 import 'ProductDetails.dart';
 
 FirebaseStorage storage = FirebaseStorage.instance;
+
+class ProductListArguments{
+  final dynamic subcategory;
+  ProductListArguments({this.subcategory});
+   dynamic get Subcategory{
+    return subcategory;
+  }
+}
+
 class ProductList extends StatefulWidget {
   static const String id = 'ProductList';
+  final dynamic subcategory;
+  ProductList(this.subcategory);
   @override
   _ProductListState createState() => _ProductListState();
 }
+
+
 
 
 class _ProductListState extends State<ProductList> {
@@ -22,6 +36,7 @@ class _ProductListState extends State<ProductList> {
   var filterSet = [];
   var filterSetCount = [];
   var filterMapedIndex = {};
+  var pageIndex = 1;
 
   _ProductListState() {
     for (var i = 0; i < properties.length; i++) {
@@ -39,6 +54,8 @@ class _ProductListState extends State<ProductList> {
   bool image_set=false;
   @override
   void initState() {
+
+    print(widget.subcategory);
     super.initState();
     final db = FirebaseFirestore.instance;
 
@@ -59,14 +76,15 @@ class _ProductListState extends State<ProductList> {
       });
 
   }
-
-
+  RangeValues _currentRangeValues = const RangeValues(0, 10000);
 
   @override
   Widget build(BuildContext context) {
     var filters = <Widget>[];
+
     for (var i = 0; i < properties.length; i++) {
       var property = properties[i]['name'];
+
       var filteroptions = <Widget>[];
       for (var j=0; j < properties[i]['value'].length; j++) {
         filteroptions.add(
@@ -92,7 +110,26 @@ class _ProductListState extends State<ProductList> {
         ),
       );
     }
-
+    filters.add(
+      Text('Price Range',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),)
+    );
+    filters.add(
+        RangeSlider(
+          values: _currentRangeValues,
+          min: 0,
+          max: 10000,
+          divisions: 20,
+          labels: RangeLabels(
+            _currentRangeValues.start.round().toString(),
+            _currentRangeValues.end.round().toString(),
+          ),
+          onChanged: (RangeValues values) {
+            setState(() {
+              _currentRangeValues = values;
+            });
+          },
+        )
+    );
     matched(dynamic valueToBeSatisfied, var filterIndex){
       var flag = false;
 
@@ -121,6 +158,8 @@ class _ProductListState extends State<ProductList> {
       return await ref.getDownloadURL();
 
     }
+
+
 
     getProductCard(dynamic product,String url) {
       //print(url);
@@ -161,7 +200,7 @@ class _ProductListState extends State<ProductList> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      'This is a smal description one line sentence',
+                      product['description'],
                       style: TextStyle(
                         fontSize: DescriptionfontSize,
                       ),
@@ -170,7 +209,7 @@ class _ProductListState extends State<ProductList> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      '₹ 2,300',
+                      '₹'+ product['price'],
                       style: TextStyle(
                         fontSize: PricefontSize,
                         fontWeight: FontWeight.w500,
@@ -190,9 +229,14 @@ class _ProductListState extends State<ProductList> {
     var displayProducts = <Widget>[];
     //var x=1;
     //print(productsDetails.length);
+    //print(productsDetails[0]['price']);
     for(var i=0; i < productsDetails.length ; i++) //TODO : change products to productsDetails(Firebase)
     {
-      // if(productsDetails[i]['subcategory'] != subcategory)
+      var price = productsDetails[i]['price'];
+      price = int.parse(price);
+      if( price < _currentRangeValues.start || price > _currentRangeValues.end)
+        continue;
+        // if(productsDetails[i]['subcategory'] != subcategory)
       //   continue;
       var flag=true;
       var product = productsDetails[i];
@@ -223,6 +267,33 @@ class _ProductListState extends State<ProductList> {
           displayProducts.add(getProductCard(product, urls[i]));
       }
     }
+
+    var ProductsPerPage=20;
+    var pageButtons = <Widget>[];
+    pageButtons.add(SizedBox(width: 10));
+    for(var i=1;i<=((displayProducts.length)/ProductsPerPage).ceil();i++)
+    {
+      Color buttonColour = Colors.orangeAccent;
+      if(i==pageIndex)
+        buttonColour = Colors.deepOrangeAccent;
+      pageButtons.add(
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              pageIndex = i;
+            });
+          },
+          child: Container(
+            height: 40,
+            width: 40,
+            color: buttonColour,
+            child: Center(child: Text('${i}')),
+          ),
+        ),
+      );
+      pageButtons.add(SizedBox(width: 10));
+    }
+
     return  Scaffold(
         drawer: Drawer(
           child: Container(
@@ -247,10 +318,36 @@ class _ProductListState extends State<ProductList> {
           builder: (context, constraints) {
             var width = constraints.maxWidth;
             var columnCount = (width/212).round();
-            return GridView.count(
-              crossAxisCount: columnCount,
-              childAspectRatio: 0.65,
-              children: displayProducts,
+            return  CustomScrollView(
+              slivers: [
+                SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: columnCount,
+                    childAspectRatio: 0.65,
+                  ),
+                  delegate: SliverChildListDelegate(
+                    displayProducts.sublist(
+                        min((pageIndex-1)*ProductsPerPage,displayProducts.length),
+                        min(pageIndex*ProductsPerPage, displayProducts.length)
+                    ),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Center(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: pageButtons,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20,)
+                    ],
+                  ),
+                ),
+              ],
             );
           },
         ),

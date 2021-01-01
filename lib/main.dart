@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: rg.Routes.productList,
+      initialRoute: rg.Routes.homePage,
                     //AddProducts.id,
       // routes: {
       //   AddProduct.id : (context) => AddProduct(),
