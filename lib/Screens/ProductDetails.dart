@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:lilly_app/Screens/welcome.dart';
+import 'package:lilly_app/main.dart';
+import 'delivery_screen.dart';
 
 FirebaseStorage storage = FirebaseStorage.instance;
 
-
-
-class ProductDetailsArguments{
-  final Map<String, dynamic> product;
-  ProductDetailsArguments({this.product});
-  Map<String,dynamic> get Product{
-    return product;
-  }
-}
 
 
 class ProductDetails extends StatefulWidget {
@@ -21,9 +15,7 @@ class ProductDetails extends StatefulWidget {
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
 
-
 }
-
 
 
 class _ProductDetailsState extends State<ProductDetails> {
@@ -58,7 +50,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   var selectedSize = -1;
   @override
   Widget build(BuildContext context) {
-    print(products);
+    //print(products);
 
     var image;
     if(urls.length > selectedImageIndex)
@@ -173,7 +165,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         ),
       );
     }
-    for(var i=0; i<products['points'].length; i++) {
+    for(var i=0; i<products['points'].length; i++){
       displayProperty.add(
         Container(
           padding: EdgeInsets.all(5),
@@ -364,8 +356,18 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   margin: EdgeInsets.fromLTRB(height/32, height/32, height/32, height/64),
                                   padding: EdgeInsets.all(height/100),
                                   child: Center(
-                                    child: Text(
-                                      'Buy Now',
+                                    child: FlatButton(
+                                      onPressed: () {(isUserSet)?
+                                        Navigator.push(
+                                          context, new MaterialPageRoute(builder: (BuildContext context) => new DeliveryScreen())
+                                      ):
+                                      Navigator.push(
+                                          context, new MaterialPageRoute(builder: (BuildContext context) => new WelcomeScreen())
+                                      );
+                                      },
+                                      child: Text(
+                                        'Buy Now',
+                                      ),
                                     ),
                                   ),
                                   decoration: BoxDecoration(

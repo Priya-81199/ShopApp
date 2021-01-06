@@ -14,6 +14,8 @@ import '../Screens/ProductList.dart';
 import '../Screens/addProducts1.dart';
 import '../Screens/homePage.dart';
 import '../Screens/login.dart';
+import '../Screens/register.dart';
+import '../Screens/welcome.dart';
 import '../firebase_storage/storage_view.dart';
 import '../startup/startup_view.dart';
 
@@ -22,9 +24,11 @@ class Routes {
   static const String storageView = '/storage-view';
   static const String loginScreen = '/login-screen';
   static const String addProductsDetails = '/add-products-details';
-  static const String productList = '/';
+  static const String productList = '/product-list';
   static const String productDetails = '/product-details';
-  static const String homePage = '/home-page';
+  static const String welcomeScreen = '/welcome-screen';
+  static const String registrationScreen = '/registration-screen';
+  static const String homePage = '/';
   static const all = <String>{
     startupView,
     storageView,
@@ -32,6 +36,8 @@ class Routes {
     addProductsDetails,
     productList,
     productDetails,
+    welcomeScreen,
+    registrationScreen,
     homePage,
   };
 }
@@ -46,6 +52,8 @@ class Router extends RouterBase {
     RouteDef(Routes.addProductsDetails, page: AddProductsDetails),
     RouteDef(Routes.productList, page: ProductList),
     RouteDef(Routes.productDetails, page: ProductDetails),
+    RouteDef(Routes.welcomeScreen, page: WelcomeScreen),
+    RouteDef(Routes.registrationScreen, page: RegistrationScreen),
     RouteDef(Routes.homePage, page: homePage),
   ];
   @override
@@ -86,6 +94,18 @@ class Router extends RouterBase {
       final args = data.getArgs<ProductDetailsArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => ProductDetails(args.product),
+        settings: data,
+      );
+    },
+    WelcomeScreen: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => WelcomeScreen(),
+        settings: data,
+      );
+    },
+    RegistrationScreen: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => RegistrationScreen(),
         settings: data,
       );
     },

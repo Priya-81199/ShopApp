@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lilly_app/Screens/rounded_button.dart';
 import 'package:lilly_app/Screens/login.dart';
 import 'package:lilly_app/Screens/register.dart';
+import 'package:lilly_app/app/route.gr.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
@@ -81,10 +82,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 children: [
 
                   RoundedButton(title: 'Log in',colour: Colors.indigoAccent,tag: 'login', onPressed: () {
-                    Navigator.pushNamed(context, LoginScreen.id);
+                    Navigator.push(
+                        context, new MaterialPageRoute(builder: (BuildContext context) => new LoginScreen())
+                    );
                   },),
                   RoundedButton(title: 'Register',colour: Colors.indigo, tag : 'register',onPressed: () {
-                    Navigator.pushNamed(context, RegistrationScreen.id);
+                    Navigator.push(
+                        context, new MaterialPageRoute(builder: (BuildContext context) => new RegistrationScreen())
+                    );
                   },),
                 ],
               ),

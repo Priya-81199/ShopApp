@@ -4,20 +4,21 @@
 // import 'package:lilly_app/Screens/ProductDetails.dart';
 // import 'package:lilly_app/Screens/addProducts.dart';
 // import 'package:lilly_app/Screens/new_mock_data.dart';
-// import 'package:lilly_app/Screens/welcome.dart';
+// import 'package:lilly_app/Screens/send_receive.dart';
 // import 'package:lilly_app/Screens/addProduct.dart';
 // import 'package:lilly_app/Screens/ProductList.dart';
 // import 'package:lilly_app/Screens/homePage.dart';
+// import 'package:lilly_app/Screens/welcome.dart';
 // import 'package:lilly_app/Screens/login.dart';
 // import 'package:lilly_app/Screens/register.dart';
-// import 'package:lilly_app/Screens/send_receive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lilly_app/app/locator.dart';
 import 'package:lilly_app/app/route.gr.dart' as rg;
-import 'package:lilly_app/services/storage_service.dart';
 import 'package:stacked_services/stacked_services.dart';
+
+bool isUserSet = false;
 
 void main() async{
   setupLocator();
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: rg.Routes.homePage,
                     //AddProducts.id,
-      // routes: {
+       routes: {
       //   AddProduct.id : (context) => AddProduct(),
       //   homePage.id : (context) => homePage(),
       //   EditSubcat.id : (context) => EditSubcat(),
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
       //   AddPhotos.id : (context) => AddPhotos(),
       //   AddProducts.id : (context) => AddProducts(),
       //   ProductDetails.id : (context) => ProductDetails(),
-      // },
+       },
       onGenerateRoute: rg.Router(),
       navigatorKey: locator<NavigationService>().navigatorKey,
     );

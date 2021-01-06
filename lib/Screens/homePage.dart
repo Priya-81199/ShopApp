@@ -1,11 +1,18 @@
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lilly_app/Screens/Components.dart';
-//import 'package:lilly_app/mockData.dart';
+import 'package:lilly_app/mockData.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lilly_app/Screens/ProductDetails.dart';
 import 'dart:math';
-
+import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/Screens/ProductList.dart';
+import 'package:lilly_app/main.dart';
+
+import 'login.dart';
+
+
 
 
 class homePage extends StatefulWidget {
@@ -23,9 +30,9 @@ class _homePageState extends State<homePage> {
   List<Map<dynamic, dynamic>> products = [];
 
 
-  void getData(String collection) {
+  void getData(String collection) async{
 
-    _firestore.collection(collection).get().then((value) {
+    await _firestore.collection(collection).get().then((value) {
 
       value.docs.forEach((result) {
         if(collection == 'categories')
@@ -47,6 +54,7 @@ class _homePageState extends State<homePage> {
   @override
   Widget build(BuildContext context) {
 
+    //isUserSet = (isUserSet)? isUserSet :false;
     var category = <Widget>[];
     categories.sort((a, b) => a['name'].compareTo(b['name']));
     var colour1 = [
@@ -122,7 +130,7 @@ class _homePageState extends State<homePage> {
       SizedBox(width: 5),
     );
     for (var i = 0; i < subcategories.length; i++) {
-      print(subcategories[i]);
+      //print(subcategories[i]);
       if(subcategories[i]['category'] == selectedCategory) {
         subcategory.add(
           SizedBox(width: 5),
@@ -165,7 +173,7 @@ class _homePageState extends State<homePage> {
       product.add(
         GestureDetector(
           onTap: () {
-            print(products[i]['name']);
+            //print(products[i]['name']);
           },
           child: Container(
             child: ClipRRect(
@@ -186,7 +194,35 @@ class _homePageState extends State<homePage> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: buildAppBar(context),
+        appBar: AppBar(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Lilly',
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Container(
+                child: FlatButton(
+                  child: Text(isUserSet?'Logout':'Login'),
+                  onPressed: (){
+                    isUserSet?
+                    FirebaseAuth.instance.signOut()
+                    //isUserSet = false
+                    :
+                    Navigator.push(
+                    context, new MaterialPageRoute(builder: (BuildContext context) => new LoginScreen())
+                    );
+
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(

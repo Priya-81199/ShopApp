@@ -3,19 +3,12 @@ import 'package:lilly_app/mockData.dart'; //
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:math';
-import 'package:lilly_app/app/route.gr.dart' as rg;
+import 'package:lilly_app/main.dart';
 
 import 'ProductDetails.dart';
 
 FirebaseStorage storage = FirebaseStorage.instance;
 
-class ProductListArguments{
-  final dynamic subcategory;
-  ProductListArguments({this.subcategory});
-   dynamic get Subcategory{
-    return subcategory;
-  }
-}
 
 class ProductList extends StatefulWidget {
   static const String id = 'ProductList';
@@ -26,11 +19,7 @@ class ProductList extends StatefulWidget {
 }
 
 
-
-
 class _ProductListState extends State<ProductList> {
-
-
 
   bool selectedData = false;
   var filterSet = [];
@@ -52,11 +41,11 @@ class _ProductListState extends State<ProductList> {
   var productsDetails = [];
   var urls = [];
   bool image_set=false;
+  var subcategory;
   @override
   void initState() {
-
-    print(widget.subcategory);
     super.initState();
+    subcategory = widget.subcategory;
     final db = FirebaseFirestore.instance;
 
       db.collection('productDetails').get().then((value) {
@@ -80,6 +69,7 @@ class _ProductListState extends State<ProductList> {
 
   @override
   Widget build(BuildContext context) {
+    //print(isUserSet);
     var filters = <Widget>[];
 
     for (var i = 0; i < properties.length; i++) {
@@ -236,8 +226,8 @@ class _ProductListState extends State<ProductList> {
       price = int.parse(price);
       if( price < _currentRangeValues.start || price > _currentRangeValues.end)
         continue;
-        // if(productsDetails[i]['subcategory'] != subcategory)
-      //   continue;
+        if(productsDetails[i]['subcategory'] != subcategory)
+        continue;
       var flag=true;
       var product = productsDetails[i];
       for (var j=0; j < product['properties'].length; j++)
@@ -294,64 +284,66 @@ class _ProductListState extends State<ProductList> {
       pageButtons.add(SizedBox(width: 10));
     }
 
-    return  Scaffold(
-        drawer: Drawer(
-          child: Container(
-            padding: EdgeInsets.all(32.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: filters,
+    return  MaterialApp(
+      home: Scaffold(
+          drawer: Drawer(
+            child: Container(
+              padding: EdgeInsets.all(32.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: filters,
+                ),
               ),
             ),
           ),
-        ),
-        appBar: AppBar(
-          title: Text(
-            'Lilly',
-            style: TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.w700,
+          appBar: AppBar(
+            title: Text(
+              'Lilly',
+              style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
-        ),
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            var width = constraints.maxWidth;
-            var columnCount = (width/212).round();
-            return  CustomScrollView(
-              slivers: [
-                SliverGrid(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: columnCount,
-                    childAspectRatio: 0.65,
-                  ),
-                  delegate: SliverChildListDelegate(
-                    displayProducts.sublist(
-                        min((pageIndex-1)*ProductsPerPage,displayProducts.length),
-                        min(pageIndex*ProductsPerPage, displayProducts.length)
+          body: LayoutBuilder(
+            builder: (context, constraints) {
+              var width = constraints.maxWidth;
+              var columnCount = (width/212).round();
+              return  CustomScrollView(
+                slivers: [
+                  SliverGrid(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: columnCount,
+                      childAspectRatio: 0.65,
+                    ),
+                    delegate: SliverChildListDelegate(
+                      displayProducts.sublist(
+                          min((pageIndex-1)*ProductsPerPage,displayProducts.length),
+                          min(pageIndex*ProductsPerPage, displayProducts.length)
+                      ),
                     ),
                   ),
-                ),
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      Center(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: pageButtons,
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        Center(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: pageButtons,
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 20,)
-                    ],
+                        SizedBox(height: 20,)
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         ),
-      );
+    );
 
   }
 }

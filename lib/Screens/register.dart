@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:lilly_app/Screens/rounded_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lilly_app/Screens/homePage.dart';
+import 'package:lilly_app/Screens/welcome.dart';
+import 'package:lilly_app/app/route.gr.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 
 class RegistrationScreen extends StatefulWidget {
+
   static const String id = 'registration_screen';
   @override
   _RegistrationScreenState createState() => _RegistrationScreenState();
@@ -108,8 +111,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           await user.sendEmailVerification();
                         }
 
-                        if (newUser != null && user.emailVerified) {
-                          Navigator.pushNamed(context, homePage.id);
+                        if (newUser != null /*&& user.emailVerified*/) {
+                          Navigator.push(
+                              context, new MaterialPageRoute(builder: (BuildContext context) => new WelcomeScreen())
+                          );
                         }
                         setState(() {
                           showSpinner = false;

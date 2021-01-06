@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lilly_app/Screens/ProductDetails.dart';
+import 'package:lilly_app/Screens/homePage.dart';
 import 'package:lilly_app/Screens/rounded_button.dart';
 import 'package:lilly_app/Screens/Components.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lilly_app/Screens/homePage.dart';
-import 'package:lilly_app/app/route.gr.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
+import 'package:lilly_app/main.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -102,7 +102,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             User user1 = FirebaseAuth.instance.currentUser;
 
                             if (user != null && user1.emailVerified) {
-                              Navigator.pushNamed(context, Routes.productList);
+                              isUserSet=true;
+                              Navigator.push(
+                                  context, new MaterialPageRoute(builder: (BuildContext context) => new homePage())
+                              );
                             }
                             setState(() {
                               showSpinner = false;

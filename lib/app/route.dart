@@ -4,6 +4,8 @@ import 'package:lilly_app/Screens/ProductList.dart';
 import 'package:lilly_app/Screens/addProducts1.dart';
 import 'package:lilly_app/Screens/homePage.dart';
 import 'package:lilly_app/Screens/login.dart';
+import 'package:lilly_app/Screens/register.dart';
+import 'package:lilly_app/Screens/welcome.dart';
 import 'package:lilly_app/firebase_storage/storage_view.dart';
 import 'package:lilly_app/services/test.dart';
 import 'package:lilly_app/startup/startup_view.dart';
@@ -15,9 +17,11 @@ import 'package:lilly_app/startup/startup_view.dart';
     MaterialRoute(page: StorageView,),
     MaterialRoute(page: LoginScreen,),
     MaterialRoute(page: AddProductsDetails,),
-    MaterialRoute(page: ProductList,initial: true),
+    MaterialRoute(page: ProductList,),
     MaterialRoute(page: ProductDetails,),
-    MaterialRoute(page: homePage,),
+    MaterialRoute(page: WelcomeScreen,),
+    MaterialRoute(page: RegistrationScreen,),
+    MaterialRoute(page: homePage,initial: true),
   ],
 )
 class $Router {
