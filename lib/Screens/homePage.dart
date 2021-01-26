@@ -9,7 +9,6 @@ import 'dart:math';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/Screens/ProductList.dart';
 import 'package:lilly_app/main.dart';
-
 import 'login.dart';
 
 
@@ -25,8 +24,6 @@ final _firestore = FirebaseFirestore.instance;
 
 
 class _homePageState extends State<homePage> {
-  List<Map<dynamic, dynamic>> categories = [];
-  List<Map<dynamic, dynamic>> subcategories = [];
   List<Map<dynamic, dynamic>> products = [];
 
 
@@ -35,19 +32,14 @@ class _homePageState extends State<homePage> {
     await _firestore.collection(collection).get().then((value) {
 
       value.docs.forEach((result) {
-        if(collection == 'categories')
-          categories.add(result.data());
-        else if(collection == 'subcategories')
-          subcategories.add(result.data());
-        else if(collection == 'products')
+
+        if(collection == 'products')
           products.add(result.data());
       });
     });
 
   }
   _homePageState(){
-    getData('categories');
-    getData('subcategories');
     getData('products');
   }
   var selectedCategory = 'category 1';
@@ -129,6 +121,7 @@ class _homePageState extends State<homePage> {
     subcategory.add(
       SizedBox(width: 5),
     );
+    //print(subcategories);
     for (var i = 0; i < subcategories.length; i++) {
       //print(subcategories[i]);
       if(subcategories[i]['category'] == selectedCategory) {
@@ -313,8 +306,33 @@ class _homePageState extends State<homePage> {
             ),
           ),
         ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(
+            Icons.chat,
+          ),
+          onPressed: (){
+            showModalBottomSheet(
+                context: context, builder: (context) => ChatScreen()
+            );
+          },
+        ),
       ),
     );
   }
 }
 
+class ChatScreen extends StatefulWidget {
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+          color: Colors.grey[900],
+          height: 500,
+
+    );
+  }
+}

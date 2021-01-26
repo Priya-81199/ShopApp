@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import '../Screens/ProductDetails.dart';
 import '../Screens/ProductList.dart';
 import '../Screens/addProducts1.dart';
+import '../Screens/delivery_screen.dart';
 import '../Screens/homePage.dart';
 import '../Screens/login.dart';
 import '../Screens/register.dart';
@@ -29,6 +30,7 @@ class Routes {
   static const String welcomeScreen = '/welcome-screen';
   static const String registrationScreen = '/registration-screen';
   static const String homePage = '/';
+  static const String deliveryScreen = '/delivery-screen';
   static const all = <String>{
     startupView,
     storageView,
@@ -39,6 +41,7 @@ class Routes {
     welcomeScreen,
     registrationScreen,
     homePage,
+    deliveryScreen,
   };
 }
 
@@ -55,6 +58,7 @@ class Router extends RouterBase {
     RouteDef(Routes.welcomeScreen, page: WelcomeScreen),
     RouteDef(Routes.registrationScreen, page: RegistrationScreen),
     RouteDef(Routes.homePage, page: homePage),
+    RouteDef(Routes.deliveryScreen, page: DeliveryScreen),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -112,6 +116,12 @@ class Router extends RouterBase {
     homePage: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => homePage(),
+        settings: data,
+      );
+    },
+    DeliveryScreen: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => DeliveryScreen(),
         settings: data,
       );
     },

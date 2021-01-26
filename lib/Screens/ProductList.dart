@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:math';
 import 'package:lilly_app/main.dart';
-
 import 'ProductDetails.dart';
 
 FirebaseStorage storage = FirebaseStorage.instance;
@@ -63,7 +62,6 @@ class _ProductListState extends State<ProductList> {
           });
         });
       });
-
   }
   RangeValues _currentRangeValues = const RangeValues(0, 10000);
 
