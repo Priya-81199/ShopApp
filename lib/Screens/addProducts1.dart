@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:lilly_app/mockData.dart';
 import 'package:file_picker/file_picker.dart';
@@ -13,7 +12,7 @@ class AddProductsDetails extends StatefulWidget {
 
 class _AddProductsDetailsState extends State<AddProductsDetails> {
 
-  var category_default = 'category 1';
+  var category_default = 'Gents';
   var subcategory_default = 'subcategory 1';
 
   var productName = '';
@@ -33,6 +32,8 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
   List<bool> imagesSelected = [];
 
   var sizeCountValues = ['0', '0', '0', '0', '0', '0', '0', '0'];
+  var ageCountValues = ['0', '0', '0', '0', '0', '0', '0'];
+  var numberCountValues = ['0', '0', '0', '0', '0', '0', '0','0', '0', '0', '0', '0', '0', '0','0', '0'];
 
   void getImages() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
@@ -210,7 +211,7 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
     var sizeNames = ['4XS', '3XS', '2XS', 'XS', 'S', 'M', 'L', 'XL'];
     List<Widget> sizeCounts = [];
     sizeCounts.add(SizedBox(width: 30));
-    for(var i=0; i<8; i++) {
+    for(var i=0; i<sizeNames.length; i++) {
       sizeCounts.add(
         Container(
           width: 30,
@@ -228,6 +229,60 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
         )
       );
       sizeCounts.add(SizedBox(width: 30));
+    }
+
+    var ageNames = ['0-1', '2-3', '4-5', '6-7', '8-9', '10-11', '12-13'];
+    List<Widget> ageCounts = [];
+    ageCounts.add(SizedBox(width: 30));
+    for(var i=0; i<ageNames.length; i++) {
+      ageCounts.add(
+          Container(
+            width: 30,
+            child: TextFormField(
+              initialValue: '${ageCountValues[i]}',
+              decoration: InputDecoration(
+                labelText: ageNames[i],
+              ),
+              onChanged: (text) {
+                setState(() {
+                  ageCountValues[i]=text;
+                });
+              },
+            ),
+          )
+      );
+      ageCounts.add(SizedBox(width: 30));
+    }
+
+    var numberNames = ['12', '14', '16', '18', '20', '22', '24','26','28','30','32','34',
+      '36', '38', '40', '42'];
+    List<Widget> numberCounts = [];
+    numberCounts.add(SizedBox(width: 30));
+    for(var i=0; i<numberNames.length; i++) {
+      numberCounts.add(
+          Container(
+            width: 30,
+            child: TextFormField(
+              initialValue: '${numberCountValues[i]}',
+              decoration: InputDecoration(
+                labelText: numberNames[i],
+              ),
+              onChanged: (text) {
+                setState(() {
+                  numberCountValues[i]=text;
+                });
+              },
+            ),
+          )
+      );
+      numberCounts.add(SizedBox(width: 30));
+    }
+
+    String getSizeCategory(){
+      for(var i=0 ; i<subcategories.length;i++){
+        if(subcategories[i]['name'] == subcategory_default)
+          return subcategories[i]['size_category'];
+      }
     }
 
     return MaterialApp(
@@ -326,9 +381,10 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
                 Column(
                   children: propertiesPresent,
                 ),
-                SizedBox(height: 30),
+                ('size'== getSizeCategory())?
                 Column(
                   children: [
+                    SizedBox(height: 30),
                     Text('Sizes Count',style: TextStyle(fontWeight: FontWeight.bold),),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -338,7 +394,38 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
                       ),
                     ),
                   ],
-                ),
+                ):
+                Container(),
+                ('age'== getSizeCategory())?
+                Column(
+                  children: [
+                    SizedBox(height: 30),
+                    Text('Age',style: TextStyle(fontWeight: FontWeight.bold),),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: ageCounts,
+                      ),
+                    ),
+                  ],
+                ):
+                    Container(),
+                ('number'== getSizeCategory())?
+                Column(
+                  children: [
+                    SizedBox(height: 30),
+                    Text('Number',style: TextStyle(fontWeight: FontWeight.bold),),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: numberCounts,
+                      ),
+                    ),
+                  ],
+                ):
+                    Container(),
                 SizedBox(height: 30),
                 Column(
                   children: [
@@ -424,6 +511,8 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
                       'properties': finalProperties,
                       'points': final_Points,
                       'sizeCounts': sizeCountValues,
+                      'ageCounts': ageCountValues,
+                      'numberCounts': numberCountValues,
                       'images': final_images,
                     };
                     print(productDetails);

@@ -18,6 +18,7 @@ import '../Screens/login.dart';
 import '../Screens/register.dart';
 import '../Screens/welcome.dart';
 import '../firebase_storage/storage_view.dart';
+import '../payment_gateway/pay.dart';
 import '../startup/startup_view.dart';
 
 class Routes {
@@ -29,8 +30,9 @@ class Routes {
   static const String productDetails = '/product-details';
   static const String welcomeScreen = '/welcome-screen';
   static const String registrationScreen = '/registration-screen';
-  static const String homePage = '/';
+  static const String homePage = '/home-page';
   static const String deliveryScreen = '/delivery-screen';
+  static const String razorPayWeb = '/';
   static const all = <String>{
     startupView,
     storageView,
@@ -42,6 +44,7 @@ class Routes {
     registrationScreen,
     homePage,
     deliveryScreen,
+    razorPayWeb,
   };
 }
 
@@ -59,6 +62,7 @@ class Router extends RouterBase {
     RouteDef(Routes.registrationScreen, page: RegistrationScreen),
     RouteDef(Routes.homePage, page: homePage),
     RouteDef(Routes.deliveryScreen, page: DeliveryScreen),
+    RouteDef(Routes.razorPayWeb, page: RazorPayWeb),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -122,6 +126,12 @@ class Router extends RouterBase {
     DeliveryScreen: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => DeliveryScreen(),
+        settings: data,
+      );
+    },
+    RazorPayWeb: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => RazorPayWeb(),
         settings: data,
       );
     },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/Screens/ProductDetails.dart';
 import 'package:lilly_app/Screens/homePage.dart';
 import 'package:lilly_app/Screens/rounded_button.dart';
@@ -102,7 +103,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             User user1 = FirebaseAuth.instance.currentUser;
 
                             if (user != null && user1.emailVerified) {
-                              isUserSet=true;
+                              //isUserSet=true;
+                              var session = FlutterSession();
+                              await session.set("isUserSet", true);
                               Navigator.push(
                                   context, new MaterialPageRoute(builder: (BuildContext context) => new homePage())
                               );

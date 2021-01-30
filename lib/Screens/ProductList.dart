@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/mockData.dart'; //
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -42,32 +43,35 @@ class _ProductListState extends State<ProductList> {
   bool image_set=false;
   var subcategory;
   @override
-  void initState() {
+  void initState(){
     super.initState();
     subcategory = widget.subcategory;
-    final db = FirebaseFirestore.instance;
+    print(subcategory);
 
-      db.collection('productDetails').get().then((value) {
-        var len = value.docs.length;
-        value.docs.forEach((result) {
-
-          storage.ref('product_images/' + result.data()['images'][0]).getDownloadURL().then((value) {
-            productsDetails.add(result.data());
-            urls.add(value);
-            if(len==urls.length){
-              setState(() {
-                image_set=true;
-              });
-            }
+    getData().then((value) => value.forEach((result) {
+      var len = value.length;
+      storage.ref('product_images/' + result['images'][0]).getDownloadURL().then((value) {
+        productsDetails.add(result);
+        urls.add(value);
+        if(len==urls.length){
+          setState(() {
+            image_set=true;
           });
-        });
+        }
       });
+    }));
   }
   RangeValues _currentRangeValues = const RangeValues(0, 10000);
 
+  Future<List<dynamic>> getData() async {
+    var session = FlutterSession();
+    var productsDetail = await session.get("prod_details");
+    return productsDetail['productDetails'];
+  }
+
   @override
   Widget build(BuildContext context) {
-    //print(isUserSet);
+
     var filters = <Widget>[];
 
     for (var i = 0; i < properties.length; i++) {
@@ -135,18 +139,6 @@ class _ProductListState extends State<ProductList> {
       }
       return flag;
     }
-
-    Future<String> getURL(String img_name) async{
-      print("Inside the Storage Service");
-
-
-
-      final ref = storage.ref().child('dress4_2.jpeg');
-
-      return await ref.getDownloadURL();
-
-    }
-
 
 
     getProductCard(dynamic product,String url) {
@@ -216,7 +208,6 @@ class _ProductListState extends State<ProductList> {
     //var subcategory = 'subcategory 1';
     var displayProducts = <Widget>[];
     //var x=1;
-    //print(productsDetails.length);
     //print(productsDetails[0]['price']);
     for(var i=0; i < productsDetails.length ; i++) //TODO : change products to productsDetails(Firebase)
     {
@@ -224,7 +215,7 @@ class _ProductListState extends State<ProductList> {
       price = int.parse(price);
       if( price < _currentRangeValues.start || price > _currentRangeValues.end)
         continue;
-        if(productsDetails[i]['subcategory'] != subcategory)
+      if(productsDetails[i]['subcategory'] != subcategory)
         continue;
       var flag=true;
       var product = productsDetails[i];

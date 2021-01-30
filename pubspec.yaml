@@ -35,7 +35,8 @@ dependencies:
   file_picker: ^2.1.4
   image: ^2.1.19
   flutter_session: ^0.1.1
-
+  whatsapp_unilink: ^1.0.0+1
+  url_launcher: ^5.7.10
 
   #state management
   stacked : ^1.2.2
@@ -52,6 +53,7 @@ dependencies:
   injectable:
 
   path_provider: ^1.6.24
+
 
 
 dev_dependencies:

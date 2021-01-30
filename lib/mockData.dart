@@ -1,115 +1,86 @@
 
-
-
 List<Map<String, dynamic>> categories = [
   {
-    'name': 'category 1',
+    'name': 'Gents',
     'image': 'category1.jpg',
   },
   {
-    'name': 'category 2',
+    'name': 'Ladies',
     'image': 'category2.jpg',
   },
   {
-    'name': 'category 3',
+    'name': 'Kids',
     'image': 'category3.jpg',
   },
   {
-    'name': 'category 4',
+    'name': 'Accessories',
     'image': 'category4.jpg',
-  },
-  {
-    'name': 'category 5',
-    'image': 'category5.jpg',
   },
 ];
 
 List<Map<String, dynamic>> subcategories = [
   {
-    'category': 'category 1',
+    'category': 'Gents',
     'name': 'subcategory 1',
     'image': 'subcategory1.jpg',
+    'size_category' : 'size',
   },
   {
-    'category': 'category 1',
+    'category': 'Gents',
     'name': 'subcategory 2',
     'image': 'subcategory2.jpg',
+    'size_category' : 'number',
   },
   {
-    'category': 'category 1',
+    'category': 'Gents',
     'name': 'subcategory 3',
     'image': 'subcategory3.jpg',
+    'size_category' : 'number',
   },
   {
-    'category': 'category 2',
-    'name': 'subcategory 4',
+    'category': 'Ladies',
+    'name': 'Kurtis',
     'image': 'subcategory4.jpg',
+    'size_category' : 'number',
   },
   {
-    'category': 'category 2',
-    'name': 'subcategory 5',
+    'category': 'Ladies',
+    'name': 'Dress',
     'image': 'subcategory5.jpg',
+    'size_category' : 'size',
   },
+
   {
-    'category': 'category 2',
-    'name': 'subcategory 6',
-    'image': 'subcategory6.jpg',
-  },
-  {
-    'category': 'category 2',
-    'name': 'subcategory 7',
-    'image': 'subcategory7.jpg',
-  },
-  {
-    'category': 'category 3',
-    'name': 'subcategory 8',
+    'category': 'Kids',
+    'name': 'Girls',
     'image': 'subcategory8.jpg',
+    'size_category' : 'age',
   },
   {
-    'category': 'category 3',
-    'name': 'subcategory 9',
+    'category': 'Kids',
+    'name': 'Boys',
     'image': 'subcategory9.jpg',
+    'size_category' : 'age',
   },
   {
-    'category': 'category 4',
-    'name': 'subcategory 10',
+    'category': 'Accessories',
+    'name': 'Lingerie',
     'image': 'subcategory10.jpg',
+    'size_category' : 'number',
   },
   {
-    'category': 'category 4',
-    'name': 'subcategory 11',
+    'category': 'Accessories',
+    'name': 'Undergarments',
     'image': 'subcategory11.jpg',
+    'size_category' : 'number',
   },
   {
-    'category': 'category 4',
-    'name': 'subcategory 12',
+    'category': 'Accessories',
+    'name': 'Night Wear',
     'image': 'subcategory12.jpg',
+    'size_category' : 'number',
   },
-  {
-    'category': 'category 4',
-    'name': 'subcategory 13',
-    'image': 'subcategory13.jpg',
-  },
-  {
-    'category': 'category 4',
-    'name': 'subcategory 14',
-    'image': 'subcategory14.jpg',
-  },
-  {
-    'category': 'category 5',
-    'name': 'subcategory 15',
-    'image': 'subcategory15.jpg',
-  },
-  {
-    'category': 'category 5',
-    'name': 'subcategory 16',
-    'image': 'subcategory16.jpg',
-  },
-  {
-    'category': 'category 5',
-    'name': 'subcategory 17',
-    'image': 'subcategory17.jpg',
-  },
+
 ];
 
 List<Map<String, dynamic>> properties = [

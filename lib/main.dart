@@ -11,16 +11,52 @@
 // import 'package:lilly_app/Screens/welcome.dart';
 // import 'package:lilly_app/Screens/login.dart';
 // import 'package:lilly_app/Screens/register.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lilly_app/app/locator.dart';
 import 'package:lilly_app/app/route.gr.dart' as rg;
+import 'package:lilly_app/mockData.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:flutter_session/flutter_session.dart';
 
+FirebaseStorage storage = FirebaseStorage.instance;
 bool isUserSet = false;
 
+
+class Data {
+  final List<dynamic> productDetails;
+  Data({this.productDetails,});
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data["productDetails"] = productDetails;
+    return data;
+  }
+}
+
+Future<List<dynamic>> getProductsDetails()  async{
+  print("here");
+  final db = FirebaseFirestore.instance;
+  List<dynamic> productsDetails=[];
+  await db.collection('productDetails').get().then((value) {
+    value.docs.forEach((result) {
+        productsDetails.add(result.data());
+    });
+  });
+  return productsDetails;
+}
+
 void main() async{
+  var session = FlutterSession();
+  bool isUserSet = await session.get("isUserSet");
+  if(isUserSet != false && isUserSet != true)
+    await session.set("isUserSet", false);
+  // var prod_session = await session.get('prod_details');
+  // if(prod_session==null)
+    session.set("prod_details", Data(productDetails:await getProductsDetails()));
+
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

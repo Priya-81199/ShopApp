@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:lilly_app/Screens/welcome.dart';
 import 'package:lilly_app/main.dart';
+import '../mockData.dart';
 import 'delivery_screen.dart';
 
 FirebaseStorage storage = FirebaseStorage.instance;
@@ -32,6 +33,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   void initState() {
     super.initState();
     products = widget.product;
+    print(products);
     for (var i = 0; i < products['images'].length; i++) {
       storage.ref('product_images/' + products['images'][i])
           .getDownloadURL()
@@ -51,7 +53,12 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
     //print(products);
-
+    String getSizeCategory(String subcategory){
+      for(var i=0 ; i<subcategories.length;i++){
+        if(subcategories[i]['name'] == subcategory)
+          return subcategories[i]['size_category'];
+      }
+    }
     var image;
     if(urls.length > selectedImageIndex)
       image = urls[selectedImageIndex];
@@ -64,10 +71,19 @@ class _ProductDetailsState extends State<ProductDetails> {
     var productPrice = products['price'];
     var productAddPoints = products['points'];
     //String addDetails = '';
-    var sizes = products['sizeCounts'];
-    List<bool> availableSizes = [false,false,false,false,false,false,false,false];
+    var sizes = (getSizeCategory(products['subcategory']) == 'size') ?
+      products['sizeCounts']:
+      (getSizeCategory(products['subcategory']) == 'age') ?
+        products['ageCounts']:
+        products['numberCounts'];
+    List<bool> availableSizes = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
     List<Widget> sizeWidgets = [];
-    List<String> sizeNames = ['4XS','3XS','2XS','XS','S','M','L','XL'];
+
+    List<String> sizeNames = (getSizeCategory(products['subcategory']) == 'size') ?
+      ['4XS','3XS','2XS','XS','S','M','L','XL']:
+      (getSizeCategory(products['subcategory']) == 'age') ?
+        ['0-1','2-3','4-5','6-7','8-9','10-11','12-13']:
+        ['12', '14', '16','18', '20', '22','24', '26', '28','30', '32', '34','36', '38', '40','42'];
 
     // for(int i = 0; i < productAddPoints.length;i++){
     //   addDetails = addDetails + productAddPoints[i];
@@ -83,7 +99,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       SizedBox(width: 10),
     );
 
-    for(var i=0; i<availableSizes.length; i++) {
+    for(var i=0; i<sizeNames.length; i++) {
       if(availableSizes[i]) {
         sizeWidgets.add(
             GestureDetector(

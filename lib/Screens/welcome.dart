@@ -3,6 +3,9 @@ import 'package:lilly_app/Screens/rounded_button.dart';
 import 'package:lilly_app/Screens/login.dart';
 import 'package:lilly_app/Screens/register.dart';
 import 'package:lilly_app/app/route.gr.dart';
+import 'package:whatsapp_unilink/whatsapp_unilink.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
@@ -99,8 +102,23 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         ),
 
       ),
-
+    floatingActionButton: FloatingActionButton(
+      child: Icon(
+        Icons.message_rounded
+      ),
+      onPressed: launchWhatsApp,
+    ),
     );
+  }
+  launchWhatsApp() async {
+    final link = WhatsAppUnilink(
+      phoneNumber: '+91-9699893233',
+      text: "Hey!",
+    );
+    // Convert the WhatsAppUnilink instance to a string.
+    // Use either Dart's string interpolation or the toString() method.
+    // The "launch" method is part of "url_launcher".
+    await launch('$link');
   }
 }
 

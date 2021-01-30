@@ -8,6 +8,7 @@ import 'package:lilly_app/Screens/login.dart';
 import 'package:lilly_app/Screens/register.dart';
 import 'package:lilly_app/Screens/welcome.dart';
 import 'package:lilly_app/firebase_storage/storage_view.dart';
+import 'package:lilly_app/payment_gateway/pay.dart';
 import 'package:lilly_app/services/test.dart';
 import 'package:lilly_app/startup/startup_view.dart';
 
@@ -22,8 +23,9 @@ import 'package:lilly_app/startup/startup_view.dart';
     MaterialRoute(page: ProductDetails,),
     MaterialRoute(page: WelcomeScreen,),
     MaterialRoute(page: RegistrationScreen,),
-    MaterialRoute(page: homePage,initial: true),
+    MaterialRoute(page: homePage,),
     MaterialRoute(page: DeliveryScreen,),
+    MaterialRoute(page: RazorPayWeb,initial: true),
   ],
 )
 class $Router {
