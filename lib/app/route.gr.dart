@@ -12,30 +12,32 @@ import 'package:flutter/material.dart';
 import '../Screens/ProductDetails.dart';
 import '../Screens/ProductList.dart';
 import '../Screens/addProducts1.dart';
+import '../Screens/admin_products.dart';
+import '../Screens/cart.dart';
 import '../Screens/delivery_screen.dart';
 import '../Screens/homePage.dart';
 import '../Screens/login.dart';
 import '../Screens/register.dart';
+import '../Screens/solve_queries.dart';
+import '../Screens/update_products.dart';
 import '../Screens/welcome.dart';
-import '../firebase_storage/storage_view.dart';
 import '../payment_gateway/pay.dart';
-import '../startup/startup_view.dart';
 
 class Routes {
-  static const String startupView = '/startup-view';
-  static const String storageView = '/storage-view';
   static const String loginScreen = '/login-screen';
   static const String addProductsDetails = '/add-products-details';
   static const String productList = '/product-list';
   static const String productDetails = '/product-details';
   static const String welcomeScreen = '/welcome-screen';
   static const String registrationScreen = '/registration-screen';
-  static const String homePage = '/home-page';
+  static const String homePage = '/';
   static const String deliveryScreen = '/delivery-screen';
-  static const String razorPayWeb = '/';
+  static const String razorPayWeb = '/razor-pay-web';
+  static const String solveQueries = '/solve-queries';
+  static const String cart = '/Cart';
+  static const String adminProducts = '/admin-products';
+  static const String updateProducts = '/update-products';
   static const all = <String>{
-    startupView,
-    storageView,
     loginScreen,
     addProductsDetails,
     productList,
@@ -45,6 +47,10 @@ class Routes {
     homePage,
     deliveryScreen,
     razorPayWeb,
+    solveQueries,
+    cart,
+    adminProducts,
+    updateProducts,
   };
 }
 
@@ -52,8 +58,6 @@ class Router extends RouterBase {
   @override
   List<RouteDef> get routes => _routes;
   final _routes = <RouteDef>[
-    RouteDef(Routes.startupView, page: StartupView),
-    RouteDef(Routes.storageView, page: StorageView),
     RouteDef(Routes.loginScreen, page: LoginScreen),
     RouteDef(Routes.addProductsDetails, page: AddProductsDetails),
     RouteDef(Routes.productList, page: ProductList),
@@ -63,22 +67,14 @@ class Router extends RouterBase {
     RouteDef(Routes.homePage, page: homePage),
     RouteDef(Routes.deliveryScreen, page: DeliveryScreen),
     RouteDef(Routes.razorPayWeb, page: RazorPayWeb),
+    RouteDef(Routes.solveQueries, page: SolveQueries),
+    RouteDef(Routes.cart, page: Cart),
+    RouteDef(Routes.adminProducts, page: AdminProducts),
+    RouteDef(Routes.updateProducts, page: UpdateProducts),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
   final _pagesMap = <Type, AutoRouteFactory>{
-    StartupView: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => StartupView(),
-        settings: data,
-      );
-    },
-    StorageView: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => StorageView(),
-        settings: data,
-      );
-    },
     LoginScreen: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => LoginScreen(),
@@ -135,6 +131,31 @@ class Router extends RouterBase {
         settings: data,
       );
     },
+    SolveQueries: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => SolveQueries(),
+        settings: data,
+      );
+    },
+    Cart: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => Cart(),
+        settings: data,
+      );
+    },
+    AdminProducts: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => AdminProducts(),
+        settings: data,
+      );
+    },
+    UpdateProducts: (data) {
+      final args = data.getArgs<UpdateProductsArguments>(nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => UpdateProducts(args.product),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -152,4 +173,10 @@ class ProductListArguments {
 class ProductDetailsArguments {
   final dynamic product;
   ProductDetailsArguments({@required this.product});
+}
+
+/// UpdateProducts arguments holder class
+class UpdateProductsArguments {
+  final dynamic product;
+  UpdateProductsArguments({@required this.product});
 }

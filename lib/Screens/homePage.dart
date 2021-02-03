@@ -1,8 +1,10 @@
 import 'dart:ui';
+import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lilly_app/Screens/Components.dart';
+import 'package:lilly_app/app/route.gr.dart';
 import 'package:lilly_app/mockData.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lilly_app/Screens/ProductDetails.dart';
@@ -12,16 +14,15 @@ import 'package:lilly_app/Screens/ProductList.dart';
 import 'package:lilly_app/main.dart';
 import 'login.dart';
 import 'package:intl/intl.dart';
-
+import 'package:carousel_slider/carousel_slider.dart';
 
 class homePage extends StatefulWidget {
-
   static const String id = "homePage";
   @override
   _homePageState createState() => _homePageState();
 }
-final _firestore = FirebaseFirestore.instance;
 
+final _firestore = FirebaseFirestore.instance;
 
 class _homePageState extends State<homePage> {
   final messageTextController = TextEditingController();
@@ -38,44 +39,33 @@ class _homePageState extends State<homePage> {
   }
 
   void getCurrentUser() async {
-    try{
+    try {
       final user = await _auth.currentUser;
-      if(user != null){
+      if (user != null) {
         loggedInUser = user;
-        print(loggedInUser.email);
-      } }
-    catch(e){
+      }
+    } catch (e) {
       print(e);
     }
   }
 
-  void messageStream() async {
-    await for(var snapshot in _firestore.collection('messages').snapshots()){
-      for (var message in snapshot.docs){
-        print(message.data());
-      }
-    }
-  }
   List<Map<dynamic, dynamic>> products = [];
 
-
-  void getData(String collection) async{
+  void getData(String collection) async {
     await _firestore.collection(collection).get().then((value) {
       value.docs.forEach((result) {
-        if(collection == 'products')
-          products.add(result.data());
+        if (collection == 'products') products.add(result.data());
       });
     });
-
   }
-  _homePageState(){
+
+  _homePageState() {
     getData('products');
   }
 
-  var selectedCategory = 'Gents';
+  var selectedCategory = 'Kids';
   @override
   Widget build(BuildContext context) {
-
     //isUserSet = (isUserSet)? isUserSet :false;
     var category = <Widget>[];
     categories.sort((a, b) => a['name'].compareTo(b['name']));
@@ -88,28 +78,26 @@ class _homePageState extends State<homePage> {
       Colors.black.withOpacity(0.5),
     ];
     var colour3 = [];
-    category.add(
-      SizedBox(width: 5),
-    );
+    // category.add(
+    //   SizedBox(width: 5),
+    // );
     for (var i = 0; i < categories.length; i++) {
-      if(categories[i]['name']==selectedCategory) {
-        colour3=colour1;
-      }
-      else {
-        colour3=colour2;
+      if (categories[i]['name'] == selectedCategory) {
+        colour3 = colour1;
+      } else {
+        colour3 = colour2;
       }
 
-      category.add(
-        SizedBox(width: 5),
-      );
+      // category.add(
+      //   SizedBox(width: 5),
+      // );
       category.add(
         GestureDetector(
           onTap: () {
-              setState(() {
-                selectedCategory = categories[i]['name'];
-              });
-              },
-
+            setState(() {
+              selectedCategory = categories[i]['name'];
+            });
+          },
           child: Stack(
             children: <Widget>[
               Container(
@@ -119,7 +107,7 @@ class _homePageState extends State<homePage> {
                 ),
               ),
               Container(
-                width: 120,
+                width: 250,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5.0),
                   color: Colors.white,
@@ -127,10 +115,7 @@ class _homePageState extends State<homePage> {
                     begin: FractionalOffset.topCenter,
                     end: FractionalOffset.bottomCenter,
                     colors: colour3,
-                    stops: [
-                      0.0,
-                      1.0
-                    ],
+                    stops: [0.0, 1.0],
                   ),
                 ),
               ),
@@ -138,33 +123,33 @@ class _homePageState extends State<homePage> {
           ),
         ),
       );
-      category.add(
-          SizedBox(width: 5),
-      );
+      // category.add(
+      //     SizedBox(width: 5),
+      // );
     }
-    category.add(
-      SizedBox(width: 5),
-    );
-
+    // category.add(
+    //   SizedBox(width: 5),
+    // );
 
     var subcategory = <Widget>[];
     subcategory.add(
       SizedBox(width: 5),
     );
-    //print(subcategories);
     for (var i = 0; i < subcategories.length; i++) {
-      //print(subcategories[i]);
-      if(subcategories[i]['category'] == selectedCategory) {
+      if (subcategories[i]['category'] == selectedCategory) {
         subcategory.add(
           SizedBox(width: 5),
         );
         subcategory.add(
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context, new MaterialPageRoute(builder: (BuildContext context) => new ProductList(subcategories[i]['name']))
-              );
-              //print(subcategories[i]['name']);//TODO:route to productList with these params
+              //subcategories[i]['name']
+              // Navigator.push(
+              //     context, new MaterialPageRoute(builder: (BuildContext context) => new ProductList(subcategories[i]['name']))
+              // );
+              ExtendedNavigator.of(context).push(Routes.productList,
+                  arguments: ProductListArguments(
+                      subcategory: subcategories[i]['name']));
             },
             child: Container(
               child: ClipRRect(
@@ -183,25 +168,22 @@ class _homePageState extends State<homePage> {
       SizedBox(width: 5),
     );
 
-
     var product = <Widget>[];
     products.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
     product.add(
       SizedBox(width: 5),
     );
-    for (var i = 0; i < min(20,products.length); i++) {
+    for (var i = 0; i < min(20, products.length); i++) {
       product.add(
         SizedBox(width: 5),
       );
       product.add(
         GestureDetector(
-          onTap: () {
-            //print(products[i]['name']);
-          },
+          onTap: () {},
           child: Container(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(5.0),
-              child: Image.asset('images/' + products[i]['images'][0]['image']),
+              child: Image.asset('images/' + products[i]['images'][0]),
             ),
           ),
         ),
@@ -218,42 +200,7 @@ class _homePageState extends State<homePage> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Color(0xf6f5f5),
-        appBar: AppBar(
-          backgroundColor: Color.fromRGBO(39,102,120 ,1),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Lilly',
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Container(
-                child: FutureBuilder(
-                  future: FlutterSession().get('isUserSet'),
-                  builder: (context, snapshot) {
-                    return FlatButton(
-                        child: Text( snapshot.hasData ? (snapshot.data ? 'Logout':'Login'):'Loading'),
-
-                        onPressed: (){
-                          isUserSet?
-                          FirebaseAuth.instance.signOut()
-                          //isUserSet = false
-                          :
-                          Navigator.push(
-                          context, new MaterialPageRoute(builder: (BuildContext context) => new LoginScreen())
-                    );
-
-                  },
-                );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+        appBar: buildAppBar(context),
         body: Stack(
           children: [
             SafeArea(
@@ -281,39 +228,43 @@ class _homePageState extends State<homePage> {
                     //   ],
                     // ),
                     SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
                     Text(
                       'Categories',
                       style: TextStyle(
+                        fontFamily: 'Lobster',
                         fontSize: 30,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 20.0),
-                      height: 120.0,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-
-                          children: category,
+                      height: 500.0,
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          autoPlay: true,
+                          aspectRatio: 2.0,
+                          enlargeCenterPage: true,
+                          autoPlayAnimationDuration: Duration(seconds: 1),
                         ),
+                        items: category,
                       ),
                     ),
                     SizedBox(
-                      height: 5,
+                      height: 20,
                     ),
                     Text(
                       'Sub Categories',
                       style: TextStyle(
+                        fontFamily: 'Lobster',
                         fontSize: 30,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 20.0),
-                      height: 120.0,
+                      height: 300.0,
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
@@ -327,6 +278,7 @@ class _homePageState extends State<homePage> {
                     Text(
                       'New Arivals',
                       style: TextStyle(
+                        fontFamily: 'Lobster',
                         fontSize: 30,
                         fontWeight: FontWeight.w700,
                       ),
@@ -346,145 +298,192 @@ class _homePageState extends State<homePage> {
                 ),
               ),
             ),
-            chat ? Positioned(
-              top:140,
-              right: 80,
-              child: Container(
-                //width: ,
-                constraints: BoxConstraints(
-                  maxHeight:500,
-                  maxWidth: 500,
-                ),
-                decoration: BoxDecoration(
-                boxShadow: [
-                    BoxShadow(
-                    color: Colors.blueGrey,
-                    offset: Offset(1.0, 1.0),
-                    blurRadius: 20.0,
-                    ),
-                    ],
-                    color: Color.fromRGBO(39,102,120 ,1),
-                    borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(30),
-                    topLeft: Radius.circular(30),
-                    bottomLeft:Radius.circular(30)
-                  )
-
-                ),
-                child:Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    StreamBuilder<QuerySnapshot>(
-                      stream: _firestore.collection('messages').orderBy('Timestamp').snapshots(),
-                      builder: (context , snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              backgroundColor: Colors.lightBlueAccent,
+            chat
+                ? Positioned(
+                    bottom: 90,
+                    right: 20,
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxHeight: 500,
+                        maxWidth: 300,
+                      ),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.blueGrey,
+                              offset: Offset(1.0, 1.0),
+                              blurRadius: 20.0,
                             ),
-                          );
-                        }
-                        final messages = snapshot.data.docs.reversed;
-                        List<MessageBubble> messageBubbles = [];
-                        for (var message in messages) {
-                          final messageText = message.get('text');
-                          final messageSender = message.get('sender');
-                          final currenUser = loggedInUser.email;
-
-
-                          final messageBubble = MessageBubble(sender: messageSender, text: messageText,isMe: currenUser==messageSender,);
-
-                          messageBubbles.add(messageBubble);
-                        }
-                        return Expanded(
-                          child: ListView(
-                            reverse: true,
-                            padding: EdgeInsets.symmetric(horizontal: 10.0 , vertical: 20.0),
-                            children: messageBubbles,
-                          ),
-                        );
-
-                      },
-                    ),
-
-                    Container(
-                      decoration: kMessageContainerDecoration,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                          ],
+                          color: Color.fromRGBO(39, 102, 120, 1),
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(30),
+                              topLeft: Radius.circular(30),
+                              bottomLeft: Radius.circular(30))),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: messageTextController,
-                              onChanged: (value) {
-                                //Do something with the user input.
-                                messageText = value;
-                              },
-                              decoration: kMessageTextFieldDecoration,
-                            ),
-                          ),
-                          FlatButton(
-                            onPressed: () {
-                              //Implement send functionality.
-                              messageTextController.clear();
-                              var now = DateTime.now();
-                              String date = '${now.day.toString()}/${now.month.toString()}';
-                              String time = '${DateFormat.jm().format(now).toString()}';
+                          StreamBuilder<QuerySnapshot>(
+                            stream: _firestore
+                                .collection('chat_messages')
+                                .orderBy('Timestamp')
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    backgroundColor: Colors.lightBlueAccent,
+                                  ),
+                                );
+                              }
+                              final messages = snapshot.data.docs.reversed;
+                              List<MessageBubble> messageBubbles = [];
+                              for (var message in messages) {
+                                final messageText = message.get('text');
+                                final messageSender = message.get('sender');
+                                final currenUser = loggedInUser.email;
 
-                              _firestore.collection('chat_messages').add({
-                                'text': messageText,
-                                'sender': loggedInUser.email,
-                                'date': date,
-                                'time': time,
-                                'Timestamp': FieldValue.serverTimestamp(),
-                              });
+                                final messageBubble = MessageBubble(
+                                  sender: '',
+                                  text: messageText,
+                                  isMe: currenUser == messageSender,
+                                );
 
+                                if (currenUser == messageSender ||
+                                    messageSender == adminEmail) {
+                                  if (messageSender == adminEmail) {
+                                    final messageReceiver =
+                                        message.get('receiver');
+                                    if (messageReceiver != currenUser) continue;
+                                  }
+                                  messageBubbles.add(messageBubble);
+                                }
+                              }
+                              return Expanded(
+                                child: ListView(
+                                  reverse: true,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 20.0),
+                                  children: messageBubbles,
+                                ),
+                              );
                             },
-                            child: Text(
-                              'Send',
-                              style: kSendButtonTextStyle,
+                          ),
+                          Container(
+                            decoration: kMessageContainerDecoration,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Expanded(
+                                  child: TextField(
+                                    controller: messageTextController,
+                                    onChanged: (value) {
+                                      //Do something with the user input.
+                                      messageText = value;
+                                    },
+                                    decoration: kMessageTextFieldDecoration,
+                                  ),
+                                ),
+                                FlatButton(
+                                  onPressed: () {
+                                    //Implement send functionality.
+                                    messageTextController.clear();
+                                    var now = DateTime.now();
+                                    String date =
+                                        '${now.day.toString()}/${now.month.toString()}';
+                                    String time =
+                                        '${DateFormat.jm().format(now).toString()}';
+
+                                    _firestore.collection('chat_messages').add({
+                                      'text': messageText,
+                                      'sender': loggedInUser.email,
+                                      'date': date,
+                                      'time': time,
+                                      'Timestamp': FieldValue.serverTimestamp(),
+                                    });
+
+                                    sendToAdmin();
+                                  },
+                                  child: Icon(
+                                    Icons.send,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ):
-                Container()
+                  )
+                : Container()
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Color.fromRGBO(39,102,120 ,1),
-          child: Icon(
-            Icons.chat,
-          ),
-          elevation: 10,
-          onPressed: (){
-            setState(() {
-              chatScreen();
-            });
-
-          },
-        ),
+        floatingActionButton: FutureBuilder(
+            future: FlutterSession().get('isUserSet'),
+            builder: (context, snapshot) {
+              return snapshot.hasData && snapshot.data
+                  ? Container(
+                      height: 60.0,
+                      width: 60.0,
+                      child: FloatingActionButton(
+                        backgroundColor: Color.fromRGBO(39, 102, 120, 1),
+                        child: Icon(
+                          Icons.chat,
+                        ),
+                        elevation: 10,
+                        onPressed: () {
+                          setState(() {
+                            chatScreen();
+                          });
+                        },
+                      ),
+                    )
+                  : Container();
+            }),
       ),
     );
   }
+
   bool chat = false;
-  void chatScreen(){
-    if(chat)
-      chat = false;
-    else
-      chat = true;
+  void chatScreen() {
+    setState(() {
+      chat = !chat;
+    });
   }
 
-
+  void sendToAdmin() async {
+    bool flag;
+    var username = loggedInUser.email;
+    var Timestamp = FieldValue.serverTimestamp();
+    await _firestore.collection('active_queries').get().then((value) => {
+          flag = true,
+          value.docs.forEach((result) {
+            // print(result['username']);
+            if (result['username'] == username) {
+              print('updation');
+              _firestore
+                  .collection('active_queries')
+                  .doc(result.id)
+                  .update({'Timestamp': Timestamp});
+              flag = false;
+            }
+          }),
+          if (flag)
+            {
+              _firestore.collection('active_queries').add({
+                'username': loggedInUser.email,
+                'Timestamp': Timestamp,
+              })
+            }
+        });
+    return;
+  }
 }
 
 class MessageBubble extends StatelessWidget {
-
-  MessageBubble({this.sender,this.text , this.isMe});
+  MessageBubble({this.sender, this.text, this.isMe});
 
   final String sender;
   final String text;
@@ -495,29 +494,34 @@ class MessageBubble extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Column(
-        crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment:
+            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Text(
             sender,
             style: TextStyle(
-                fontSize: 12.0,
-                color: Colors.black54
-            ),
+                fontFamily: 'Lobster', fontSize: 12.0, color: Colors.black54),
           ),
           Material(
-            borderRadius: isMe?BorderRadius.only(topLeft: Radius.circular(30),bottomLeft: Radius.circular(30),bottomRight: Radius.circular(30)):
-            BorderRadius.only(topRight: Radius.circular(30),bottomLeft: Radius.circular(30),bottomRight: Radius.circular(30)),
+            borderRadius: isMe
+                ? BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30))
+                : BorderRadius.only(
+                    topRight: Radius.circular(30),
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30)),
             elevation: 5.0,
-            color: isMe? Colors.lightGreen[100] : Colors.lightGreen[800],
+            color: isMe ? Colors.white : Colors.blueGrey.shade300,
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical : 10.0 , horizontal: 20.0),
-              child: Text(
-                  text,
-                  style : TextStyle(
-                    color: isMe? Colors.black: Colors.white,
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: Text(text,
+                  style: TextStyle(
+                    fontFamily: 'Lobster',
+                    color: isMe ? Colors.black : Colors.white,
                     fontSize: 15,
-                  )
-              ),
+                  )),
             ),
           ),
         ],
@@ -525,5 +529,3 @@ class MessageBubble extends StatelessWidget {
     );
   }
 }
-
-

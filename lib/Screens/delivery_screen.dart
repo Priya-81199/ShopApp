@@ -48,7 +48,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                 Text(
                     'Enter a shipping address',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Lobster',
                     fontSize: 20
                   ),
                 ),

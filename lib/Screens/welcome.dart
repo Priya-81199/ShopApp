@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:lilly_app/Screens/rounded_button.dart';
 import 'package:lilly_app/Screens/login.dart';
@@ -24,7 +25,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     super.initState();
 
     controller = AnimationController(duration: Duration(seconds: 1), vsync: this);
-    animation = ColorTween(begin: Colors.blueGrey , end: Colors.white).animate(controller);
+    animation = ColorTween(begin: Color.fromRGBO(22,135,167,1) , end: Colors.white).animate(controller);
 
     controller.forward();
 
@@ -71,8 +72,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     child:
                       Text( 'Lilly Shop',
                       style: TextStyle(
+                        fontFamily: 'Lobster',
                         fontSize: 40.0,
                         fontWeight: FontWeight.w900,
+                        color: Colors.black
                       ),
                   ),
                   ),
@@ -83,16 +86,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               ),
               Column(
                 children: [
-
                   RoundedButton(title: 'Log in',colour: Colors.indigoAccent,tag: 'login', onPressed: () {
-                    Navigator.push(
-                        context, new MaterialPageRoute(builder: (BuildContext context) => new LoginScreen())
-                    );
+                    ExtendedNavigator.of(context).push(Routes.loginScreen);
                   },),
                   RoundedButton(title: 'Register',colour: Colors.indigo, tag : 'register',onPressed: () {
-                    Navigator.push(
-                        context, new MaterialPageRoute(builder: (BuildContext context) => new RegistrationScreen())
-                    );
+                    ExtendedNavigator.of(context).push(Routes.registrationScreen);
                   },),
                 ],
               ),

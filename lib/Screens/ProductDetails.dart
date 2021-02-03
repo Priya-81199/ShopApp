@@ -1,8 +1,16 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/Screens/welcome.dart';
 import 'package:lilly_app/main.dart';
 import '../mockData.dart';
+import 'Components.dart';
+import 'package:lilly_app/app/route.gr.dart';
 import 'delivery_screen.dart';
 
 FirebaseStorage storage = FirebaseStorage.instance;
@@ -33,18 +41,18 @@ class _ProductDetailsState extends State<ProductDetails> {
   void initState() {
     super.initState();
     products = widget.product;
-    print(products);
+    //print(products);
     for (var i = 0; i < products['images'].length; i++) {
-      storage.ref('product_images/' + products['images'][i])
-          .getDownloadURL()
-          .then((value) {
-        urls.add(value);
+      // storage.ref('product_images/' + products['images'][i])
+      //     .getDownloadURL()
+      //     .then((value) {
+        urls.add(getImageURL(products['images'][i]));
         if (products['images'].length == urls.length) {
           setState(() {
             image_set = true;
           });
         }
-      });
+      // });
     }
   }
 
@@ -113,10 +121,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                     height: 40,
                     padding: EdgeInsets.all(5),
                     child: Center(
-                        child: Text(sizeNames[i])
+                        child: Text(sizeNames[i],
+                          style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        )
                     ),
                     decoration: BoxDecoration(
-                      color: (i==selectedSize)?Colors.orangeAccent:Colors.yellow,
+                      color: (i==selectedSize) ? Color.fromRGBO(22,135,167,1):Color.fromRGBO(211,224,234, 1),
                       borderRadius: BorderRadius.all(
                         Radius.circular(15),
                       ),
@@ -165,6 +177,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               Text(
                 products['properties'][i]['name'] + ': ',
                 style: TextStyle(
+                  fontFamily: 'Lobster',
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                 ),
@@ -173,6 +186,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               Text(
                 products['properties'][i]['value'],
                 style: TextStyle(
+                  fontFamily: 'Handlee',
                   fontSize: 20,
                 ),
               )
@@ -190,6 +204,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 Text(
                   products['points'][i],
                   style: TextStyle(
+                    fontFamily: 'Handlee',
                     fontSize: 20,
                   ),
                 )
@@ -200,15 +215,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     }
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Lilly',
-            style: TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
+        appBar:buildAppBar(context),
         body: LayoutBuilder(
           builder: (context, constraints) {
             var width = constraints.maxWidth;
@@ -257,12 +264,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                       padding: EdgeInsets.fromLTRB(height/50, height/25, height/50, 0),
                       alignment: Alignment.topLeft,
                       child: Column(
+                        //crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
+                            width: width*2/5,
                             alignment: Alignment.topLeft,
                             child: Text(
                               productName,
                               style: TextStyle(
+                                fontFamily: 'Lobster',
                                 fontWeight: FontWeight.bold,
                                 fontSize: height/32,
                               ),
@@ -273,6 +283,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             child: Text(
                               productDetail,
                               style: TextStyle(
+                                fontFamily: 'Handlee',
                                 fontWeight: FontWeight.w200,
                                 fontSize: height/40,
                               ),
@@ -287,6 +298,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             child: Text(
                               '₹ $productPrice',
                               style: TextStyle(
+                                  fontFamily: 'Lobster',
                                 fontWeight: FontWeight.w300,
                                 fontSize: height/40,
                                 color: Colors.pinkAccent
@@ -301,6 +313,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             child: Text(
                               'Properties',
                               style: TextStyle(
+                                fontFamily: 'Lobster',
                                 fontWeight: FontWeight.bold,
                                 fontSize: height/40,
                               ),
@@ -332,14 +345,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              'Available Sizes',
+                              'Available ${getSizeCategory(products['subcategory'])}',
                               style: TextStyle(
+                                fontFamily: 'Lobster',
                                 fontWeight: FontWeight.bold,
                                 fontSize: height/40,
                               ),
                             ),
                           ),
-
+                          SizedBox(
+                              height: 20
+                          ),
                           Container(
                             padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                             child: SingleChildScrollView(
@@ -372,41 +388,56 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   margin: EdgeInsets.fromLTRB(height/32, height/32, height/32, height/64),
                                   padding: EdgeInsets.all(height/100),
                                   child: Center(
-                                    child: FlatButton(
-                                      onPressed: () {(isUserSet)?
-                                        Navigator.push(
-                                          context, new MaterialPageRoute(builder: (BuildContext context) => new DeliveryScreen())
-                                      ):
-                                      Navigator.push(
-                                          context, new MaterialPageRoute(builder: (BuildContext context) => new WelcomeScreen())
-                                      );
-                                      },
-                                      child: Text(
-                                        'Buy Now',
-                                      ),
+                                    child: FutureBuilder(
+                                      future: FlutterSession().get('isUserSet'),
+                                      builder: (context, snapshot) {
+                                        return FlatButton(
+                                          onPressed: () {
+                                            snapshot.hasData && snapshot.data ?
+                                            ExtendedNavigator.of(context).push(
+                                                Routes.deliveryScreen) :
+                                            ExtendedNavigator.of(context).push(
+                                                Routes.welcomeScreen);
+                                          },
+                                          child: Text(
+                                            'Buy Now',
+                                            style: TextStyle(
+                                              fontFamily: 'Lobster',
+                                            ),
+                                          ),
+                                        );
+                                      }
                                     ),
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.orangeAccent,
+                                    color: Color.fromRGBO(22,135,167,1),
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(15),
                                     ),
                                   ),
                                 ),
-                                Container(
-                                  width: width*0.1,
-                                  height: height/20,
-                                  margin: EdgeInsets.fromLTRB(height/32, height/64, height/32, height/32),
-                                  padding: EdgeInsets.all(height/100),
-                                  child: Center(
-                                    child: Text(
-                                      'Add to Cart',
+                                FlatButton(
+                                  onPressed: (){
+                                    (_auth.currentUser != null ) ? addToCart(): ExtendedNavigator.of(context).push(Routes.welcomeScreen);
+                                  },
+                                  child: Container(
+                                    width: width*0.1,
+                                    height: height/20,
+                                    margin: EdgeInsets.fromLTRB(height/32, height/64, height/32, height/32),
+                                    padding: EdgeInsets.all(height/100),
+                                    child: Center(
+                                      child: Text(
+                                        'Add to Cart',
+                                        style: TextStyle(
+                                          fontFamily: 'Lobster',
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.yellow,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
+                                    decoration: BoxDecoration(
+                                      color: Color.fromRGBO(211,224,234, 1),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(15),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -477,6 +508,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               child: Text(
                                 productName,
                                 style: TextStyle(
+                                  fontFamily: 'Lobster',
                                   fontWeight: FontWeight.bold,
                                   fontSize: height/32,
                                 ),
@@ -487,6 +519,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               child: Text(
                                 productDetail,
                                 style: TextStyle(
+                                  fontFamily: 'Lobster',
                                   fontWeight: FontWeight.w200,
                                   fontSize: height/40,
                                 ),
@@ -501,6 +534,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               child: Text(
                                   '₹ $productPrice',
                                 style: TextStyle(
+                                    fontFamily: 'Lobster',
                                     fontWeight: FontWeight.w300,
                                     fontSize: height/40,
                                     color: Colors.pinkAccent
@@ -515,6 +549,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               child: Text(
                                 'Properties',
                                 style: TextStyle(
+                                  fontFamily: 'Lobster',
                                   fontWeight: FontWeight.bold,
                                   fontSize: height/40,
                                 ),
@@ -536,13 +571,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              'Available Sizes',
+                              'Available ${getSizeCategory(products['subcategory'])}',
                               style: TextStyle(
+                                fontFamily: 'Lobster',
                                 fontWeight: FontWeight.bold,
                                 fontSize: height/40,
                               ),
                             ),
                           ),
+                          SizedBox(height: 10,),
 
                           Container(
                             padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
@@ -576,28 +613,40 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     child: Center(
                                       child: Text(
                                         'Buy Now',
+                                        style: TextStyle(
+                                          fontFamily: 'Lobster',
+                                        ),
                                       ),
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.orangeAccent,
+                                      color: Color.fromRGBO(22,135,167,1),
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(15),
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    height: height/20,
-                                    margin: EdgeInsets.fromLTRB(height/32, height/64, height/32, height/32),
-                                    padding: EdgeInsets.all(height/100),
-                                    child: Center(
-                                      child: Text(
-                                        'Add to Cart',
+                                  FlatButton(
+                                    onPressed: (){
+                                      print(_auth);
+                                      (_auth != null) ? addToCart(): ExtendedNavigator.of(context).push(Routes.welcomeScreen);
+                                    },
+                                    child: Container(
+                                      height: height/20,
+                                      margin: EdgeInsets.fromLTRB(height/32, height/64, height/32, height/32),
+                                      padding: EdgeInsets.all(height/100),
+                                      child: Center(
+                                        child: Text(
+                                          'Add to Cart',
+                                          style: TextStyle(
+                                            fontFamily: 'Lobster',
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.yellow,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(15),
+                                      decoration: BoxDecoration(
+                                        color:Color.fromRGBO(211,224,234, 1),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(15),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -647,6 +696,20 @@ class _ProductDetailsState extends State<ProductDetails> {
       return names[0];
     }
   }
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  final _firestore = FirebaseFirestore.instance;
+  String user;
+
+
+  void addToCart(){
+    if(_auth != null){
+      user = _auth.currentUser.email;
+    }
+    _firestore.collection('cart').add({
+      'product' : products,
+      'user' : user
+    });
+  }
 
   DropdownButton<dynamic> buildDropdownButton(dynamic default_name, List<dynamic> names) {
     return DropdownButton<dynamic>(
@@ -655,6 +718,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       iconSize: 24,
       elevation: 16,
       style: TextStyle(
+          fontFamily: 'Lobster',
           color: Colors.indigoAccent
       ),
       underline: Container(
@@ -670,7 +734,9 @@ class _ProductDetailsState extends State<ProductDetails> {
           .map<DropdownMenuItem<String>>((dynamic value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value),
+          child: Text(value,style: TextStyle(
+            fontFamily: 'Lobster',
+          ),),
         );
       })
           .toList(),

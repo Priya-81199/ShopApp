@@ -1,5 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
+import 'package:lilly_app/Screens/Components.dart';
+import 'package:lilly_app/app/route.gr.dart';
 import 'package:lilly_app/mockData.dart'; //
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -8,6 +11,8 @@ import 'package:lilly_app/main.dart';
 import 'ProductDetails.dart';
 
 FirebaseStorage storage = FirebaseStorage.instance;
+
+
 
 
 class ProductList extends StatefulWidget {
@@ -38,6 +43,7 @@ class _ProductListState extends State<ProductList> {
     }
   }
 
+
   var productsDetails = [];
   var urls = [];
   bool image_set=false;
@@ -46,19 +52,23 @@ class _ProductListState extends State<ProductList> {
   void initState(){
     super.initState();
     subcategory = widget.subcategory;
-    print(subcategory);
+    //print(subcategory);
 
     getData().then((value) => value.forEach((result) {
       var len = value.length;
-      storage.ref('product_images/' + result['images'][0]).getDownloadURL().then((value) {
+
+      //storage.ref('product_images/' + result['images'][0]).getDownloadURL().then((value) {
+      var url = getImageURL(result['images'][0]);
+
         productsDetails.add(result);
-        urls.add(value);
+        urls.add(url);
+
         if(len==urls.length){
           setState(() {
             image_set=true;
           });
         }
-      });
+      // });
     }));
   }
   RangeValues _currentRangeValues = const RangeValues(0, 10000);
@@ -81,7 +91,10 @@ class _ProductListState extends State<ProductList> {
       for (var j=0; j < properties[i]['value'].length; j++) {
         filteroptions.add(
           CheckboxListTile(
-            title: Text(properties[i]['value'][j]),
+            title: Text(properties[i]['value'][j],
+              style: TextStyle(fontFamily: 'Handlee'
+              ),
+            ),
             value: filterSet[i][j],
             onChanged: (bool value) {
               setState(() {
@@ -97,13 +110,15 @@ class _ProductListState extends State<ProductList> {
       }
       filters.add(
         ExpansionTile(
-          title: Text(property, style: TextStyle(fontSize: 16),),
+          title: Text(property, style: TextStyle(
+              fontFamily: 'Lobster',
+              fontSize: 16),),
           children: filteroptions,
         ),
       );
     }
     filters.add(
-      Text('Price Range',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),)
+      Text('Price Range',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,fontFamily: 'Lobster',),)
     );
     filters.add(
         RangeSlider(
@@ -146,16 +161,18 @@ class _ProductListState extends State<ProductList> {
       return LayoutBuilder(
         builder: (context, constraints){
           var width = constraints.maxWidth;
-          var NamefontSize = width/232*20;
-          var PricefontSize = width/232*18;
-          var DescriptionfontSize = width/232*14;
+          var NamefontSize = width/232*18;
+          var PricefontSize = width/232*16;
+          var DescriptionfontSize = width/232*12;
           return GestureDetector(
             onTap: (){
-              Navigator.push(
-                  context, new MaterialPageRoute(builder: (BuildContext context) => new ProductDetails(product))
-                );
+              // Navigator.push(
+              //     context, new MaterialPageRoute(builder: (BuildContext context) => new ProductDetails(product))
+              //   );
+              ExtendedNavigator.of(context).push(Routes.productDetails,arguments: ProductDetailsArguments(product: product));
               },
             child: Container(
+
               padding: EdgeInsets.all(10.0),
               margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
               child: Column(
@@ -172,6 +189,7 @@ class _ProductListState extends State<ProductList> {
                     child: Text(
                       product['name'],
                       style: TextStyle(
+                        fontFamily: 'Lobster',
                         fontSize: NamefontSize,
                         fontWeight: FontWeight.bold,
                       ),
@@ -182,6 +200,7 @@ class _ProductListState extends State<ProductList> {
                     child: Text(
                       product['description'],
                       style: TextStyle(
+                        fontFamily: 'Handlee',
                         fontSize: DescriptionfontSize,
                       ),
                     ),
@@ -191,6 +210,7 @@ class _ProductListState extends State<ProductList> {
                     child: Text(
                       '₹'+ product['price'],
                       style: TextStyle(
+                        fontFamily: 'Lobster',
                         fontSize: PricefontSize,
                         fontWeight: FontWeight.w500,
                         color: Colors.pinkAccent,
@@ -209,7 +229,7 @@ class _ProductListState extends State<ProductList> {
     var displayProducts = <Widget>[];
     //var x=1;
     //print(productsDetails[0]['price']);
-    for(var i=0; i < productsDetails.length ; i++) //TODO : change products to productsDetails(Firebase)
+    for(var i=0; i < productsDetails.length ; i++)
     {
       var price = productsDetails[i]['price'];
       price = int.parse(price);
@@ -252,9 +272,9 @@ class _ProductListState extends State<ProductList> {
     pageButtons.add(SizedBox(width: 10));
     for(var i=1;i<=((displayProducts.length)/ProductsPerPage).ceil();i++)
     {
-      Color buttonColour = Colors.orangeAccent;
+      Color buttonColour = Color.fromRGBO(211,224,234, 1);
       if(i==pageIndex)
-        buttonColour = Colors.deepOrangeAccent;
+        buttonColour = Color.fromRGBO(22,135,167,1);
       pageButtons.add(
         GestureDetector(
           onTap: () {
@@ -266,7 +286,7 @@ class _ProductListState extends State<ProductList> {
             height: 40,
             width: 40,
             color: buttonColour,
-            child: Center(child: Text('${i}')),
+            child: Center(child: Text('${i}',style: TextStyle(fontFamily: 'Handlee'),)),
           ),
         ),
       );
@@ -285,19 +305,11 @@ class _ProductListState extends State<ProductList> {
               ),
             ),
           ),
-          appBar: AppBar(
-            title: Text(
-              'Lilly',
-              style: TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
+          appBar: buildAppBar(context),
           body: LayoutBuilder(
             builder: (context, constraints) {
               var width = constraints.maxWidth;
-              var columnCount = (width/212).round();
+              var columnCount = (width/300).round();
               return  CustomScrollView(
                 slivers: [
                   SliverGrid(

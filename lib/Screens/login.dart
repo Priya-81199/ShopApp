@@ -105,6 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             if (user != null && user1.emailVerified) {
                               //isUserSet=true;
                               var session = FlutterSession();
+                              print('here');
                               await session.set("isUserSet", true);
                               Navigator.push(
                                   context, new MaterialPageRoute(builder: (BuildContext context) => new homePage())

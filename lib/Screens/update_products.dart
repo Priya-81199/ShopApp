@@ -6,12 +6,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
-class AddProductsDetails extends StatefulWidget {
+class UpdateProducts extends StatefulWidget {
+  final dynamic product;
+  UpdateProducts(this.product);
   @override
-  _AddProductsDetailsState createState() => _AddProductsDetailsState();
+  _UpdateProductsState createState() => _UpdateProductsState();
 }
 
-class _AddProductsDetailsState extends State<AddProductsDetails> {
+class _UpdateProductsState extends State<UpdateProducts> {
 
   var category_default = 'Gents';
   var subcategory_default = 'subcategory 1';
@@ -32,9 +34,9 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
   List<Widget> images = [];
   List<bool> imagesSelected = [];
 
-  var sizeCountValues = ['0', '0', '0', '0', '0', '0', '0', '0'];
-  var ageCountValues = ['0', '0', '0', '0', '0', '0', '0'];
-  var numberCountValues = ['0', '0', '0', '0', '0', '0', '0','0', '0', '0', '0', '0', '0', '0','0', '0'];
+  List<dynamic> sizeCountValues = ['0', '0', '0', '0', '0', '0', '0', '0'];
+  List<dynamic> ageCountValues = ['0', '0', '0', '0', '0', '0', '0'];
+  List<dynamic> numberCountValues = ['0', '0', '0', '0', '0', '0', '0','0', '0', '0', '0', '0', '0', '0','0', '0'];
 
   void getImages() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
@@ -43,11 +45,7 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
       allowedExtensions: ['jpg', 'png', 'bmp','jpeg'],
     );
 
-    void deselectImage(var index) {
-      setState(() {
-        imagesSelected[index]=false;
-      });
-    }
+
 
     if(result != null) {
       List<PlatformFile> files = result.files;
@@ -100,9 +98,81 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
     }
   }
 
+  void deselectImage(var index) {
+    setState(() {
+      imagesSelected[index]=false;
+    });
+  }
+
+  var productID;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    var product = widget.product;
+    productID  = product['id'];
+    category_default = product['category'];
+    subcategory_default = product['subcategory'];
+    productName = product['name'];
+    price = product['price'];
+    description = product['description'];
+    addedPropertyList = product['properties'];
+    for(var i = 0 ; i < product['properties'].length ; i++)
+      addedPropertiesOn.add(true);
+    addedPoints = product['points'];
+    for(var i = 0 ; i < product['points'].length ; i++)
+      addedPointsOn.add(true);
+    sizeCountValues = product['sizeCounts'];
+    ageCountValues = product['ageCounts'];
+    numberCountValues = product['numberCounts'];
+    for(int i = 0 ; i < product['images'].length ; i++) {
+      var imageIndex = images.length;
+      ImageFiles.add(product['images'][i]);
+      images.add(
+        Stack(
+          children: <Widget>[
+            GestureDetector(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 200,
+                  child: Image.network(getImageURL(product['images'][i])),
+                  decoration: BoxDecoration(
+                    boxShadow: [BoxShadow(color: Colors.indigo,spreadRadius: 2)],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 10,
+              right: 10,
+              child: GestureDetector(
+                onTap: () {
+                  deselectImage(imageIndex);
+                },
+                child: Text(
+                  'X',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    backgroundColor: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+      imagesSelected.add(true);
+    }
+   print(product);
+  }
 
   @override
   Widget build(BuildContext context) {
+
     var category = [];
     for(var i = 0 ; i < categories.length ; i++) {
       category.add(categories[i]['name']);
@@ -214,20 +284,20 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
     sizeCounts.add(SizedBox(width: 30));
     for(var i=0; i<sizeNames.length; i++) {
       sizeCounts.add(
-        Container(
-          width: 30,
-          child: TextFormField(
-            initialValue: '${sizeCountValues[i]}',
-            decoration: InputDecoration(
-              labelText: sizeNames[i],
+          Container(
+            width: 30,
+            child: TextFormField(
+              initialValue: '${sizeCountValues[i]}',
+              decoration: InputDecoration(
+                labelText: sizeNames[i],
+              ),
+              onChanged: (text) {
+                setState(() {
+                  sizeCountValues[i]=text;
+                });
+              },
             ),
-            onChanged: (text) {
-              setState(() {
-                sizeCountValues[i]=text;
-              });
-            },
-          ),
-        )
+          )
       );
       sizeCounts.add(SizedBox(width: 30));
     }
@@ -288,7 +358,7 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
 
     return MaterialApp(
       home: Scaffold(
-        appBar:buildAppBar(context),
+        appBar: buildAppBar(context),
         body : Container(
           child: SingleChildScrollView(
             child: Column(
@@ -408,7 +478,7 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
                     ),
                   ],
                 ):
-                    Container(),
+                Container(),
                 ('number'== getSizeCategory())?
                 Column(
                   children: [
@@ -423,7 +493,7 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
                     ),
                   ],
                 ):
-                    Container(),
+                Container(),
                 SizedBox(height: 30),
                 Column(
                   children: [
@@ -479,63 +549,97 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
                   ),
                 ),
                 SizedBox(height: 30),
-                GestureDetector(
-                  onTap: () {
-                    var finalProperties = [];
-                    for(var i=0; i<addedPropertyList.length; i++) {
-                      if(addedPropertiesOn[i]){
-                        finalProperties.add(addedPropertyList[i]);
-                      }
-                    }
-                    var final_Points = [];
-                    for(var i=0; i<addedPoints.length; i++) {
-                      if(addedPointsOn[i]){
-                        final_Points.add(addedPoints[i]);
-                      }
-                    }
-                    var final_images = [];
-                    for(var i=0; i<ImageFiles.length; i++) {
-                      if(imagesSelected[i]){
-                        final_images.add(ImageFiles[i]);
-                      }
-                    }
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        var finalProperties = [];
+                        for(var i=0; i<addedPropertyList.length; i++) {
+                          if(addedPropertiesOn[i]){
+                            finalProperties.add(addedPropertyList[i]);
+                          }
+                        }
+                        var final_Points = [];
+                        for(var i=0; i<addedPoints.length; i++) {
+                          if(addedPointsOn[i]){
+                            final_Points.add(addedPoints[i]);
+                          }
+                        }
+                        var final_images = [];
+                        for(var i=0; i<ImageFiles.length; i++) {
+                          if(imagesSelected[i]){
+                            final_images.add(ImageFiles[i]);
+                          }
+                        }
 
-                    var productDetails = {
-                      'category': category_default,
-                      'subcategory': subcategory_default,
-                      'name': productName,
-                      'price': price,
-                      'description': description,
-                      'properties': finalProperties,
-                      'points': final_Points,
-                      'sizeCounts': sizeCountValues,
-                      'ageCounts': ageCountValues,
-                      'numberCounts': numberCountValues,
-                      'images': final_images,
-                    };
-                    print(productDetails);
-                    _firestore.collection('productDetails').add(productDetails);
-                  },
-                  child: Container(
-                    height: 50,
-                    width: 120,
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Add',
-                        style: TextStyle(
-                          fontSize: 20,
+                        var productDetails = {
+                          'category': category_default,
+                          'subcategory': subcategory_default,
+                          'name': productName,
+                          'price': price,
+                          'description': description,
+                          'properties': finalProperties,
+                          'points': final_Points,
+                          'sizeCounts': sizeCountValues,
+                          'ageCounts': ageCountValues,
+                          'numberCounts': numberCountValues,
+                          'images': final_images,
+                        };
+                        print(productDetails);
+                        _firestore.collection('productDetails').doc(productID).update(productDetails);
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 120,
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5),
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Update',
+                            style: TextStyle(
+                              fontFamily: 'Lobster',
+                              fontSize: 20,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                    SizedBox(width: 20),
+                    GestureDetector(
+                      onTap: () {
+                        _firestore.collection('productDetails').doc(productID).delete();
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.pink,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5),
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Remove Product',
+                            style: TextStyle(
+                              fontFamily: 'Lobster',
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+
                 SizedBox(height: 20),
+
+
               ],
             ),
           ),
@@ -560,10 +664,10 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
     setState(() {
       addedPropertiesOn.add(true);
       addedPropertyList.add(
-        {
-          'name': property_default,
-          'value': value_default,
-        }
+          {
+            'name': property_default,
+            'value': value_default,
+          }
       );
     });
   }
@@ -623,4 +727,3 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
     );
   }
 }
-
