@@ -15,6 +15,12 @@ import 'package:lilly_app/main.dart';
 import 'login.dart';
 import 'package:intl/intl.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:scroll_to_id/scroll_to_id.dart';
+
+final scrollController = ScrollController();
+
+ScrollToId scrollToId = ScrollToId(scrollController: scrollController);
+
 
 class homePage extends StatefulWidget {
   static const String id = "homePage";
@@ -196,6 +202,8 @@ class _homePageState extends State<homePage> {
       SizedBox(width: 5),
     );
 
+
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -227,15 +235,115 @@ class _homePageState extends State<homePage> {
                     //     Icon(Icons.search),
                     //   ],
                     // ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      'Categories',
-                      style: TextStyle(
-                        fontFamily: 'Lobster',
-                        fontSize: 30,
-                        fontWeight: FontWeight.w700,
+
+                    // Text(
+                    //   'Categories',
+                    //   style: TextStyle(
+                    //     fontFamily: 'Lobster',
+                    //     fontSize: 30,
+                    //     fontWeight: FontWeight.w700,
+                    //   ),
+                    // ),
+
+                    Container(
+                      color: Color.fromRGBO(211,224,234,1),
+                      child: Row(
+
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FlatButton(
+                            hoverColor: Color.fromRGBO(246,245,245 ,1),
+                            onPressed: (){
+                              selectCat('Gents');
+                            },
+                            child: Container(
+                              width: 250,
+                              height: 70,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: Text(
+                                    'Men Clothing',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'Handlee',
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          FlatButton(
+                            hoverColor: Color.fromRGBO(246,245,245 ,1),
+                            onPressed: (){
+                              selectCat('Ladies');
+                            },
+                            child: Container(
+                              width: 250,
+                              height: 70,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: Text(
+                                    'Women Clothing',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'Handlee',
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          FlatButton(
+                            hoverColor: Color.fromRGBO(246,245,245 ,1),
+                            onPressed: (){
+                              selectCat('Kids');
+                            },
+                            child: Container(
+                              width: 250,
+                              height: 70,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: Text(
+                                    'Kids Clothing',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'Handlee',
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          FlatButton(
+                            hoverColor: Color.fromRGBO(246,245,245 ,1),
+                            onPressed: (){
+                              selectCat('Accessories');
+                            },
+                            child: Container(
+                              width: 250,
+                              height: 70,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: Text(
+                                    'Accessories',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'Handlee',
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     Container(
@@ -262,21 +370,30 @@ class _homePageState extends State<homePage> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 20.0),
-                      height: 300.0,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: subcategory,
-                        ),
-                      ),
-                    ),
+                    // InteractiveScrollViewer(
+                    //   scrollToId: scrollToId,
+                    //   children: <ScrollContent>[
+                    //   ScrollContent(
+                    //   id: 'a',
+                    //     child:
+                        Container(
+                            margin: EdgeInsets.symmetric(vertical: 20.0),
+                            height: 300.0,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: subcategory,
+                              ),
+                            ),
+                         ),
+                //       ),
+                //     ]
+                // ),
                     SizedBox(
                       height: 5,
                     ),
                     Text(
-                      'New Arivals',
+                      'New Arrivals',
                       style: TextStyle(
                         fontFamily: 'Lobster',
                         fontSize: 30,
@@ -451,6 +568,14 @@ class _homePageState extends State<homePage> {
     setState(() {
       chat = !chat;
     });
+  }
+
+  void selectCat(String catName){
+    setState(() {
+
+      selectedCategory = catName;
+    });
+
   }
 
   void sendToAdmin() async {

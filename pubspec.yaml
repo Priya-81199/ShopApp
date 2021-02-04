@@ -38,6 +38,7 @@ dependencies:
   whatsapp_unilink: ^1.0.0+1
   url_launcher: ^5.7.10
   carousel_slider: ^3.0.0
+  scroll_to_id: ^1.4.0
 
   #state management
   stacked : ^1.2.2

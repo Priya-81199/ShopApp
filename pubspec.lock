@@ -625,6 +625,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
+  scroll_to_id:
+    dependency: "direct main"
+    description:
+      name: scroll_to_id
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.4.0"
   shared_preferences:
     dependency: transitive
     description:
