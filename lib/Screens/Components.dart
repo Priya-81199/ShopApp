@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/app/route.gr.dart' as rg;
+import 'package:lilly_app/app/route.gr.dart';
 import 'homePage.dart';
 import 'login.dart';
 
@@ -12,53 +13,66 @@ String getImageURL(String imageName) {
 
 String adminEmail = 'princymishra10@gmail.com';
 
+
 AppBar buildAppBar(BuildContext context,Function() f) {
   return AppBar(
     backgroundColor: Color.fromRGBO(39, 102, 120, 1),
     title: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Center(
-          child: Text(
-            'Lilly',
-            style: TextStyle(
-              fontFamily: 'Lobster',
-              fontSize: 40,
-            ),
+        Text(
+          'Lilly',
+          style: TextStyle(
+            fontFamily: 'Lobster',
+            fontSize: 40,
           ),
         ),
+
         Container(
           child: FutureBuilder(
             future: FlutterSession().get('isUserSet'),
             builder: (context, snapshot) {
               return Container(
-                width: 150,
-                height: 100,
-                child: FlatButton(
-                  hoverColor: Color.fromRGBO(211, 224, 234, 1),
-                  child: Text(
-                    snapshot.hasData
-                        ? (snapshot.data ? 'Logout' : 'Login')
-                        : 'Loading',
-                    style: TextStyle(
-                      fontFamily: 'Lobster',
-                      fontSize: 24,
+
+                child: Row(
+                  children: [
+                snapshot.hasData ? (snapshot.data ?
+                    IconButton(
+                        icon: Icon(Icons.shopping_cart),
+                        onPressed: (){
+                          ExtendedNavigator.of(context).push(Routes.cart);
+                        }):Container()):Container(),
+                    Container(
+                      width: 150,
+                      height: 100,
+                      child: FlatButton(
+                        hoverColor: Color.fromRGBO(211, 224, 234, 1),
+                        child: Text(
+                          snapshot.hasData
+                              ? (snapshot.data ? 'Logout' : 'Login')
+                              : 'Loading',
+                          style: TextStyle(
+                            fontFamily: 'Lobster',
+                            fontSize: 24,
+                          ),
+                        ),
+                        onPressed: () async {
+                          //print(snapshot.data);
+                          if (snapshot.hasData) {
+                            if (snapshot.data) {
+                              FirebaseAuth.instance.signOut();
+                              await FlutterSession().set('isUserSet', false);
+                              f();
+                              //ExtendedNavigator.root.push(rg.Routes.homePage);
+                            } else {
+                              //Navigator.pushNamed(context, rg.Routes.);
+                              ExtendedNavigator.of(context).push(rg.Routes.loginScreen);
+                            }
+                          }
+                        },
+                      ),
                     ),
-                  ),
-                  onPressed: () async {
-                    //print(snapshot.data);
-                    if (snapshot.hasData) {
-                      if (snapshot.data) {
-                        FirebaseAuth.instance.signOut();
-                        await FlutterSession().set('isUserSet', false);
-                        f();
-                        //ExtendedNavigator.root.push(rg.Routes.homePage);
-                      } else {
-                        //Navigator.pushNamed(context, rg.Routes.);
-                        ExtendedNavigator.of(context).push(rg.Routes.loginScreen);
-                      }
-                    }
-                  },
+                  ],
                 ),
               );
             },
