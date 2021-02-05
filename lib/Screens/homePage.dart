@@ -72,31 +72,11 @@ class _homePageState extends State<homePage> {
   var selectedCategory = 'Kids';
   @override
   Widget build(BuildContext context) {
-    //isUserSet = (isUserSet)? isUserSet :false;
     var category = <Widget>[];
     categories.sort((a, b) => a['name'].compareTo(b['name']));
-    var colour1 = [
-      Colors.red.withOpacity(0.0),
-      Colors.red.withOpacity(0.0),
-    ];
-    var colour2 = [
-      Colors.black.withOpacity(0.5),
-      Colors.black.withOpacity(0.5),
-    ];
-    var colour3 = [];
-    // category.add(
-    //   SizedBox(width: 5),
-    // );
-    for (var i = 0; i < categories.length; i++) {
-      if (categories[i]['name'] == selectedCategory) {
-        colour3 = colour1;
-      } else {
-        colour3 = colour2;
-      }
 
-      // category.add(
-      //   SizedBox(width: 5),
-      // );
+    for (var i = 0; i < categories.length; i++) {
+
       category.add(
         GestureDetector(
           onTap: () {
@@ -104,38 +84,17 @@ class _homePageState extends State<homePage> {
               selectedCategory = categories[i]['name'];
             });
           },
-          child: Stack(
-            children: <Widget>[
-              Container(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5.0),
-                  child: Image.asset('images/' + categories[i]['image']),
-                ),
-              ),
-              Container(
-                width: 250,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5.0),
-                  color: Colors.white,
-                  gradient: LinearGradient(
-                    begin: FractionalOffset.topCenter,
-                    end: FractionalOffset.bottomCenter,
-                    colors: colour3,
-                    stops: [0.0, 1.0],
-                  ),
-                ),
-              ),
-            ],
+          child: Container(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5.0),
+              child: Image.asset('images/' + categories[i]['image']),
+            ),
           ),
         ),
       );
-      // category.add(
-      //     SizedBox(width: 5),
-      // );
+
     }
-    // category.add(
-    //   SizedBox(width: 5),
-    // );
+
 
     var subcategory = <Widget>[];
     subcategory.add(
@@ -149,10 +108,6 @@ class _homePageState extends State<homePage> {
         subcategory.add(
           GestureDetector(
             onTap: () {
-              //subcategories[i]['name']
-              // Navigator.push(
-              //     context, new MaterialPageRoute(builder: (BuildContext context) => new ProductList(subcategories[i]['name']))
-              // );
               ExtendedNavigator.of(context).push(Routes.productList,
                   arguments: ProductListArguments(
                       subcategory: subcategories[i]['name']));
@@ -255,6 +210,7 @@ class _homePageState extends State<homePage> {
                             hoverColor: Color.fromRGBO(246,245,245 ,1),
                             onPressed: (){
                               selectCat('Gents');
+
                             },
                             child: Container(
                               width: 250,
@@ -362,6 +318,7 @@ class _homePageState extends State<homePage> {
                     SizedBox(
                       height: 20,
                     ),
+
                     Text(
                       'Sub Categories',
                       style: TextStyle(
@@ -370,12 +327,8 @@ class _homePageState extends State<homePage> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    // InteractiveScrollViewer(
-                    //   scrollToId: scrollToId,
-                    //   children: <ScrollContent>[
-                    //   ScrollContent(
-                    //   id: 'a',
-                    //     child:
+
+
                         Container(
                             margin: EdgeInsets.symmetric(vertical: 20.0),
                             height: 300.0,
@@ -386,9 +339,7 @@ class _homePageState extends State<homePage> {
                               ),
                             ),
                          ),
-                //       ),
-                //     ]
-                // ),
+
                     SizedBox(
                       height: 5,
                     ),
@@ -572,10 +523,13 @@ class _homePageState extends State<homePage> {
 
   void selectCat(String catName){
     setState(() {
-
       selectedCategory = catName;
     });
-
+    // scrollToId.animateTo(
+    //     'b',
+    //     duration: Duration(milliseconds: 500),
+    //     curve: Curves.ease
+    // );
   }
 
   void sendToAdmin() async {

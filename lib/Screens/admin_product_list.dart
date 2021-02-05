@@ -15,16 +15,15 @@ FirebaseStorage storage = FirebaseStorage.instance;
 
 
 
-class ProductList extends StatefulWidget {
-  static const String id = 'ProductList';
-  final dynamic subcategory;
-  ProductList(this.subcategory);
+class AdminProductList extends StatefulWidget {
+  static const String id = 'AdminProductList';
+
   @override
-  _ProductListState createState() => _ProductListState();
+  _AdminProductListState createState() => _AdminProductListState();
 }
 
 
-class _ProductListState extends State<ProductList> {
+class _AdminProductListState extends State<AdminProductList> {
 
   bool selectedData = false;
   var filterSet = [];
@@ -32,7 +31,7 @@ class _ProductListState extends State<ProductList> {
   var filterMapedIndex = {};
   var pageIndex = 1;
 
-  _ProductListState() {
+  _AdminProductListState() {
     for (var i = 0; i < properties.length; i++) {
       filterSet.add([]);
       filterSetCount.add(0);
@@ -51,8 +50,6 @@ class _ProductListState extends State<ProductList> {
   @override
   void initState(){
     super.initState();
-    subcategory = widget.subcategory;
-    //print(subcategory);
 
     getData().then((value) => value.forEach((result) {
       var len = value.length;
@@ -60,14 +57,14 @@ class _ProductListState extends State<ProductList> {
       //storage.ref('product_images/' + result['images'][0]).getDownloadURL().then((value) {
       var url = getImageURL(result['images'][0]);
 
-        productsDetails.add(result);
-        urls.add(url);
+      productsDetails.add(result);
+      urls.add(url);
 
-        if(len==urls.length){
-          setState(() {
-            image_set=true;
-          });
-        }
+      if(len==urls.length){
+        setState(() {
+          image_set=true;
+        });
+      }
       // });
     }));
   }
@@ -119,7 +116,7 @@ class _ProductListState extends State<ProductList> {
       );
     }
     filters.add(
-      Text('Price Range',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,fontFamily: 'Lobster',),)
+        Text('Price Range',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,fontFamily: 'Lobster',),)
     );
     filters.add(
         RangeSlider(
@@ -171,8 +168,8 @@ class _ProductListState extends State<ProductList> {
               // Navigator.push(
               //     context, new MaterialPageRoute(builder: (BuildContext context) => new ProductDetails(product))
               //   );
-              ExtendedNavigator.of(context).push(Routes.productDetails,arguments: ProductDetailsArguments(product: product));
-              },
+              ExtendedNavigator.of(context).push(Routes.updateProducts,arguments: UpdateProductsArguments(product: product));
+            },
             child: Container(
 
               padding: EdgeInsets.all(10.0),
@@ -180,11 +177,11 @@ class _ProductListState extends State<ProductList> {
               child: Column(
                 children: [
                   Container(
-                    height: 0.65*constraints.maxHeight,
-                    child: Image.network(
-                        url
-                    )
-                        //getURL(product['images'][0]).toString()),//TODO:Firebase storage se fetch karna
+                      height: 0.65*constraints.maxHeight,
+                      child: Image.network(
+                          url
+                      )
+                    //getURL(product['images'][0]).toString()),//TODO:Firebase storage se fetch karna
                   ),
                   Align(
                     alignment: Alignment.topLeft,
@@ -237,8 +234,8 @@ class _ProductListState extends State<ProductList> {
       price = int.parse(price);
       if( price < _currentRangeValues.start || price > _currentRangeValues.end)
         continue;
-      if(productsDetails[i]['subcategory'] != subcategory)
-        continue;
+      // if(productsDetails[i]['subcategory'] != subcategory)
+      //   continue;
       var flag=true;
       var product = productsDetails[i];
       for (var j=0; j < product['properties'].length; j++)
@@ -265,7 +262,7 @@ class _ProductListState extends State<ProductList> {
       //print(flag);
       if(flag && image_set) {
 
-          displayProducts.add(getProductCard(product, urls[i]));
+        displayProducts.add(getProductCard(product, urls[i]));
       }
     }
 
@@ -297,55 +294,55 @@ class _ProductListState extends State<ProductList> {
 
     return  MaterialApp(
       home: Scaffold(
-          drawer: Drawer(
-            child: Container(
-              padding: EdgeInsets.all(32.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: filters,
-                ),
+        drawer: Drawer(
+          child: Container(
+            padding: EdgeInsets.all(32.0),
+            child: SingleChildScrollView(
+              child: Column(
+                children: filters,
               ),
             ),
           ),
-          appBar: buildAppBar(context),
-          body: LayoutBuilder(
-            builder: (context, constraints) {
-              var width = constraints.maxWidth;
-              var columnCount = (width/300).round();
-              return  CustomScrollView(
-                slivers: [
-                  SliverGrid(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: columnCount,
-                      childAspectRatio: 0.65,
-                    ),
-                    delegate: SliverChildListDelegate(
-                      displayProducts.sublist(
-                          min((pageIndex-1)*ProductsPerPage,displayProducts.length),
-                          min(pageIndex*ProductsPerPage, displayProducts.length)
-                      ),
+        ),
+        appBar: buildAppBar(context),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            var width = constraints.maxWidth;
+            var columnCount = (width/300).round();
+            return  CustomScrollView(
+              slivers: [
+                SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: columnCount,
+                    childAspectRatio: 0.65,
+                  ),
+                  delegate: SliverChildListDelegate(
+                    displayProducts.sublist(
+                        min((pageIndex-1)*ProductsPerPage,displayProducts.length),
+                        min(pageIndex*ProductsPerPage, displayProducts.length)
                     ),
                   ),
-                  SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        Center(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: pageButtons,
-                            ),
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Center(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: pageButtons,
                           ),
                         ),
-                        SizedBox(height: 20,)
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: 20,)
+                    ],
                   ),
-                ],
-              );
-            },
-          ),
+                ),
+              ],
+            );
+          },
         ),
+      ),
     );
 
   }

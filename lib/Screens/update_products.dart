@@ -111,6 +111,7 @@ class _UpdateProductsState extends State<UpdateProducts> {
     // TODO: implement initState
     super.initState();
     var product = widget.product;
+    print(product);
     productID  = product['id'];
     category_default = product['category'];
     subcategory_default = product['subcategory'];
@@ -123,9 +124,9 @@ class _UpdateProductsState extends State<UpdateProducts> {
     addedPoints = product['points'];
     for(var i = 0 ; i < product['points'].length ; i++)
       addedPointsOn.add(true);
-    sizeCountValues = product['sizeCounts'];
+    //sizeCountValues = product['sizeCounts'];
     ageCountValues = product['ageCounts'];
-    numberCountValues = product['numberCounts'];
+    //numberCountValues = product['numberCounts'];
     for(int i = 0 ; i < product['images'].length ; i++) {
       var imageIndex = images.length;
       ImageFiles.add(product['images'][i]);

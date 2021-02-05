@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import '../Screens/ProductDetails.dart';
 import '../Screens/ProductList.dart';
 import '../Screens/addProducts1.dart';
+import '../Screens/admin_product_list.dart';
 import '../Screens/admin_products.dart';
 import '../Screens/cart.dart';
 import '../Screens/delivery_screen.dart';
@@ -30,13 +31,14 @@ class Routes {
   static const String productDetails = '/product-details';
   static const String welcomeScreen = '/welcome-screen';
   static const String registrationScreen = '/registration-screen';
-  static const String homePage = '/';
+  static const String homePage = '/home-page';
   static const String deliveryScreen = '/delivery-screen';
   static const String razorPayWeb = '/razor-pay-web';
   static const String solveQueries = '/solve-queries';
   static const String cart = '/Cart';
   static const String adminProducts = '/admin-products';
   static const String updateProducts = '/update-products';
+  static const String adminProductList = '/';
   static const all = <String>{
     loginScreen,
     addProductsDetails,
@@ -51,6 +53,7 @@ class Routes {
     cart,
     adminProducts,
     updateProducts,
+    adminProductList,
   };
 }
 
@@ -71,6 +74,7 @@ class Router extends RouterBase {
     RouteDef(Routes.cart, page: Cart),
     RouteDef(Routes.adminProducts, page: AdminProducts),
     RouteDef(Routes.updateProducts, page: UpdateProducts),
+    RouteDef(Routes.adminProductList, page: AdminProductList),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -153,6 +157,12 @@ class Router extends RouterBase {
       final args = data.getArgs<UpdateProductsArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => UpdateProducts(args.product),
+        settings: data,
+      );
+    },
+    AdminProductList: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => AdminProductList(),
         settings: data,
       );
     },
