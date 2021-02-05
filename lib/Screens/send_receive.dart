@@ -11,14 +11,13 @@ class SendReceive extends StatefulWidget {
 }
 
 class _SendReceiveState extends State<SendReceive> {
-
   final db = FirebaseFirestore.instance;
 
-  void addData(data, collection){
+  void addData(data, collection) {
     db.collection(collection).add(data);
   }
 
-  void allData(){
+  void allData() {
     for (var i = 0; i < categories.length; i++) {
       addData(categories[i], 'categories');
     }
@@ -36,13 +35,18 @@ class _SendReceiveState extends State<SendReceive> {
     }
 
     for (var i = 0; i < products.length; i++) {
-     addData(products[i], 'products');
+      addData(products[i], 'products');
     }
   }
+
   @override
   Widget build(BuildContext context) {
+    void f() {
+      setState(() {});
+    }
+
     return Scaffold(
-      appBar: buildAppBar(context),
+      appBar: buildAppBar(context, f),
       body: Container(
         child: Center(
           child: FloatingActionButton(

@@ -17,7 +17,6 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
   final myController6 = TextEditingController();
   final myController7 = TextEditingController();
 
-
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -33,11 +32,14 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    void f() {
+      setState(() {});
+    }
+
     return Scaffold(
-      appBar: buildAppBar(context),
+      appBar: buildAppBar(context, f),
       body: Center(
         child: Container(
-
           child: SizedBox(
             width: 400,
             child: Column(
@@ -46,22 +48,20 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   height: 30,
                 ),
                 Text(
-                    'Enter a shipping address',
-                  style: TextStyle(
-                    fontFamily: 'Lobster',
-                    fontSize: 20
-                  ),
+                  'Enter a shipping address',
+                  style: TextStyle(fontFamily: 'Lobster', fontSize: 20),
                 ),
                 SizedBox(
                   height: 30,
                 ),
-              TextField(
-                controller: myController1,
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Full Name',
-              ),),
+                TextField(
+                  controller: myController1,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Full Name',
+                  ),
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -71,7 +71,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Mobile Number',
-                  ),),
+                  ),
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -81,7 +82,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'PIN Code',
-                  ),),
+                  ),
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -91,7 +93,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Address Line 1',
-                  ),),
+                  ),
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -101,7 +104,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Address Line 2',
-                  ),),
+                  ),
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -111,7 +115,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Address Line 3',
-                  ),),
+                  ),
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -121,22 +126,28 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Town/City',
-                  ),),
+                  ),
+                ),
                 SizedBox(
                   height: 10,
                 ),
-                RoundedButton(title: 'Deliver Here!',colour: Colors.indigo, tag : 'register',onPressed: () {
-                  // Navigator.push(
-                  //     context, new MaterialPageRoute(builder: (BuildContext context) => new WelcomeScreen())
-                  // );
-                  print(myController1.text);
-                  print(myController2.text);
-                  print(myController3.text);
-                  print(myController4.text);
-                  print(myController5.text);
-                  print(myController6.text);
-                  print(myController7.text);
-                },),
+                RoundedButton(
+                  title: 'Deliver Here!',
+                  colour: Colors.indigo,
+                  tag: 'register',
+                  onPressed: () {
+                    // Navigator.push(
+                    //     context, new MaterialPageRoute(builder: (BuildContext context) => new WelcomeScreen())
+                    // );
+                    print(myController1.text);
+                    print(myController2.text);
+                    print(myController3.text);
+                    print(myController4.text);
+                    print(myController5.text);
+                    print(myController6.text);
+                    print(myController7.text);
+                  },
+                ),
               ],
             ),
           ),
@@ -145,4 +156,3 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
     );
   }
 }
-

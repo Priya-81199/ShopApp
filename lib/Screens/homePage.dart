@@ -21,7 +21,6 @@ final scrollController = ScrollController();
 
 ScrollToId scrollToId = ScrollToId(scrollController: scrollController);
 
-
 class homePage extends StatefulWidget {
   static const String id = "homePage";
   @override
@@ -40,8 +39,13 @@ class _homePageState extends State<homePage> {
   @override
   void initState() {
     super.initState();
-
+    setLastVisited();
     getCurrentUser();
+  }
+
+  void setLastVisited() async {
+    var session = FlutterSession();
+    await session.set("last_visited", Routes.homePage);
   }
 
   void getCurrentUser() async {
@@ -72,11 +76,14 @@ class _homePageState extends State<homePage> {
   var selectedCategory = 'Kids';
   @override
   Widget build(BuildContext context) {
+    void f() {
+      setState(() {});
+    }
+
     var category = <Widget>[];
     categories.sort((a, b) => a['name'].compareTo(b['name']));
 
     for (var i = 0; i < categories.length; i++) {
-
       category.add(
         GestureDetector(
           onTap: () {
@@ -92,9 +99,7 @@ class _homePageState extends State<homePage> {
           ),
         ),
       );
-
     }
-
 
     var subcategory = <Widget>[];
     subcategory.add(
@@ -163,7 +168,7 @@ class _homePageState extends State<homePage> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Color(0xf6f5f5),
-        appBar: buildAppBar(context),
+        appBar: buildAppBar(context, f),
         body: Stack(
           children: [
             SafeArea(
@@ -201,16 +206,14 @@ class _homePageState extends State<homePage> {
                     // ),
 
                     Container(
-                      color: Color.fromRGBO(211,224,234,1),
+                      color: Color.fromRGBO(211, 224, 234, 1),
                       child: Row(
-
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           FlatButton(
-                            hoverColor: Color.fromRGBO(246,245,245 ,1),
-                            onPressed: (){
+                            hoverColor: Color.fromRGBO(246, 245, 245, 1),
+                            onPressed: () {
                               selectCat('Gents');
-
                             },
                             child: Container(
                               width: 250,
@@ -231,8 +234,8 @@ class _homePageState extends State<homePage> {
                             ),
                           ),
                           FlatButton(
-                            hoverColor: Color.fromRGBO(246,245,245 ,1),
-                            onPressed: (){
+                            hoverColor: Color.fromRGBO(246, 245, 245, 1),
+                            onPressed: () {
                               selectCat('Ladies');
                             },
                             child: Container(
@@ -254,8 +257,8 @@ class _homePageState extends State<homePage> {
                             ),
                           ),
                           FlatButton(
-                            hoverColor: Color.fromRGBO(246,245,245 ,1),
-                            onPressed: (){
+                            hoverColor: Color.fromRGBO(246, 245, 245, 1),
+                            onPressed: () {
                               selectCat('Kids');
                             },
                             child: Container(
@@ -277,8 +280,8 @@ class _homePageState extends State<homePage> {
                             ),
                           ),
                           FlatButton(
-                            hoverColor: Color.fromRGBO(246,245,245 ,1),
-                            onPressed: (){
+                            hoverColor: Color.fromRGBO(246, 245, 245, 1),
+                            onPressed: () {
                               selectCat('Accessories');
                             },
                             child: Container(
@@ -328,17 +331,16 @@ class _homePageState extends State<homePage> {
                       ),
                     ),
 
-
-                        Container(
-                            margin: EdgeInsets.symmetric(vertical: 20.0),
-                            height: 300.0,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: subcategory,
-                              ),
-                            ),
-                         ),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 20.0),
+                      height: 300.0,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: subcategory,
+                        ),
+                      ),
+                    ),
 
                     SizedBox(
                       height: 5,
@@ -521,7 +523,7 @@ class _homePageState extends State<homePage> {
     });
   }
 
-  void selectCat(String catName){
+  void selectCat(String catName) {
     setState(() {
       selectedCategory = catName;
     });
@@ -570,6 +572,8 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Column(

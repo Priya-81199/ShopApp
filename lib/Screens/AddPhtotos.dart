@@ -9,7 +9,6 @@ import 'dart:ui';
 import 'package:file_picker/file_picker.dart';
 import 'package:image/image.dart' as img;
 
-
 class AddPhotos extends StatefulWidget {
   static const String id = 'AddPhotos';
 
@@ -18,7 +17,6 @@ class AddPhotos extends StatefulWidget {
 }
 
 class _AddPhotosState extends State<AddPhotos> {
-
   List<Widget> images = [];
   bool avail = false;
 
@@ -29,51 +27,55 @@ class _AddPhotosState extends State<AddPhotos> {
       allowedExtensions: ['jpg', 'png', 'bmp'],
     );
 
-    if(result != null) {
+    if (result != null) {
       List<PlatformFile> files = result.files;
       setState(() {
         avail = true;
-        for(int i = 0 ; i < files.length ; i++) {
+        for (int i = 0; i < files.length; i++) {
           images.add(Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
-                width: 200,
-                child: Image.memory(files[i].bytes),
-                decoration: BoxDecoration(
-                  boxShadow: [BoxShadow(color: Colors.indigo,spreadRadius: 2)],
-                ),
+              width: 200,
+              child: Image.memory(files[i].bytes),
+              decoration: BoxDecoration(
+                boxShadow: [BoxShadow(color: Colors.indigo, spreadRadius: 2)],
+              ),
             ),
           ));
         }
       });
-
     } else {
       // User canceled the picker
     }
   }
 
+  void f() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(context),
-      body: avail? SingleChildScrollView(
+    void f() {
+      setState(() {});
+    }
 
-        child: Container(
-          child: Center(
-            child: Row(
-              children: images,
-            ),
-          )
-        ),
-      )
-      :
-      Container(),
+    return Scaffold(
+      appBar: buildAppBar(context, f),
+      body: avail
+          ? SingleChildScrollView(
+              child: Container(
+                  child: Center(
+                child: Row(
+                  children: images,
+                ),
+              )),
+            )
+          : Container(),
       floatingActionButton: FloatingActionButton(
         elevation: 20,
         child: Icon(Icons.photo),
         onPressed: getImages,
-    ),
+      ),
     );
   }
 }

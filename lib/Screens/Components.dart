@@ -12,7 +12,7 @@ String getImageURL(String imageName) {
 
 String adminEmail = 'princymishra10@gmail.com';
 
-AppBar buildAppBar(BuildContext context) {
+AppBar buildAppBar(BuildContext context,Function() f) {
   return AppBar(
     backgroundColor: Color.fromRGBO(39, 102, 120, 1),
     title: Row(
@@ -51,12 +51,11 @@ AppBar buildAppBar(BuildContext context) {
                       if (snapshot.data) {
                         FirebaseAuth.instance.signOut();
                         await FlutterSession().set('isUserSet', false);
-
+                        f();
                         //ExtendedNavigator.root.push(rg.Routes.homePage);
                       } else {
                         //Navigator.pushNamed(context, rg.Routes.);
-                        ExtendedNavigator.of(context)
-                            .push(rg.Routes.loginScreen);
+                        ExtendedNavigator.of(context).push(rg.Routes.loginScreen);
                       }
                     }
                   },

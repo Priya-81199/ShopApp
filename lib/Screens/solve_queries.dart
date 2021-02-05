@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/Screens/Components.dart';
 import 'package:intl/intl.dart';
+import 'package:lilly_app/app/route.gr.dart';
 
 class SolveQueries extends StatefulWidget {
   @override
@@ -20,7 +22,7 @@ class _SolveQueriesState extends State<SolveQueries> {
   @override
   void initState() {
     super.initState();
-
+    setLastVisited();
     getCurrentUser();
   }
 
@@ -46,8 +48,17 @@ class _SolveQueriesState extends State<SolveQueries> {
     });
   }
 
+  void setLastVisited() async {
+    var session = FlutterSession();
+    await session.set("last_visited", Routes.solveQueries);
+  }
+
   @override
   Widget build(BuildContext context) {
+    void f() {
+      setState(() {});
+    }
+
     List<Widget> activeQueriesWidget = [];
     if (!activeQueriesFetched)
       getActiveQueries();
@@ -64,9 +75,12 @@ class _SolveQueriesState extends State<SolveQueries> {
               });
               print(result['username']);
             },
-            child: Text(result['username'],style: TextStyle(
-              color: Colors.black45,
-            ),),
+            child: Text(
+              result['username'],
+              style: TextStyle(
+                color: Colors.black45,
+              ),
+            ),
           ),
         ));
         activeQueriesWidget.add(
@@ -83,7 +97,7 @@ class _SolveQueriesState extends State<SolveQueries> {
     }
 
     return Scaffold(
-      appBar: buildAppBar(context),
+      appBar: buildAppBar(context, f),
       body: LayoutBuilder(builder: (context, constraints) {
         var width = constraints.maxWidth - 400;
         var height = constraints.maxHeight;
@@ -207,6 +221,7 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Column(

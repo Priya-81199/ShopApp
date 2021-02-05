@@ -7,7 +7,6 @@ import 'package:lilly_app/app/route.gr.dart';
 import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
   @override
@@ -15,8 +14,7 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen>
-    with SingleTickerProviderStateMixin{
-
+    with SingleTickerProviderStateMixin {
   AnimationController controller;
   Animation animation;
 
@@ -24,15 +22,19 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   void initState() {
     super.initState();
 
-    controller = AnimationController(duration: Duration(seconds: 1), vsync: this);
-    animation = ColorTween(begin: Color.fromRGBO(22,135,167,1) , end: Colors.white).animate(controller);
+    controller =
+        AnimationController(duration: Duration(seconds: 1), vsync: this);
+    animation =
+        ColorTween(begin: Color.fromRGBO(22, 135, 167, 1), end: Colors.white)
+            .animate(controller);
 
     controller.forward();
 
-    controller.addListener((){
+    controller.addListener(() {
       setState(() {});
     });
   }
+
   @override
   void dispose() {
     controller.dispose();
@@ -41,11 +43,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    void f() {
+      setState(() {});
+    }
+
     var screenSize = MediaQuery.of(context).size;
     return Scaffold(
-
       backgroundColor: animation.value,
-      body:  Container(
+      body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("images/bg.jpg"),
@@ -69,15 +74,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     ),
                   ),
                   Flexible(
-                    child:
-                      Text( 'Lilly Shop',
+                    child: Text(
+                      'Lilly Shop',
                       style: TextStyle(
-                        fontFamily: 'Lobster',
-                        fontSize: 40.0,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.black
-                      ),
-                  ),
+                          fontFamily: 'Lobster',
+                          fontSize: 40.0,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.black),
+                    ),
                   ),
                 ],
               ),
@@ -86,28 +90,36 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               ),
               Column(
                 children: [
-                  RoundedButton(title: 'Log in',colour: Colors.indigoAccent,tag: 'login', onPressed: () {
-                    ExtendedNavigator.of(context).push(Routes.loginScreen);
-                  },),
-                  RoundedButton(title: 'Register',colour: Colors.indigo, tag : 'register',onPressed: () {
-                    ExtendedNavigator.of(context).push(Routes.registrationScreen);
-                  },),
+                  RoundedButton(
+                    title: 'Log in',
+                    colour: Colors.indigoAccent,
+                    tag: 'login',
+                    onPressed: () {
+                      ExtendedNavigator.of(context).push(Routes.loginScreen);
+                    },
+                  ),
+                  RoundedButton(
+                    title: 'Register',
+                    colour: Colors.indigo,
+                    tag: 'register',
+                    onPressed: () {
+                      ExtendedNavigator.of(context)
+                          .push(Routes.registrationScreen);
+                    },
+                  ),
                 ],
               ),
-
             ],
           ),
         ),
-
       ),
-    floatingActionButton: FloatingActionButton(
-      child: Icon(
-        Icons.message_rounded
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.message_rounded),
+        onPressed: launchWhatsApp,
       ),
-      onPressed: launchWhatsApp,
-    ),
     );
   }
+
   launchWhatsApp() async {
     final link = WhatsAppUnilink(
       phoneNumber: '+91-9699893233',
@@ -119,4 +131,3 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     await launch('$link');
   }
 }
-

@@ -14,7 +14,6 @@ class UpdateProducts extends StatefulWidget {
 }
 
 class _UpdateProductsState extends State<UpdateProducts> {
-
   var category_default = 'Gents';
   var subcategory_default = 'subcategory 1';
 
@@ -36,21 +35,36 @@ class _UpdateProductsState extends State<UpdateProducts> {
 
   List<dynamic> sizeCountValues = ['0', '0', '0', '0', '0', '0', '0', '0'];
   List<dynamic> ageCountValues = ['0', '0', '0', '0', '0', '0', '0'];
-  List<dynamic> numberCountValues = ['0', '0', '0', '0', '0', '0', '0','0', '0', '0', '0', '0', '0', '0','0', '0'];
+  List<dynamic> numberCountValues = [
+    '0',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0'
+  ];
 
   void getImages() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
       type: FileType.custom,
-      allowedExtensions: ['jpg', 'png', 'bmp','jpeg'],
+      allowedExtensions: ['jpg', 'png', 'bmp', 'jpeg'],
     );
 
-
-
-    if(result != null) {
+    if (result != null) {
       List<PlatformFile> files = result.files;
       setState(() {
-        for(int i = 0 ; i < files.length ; i++) {
+        for (int i = 0; i < files.length; i++) {
           var imageIndex = images.length;
           ImageFiles.add(files[i].name);
           images.add(
@@ -63,7 +77,9 @@ class _UpdateProductsState extends State<UpdateProducts> {
                       width: 200,
                       child: Image.memory(files[i].bytes),
                       decoration: BoxDecoration(
-                        boxShadow: [BoxShadow(color: Colors.indigo,spreadRadius: 2)],
+                        boxShadow: [
+                          BoxShadow(color: Colors.indigo, spreadRadius: 2)
+                        ],
                       ),
                     ),
                   ),
@@ -92,7 +108,6 @@ class _UpdateProductsState extends State<UpdateProducts> {
           imagesSelected.add(true);
         }
       });
-
     } else {
       // User canceled the picker
     }
@@ -100,7 +115,7 @@ class _UpdateProductsState extends State<UpdateProducts> {
 
   void deselectImage(var index) {
     setState(() {
-      imagesSelected[index]=false;
+      imagesSelected[index] = false;
     });
   }
 
@@ -112,22 +127,21 @@ class _UpdateProductsState extends State<UpdateProducts> {
     super.initState();
     var product = widget.product;
     print(product);
-    productID  = product['id'];
+    productID = product['id'];
     category_default = product['category'];
     subcategory_default = product['subcategory'];
     productName = product['name'];
     price = product['price'];
     description = product['description'];
     addedPropertyList = product['properties'];
-    for(var i = 0 ; i < product['properties'].length ; i++)
+    for (var i = 0; i < product['properties'].length; i++)
       addedPropertiesOn.add(true);
     addedPoints = product['points'];
-    for(var i = 0 ; i < product['points'].length ; i++)
-      addedPointsOn.add(true);
+    for (var i = 0; i < product['points'].length; i++) addedPointsOn.add(true);
     //sizeCountValues = product['sizeCounts'];
     ageCountValues = product['ageCounts'];
     //numberCountValues = product['numberCounts'];
-    for(int i = 0 ; i < product['images'].length ; i++) {
+    for (int i = 0; i < product['images'].length; i++) {
       var imageIndex = images.length;
       ImageFiles.add(product['images'][i]);
       images.add(
@@ -140,7 +154,9 @@ class _UpdateProductsState extends State<UpdateProducts> {
                   width: 200,
                   child: Image.network(getImageURL(product['images'][i])),
                   decoration: BoxDecoration(
-                    boxShadow: [BoxShadow(color: Colors.indigo,spreadRadius: 2)],
+                    boxShadow: [
+                      BoxShadow(color: Colors.indigo, spreadRadius: 2)
+                    ],
                   ),
                 ),
               ),
@@ -168,39 +184,42 @@ class _UpdateProductsState extends State<UpdateProducts> {
       );
       imagesSelected.add(true);
     }
-   print(product);
+    print(product);
   }
 
   @override
   Widget build(BuildContext context) {
+    void f() {
+      setState(() {});
+    }
 
     var category = [];
-    for(var i = 0 ; i < categories.length ; i++) {
+    for (var i = 0; i < categories.length; i++) {
       category.add(categories[i]['name']);
     }
 
     var sub_category = [];
-    for(var i = 0 ; i < subcategories.length ; i++) {
-      if(subcategories[i]['category'] == category_default) {
+    for (var i = 0; i < subcategories.length; i++) {
+      if (subcategories[i]['category'] == category_default) {
         sub_category.add(subcategories[i]['name']);
       }
     }
 
     var property = [];
-    for(var i = 0; i < properties.length ; i++) {
+    for (var i = 0; i < properties.length; i++) {
       property.add(properties[i]['name']);
     }
 
     var value = [];
-    for(var i = 0 ; i < propertyvalues.length ; i++) {
-      if(propertyvalues[i]['property'] == property_default) {
+    for (var i = 0; i < propertyvalues.length; i++) {
+      if (propertyvalues[i]['property'] == property_default) {
         value.add(propertyvalues[i]['name']);
       }
     }
 
     List<Widget> propertiesPresent = [];
-    for(var i = 0 ; i < addedPropertyList.length ; i++) {
-      if(addedPropertiesOn[i]) {
+    for (var i = 0; i < addedPropertyList.length; i++) {
+      if (addedPropertiesOn[i]) {
         propertiesPresent.add(
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -234,8 +253,8 @@ class _UpdateProductsState extends State<UpdateProducts> {
     }
 
     List<Widget> pointsPresent = [];
-    for(var i=0; i<addedPoints.length; i++) {
-      if(addedPointsOn[i]) {
+    for (var i = 0; i < addedPoints.length; i++) {
+      if (addedPointsOn[i]) {
         pointsPresent.add(
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -266,11 +285,9 @@ class _UpdateProductsState extends State<UpdateProducts> {
     }
 
     List<Widget> displayImages = [];
-    for(var i=0; i<images.length; i++) {
-      if(imagesSelected[i]) {
-        displayImages.add(
-            images[i]
-        );
+    for (var i = 0; i < images.length; i++) {
+      if (imagesSelected[i]) {
+        displayImages.add(images[i]);
       }
     }
     displayImages.add(
@@ -283,84 +300,94 @@ class _UpdateProductsState extends State<UpdateProducts> {
     var sizeNames = ['4XS', '3XS', '2XS', 'XS', 'S', 'M', 'L', 'XL'];
     List<Widget> sizeCounts = [];
     sizeCounts.add(SizedBox(width: 30));
-    for(var i=0; i<sizeNames.length; i++) {
-      sizeCounts.add(
-          Container(
-            width: 30,
-            child: TextFormField(
-              initialValue: '${sizeCountValues[i]}',
-              decoration: InputDecoration(
-                labelText: sizeNames[i],
-              ),
-              onChanged: (text) {
-                setState(() {
-                  sizeCountValues[i]=text;
-                });
-              },
-            ),
-          )
-      );
+    for (var i = 0; i < sizeNames.length; i++) {
+      sizeCounts.add(Container(
+        width: 30,
+        child: TextFormField(
+          initialValue: '${sizeCountValues[i]}',
+          decoration: InputDecoration(
+            labelText: sizeNames[i],
+          ),
+          onChanged: (text) {
+            setState(() {
+              sizeCountValues[i] = text;
+            });
+          },
+        ),
+      ));
       sizeCounts.add(SizedBox(width: 30));
     }
 
     var ageNames = ['0-1', '2-3', '4-5', '6-7', '8-9', '10-11', '12-13'];
     List<Widget> ageCounts = [];
     ageCounts.add(SizedBox(width: 30));
-    for(var i=0; i<ageNames.length; i++) {
-      ageCounts.add(
-          Container(
-            width: 30,
-            child: TextFormField(
-              initialValue: '${ageCountValues[i]}',
-              decoration: InputDecoration(
-                labelText: ageNames[i],
-              ),
-              onChanged: (text) {
-                setState(() {
-                  ageCountValues[i]=text;
-                });
-              },
-            ),
-          )
-      );
+    for (var i = 0; i < ageNames.length; i++) {
+      ageCounts.add(Container(
+        width: 30,
+        child: TextFormField(
+          initialValue: '${ageCountValues[i]}',
+          decoration: InputDecoration(
+            labelText: ageNames[i],
+          ),
+          onChanged: (text) {
+            setState(() {
+              ageCountValues[i] = text;
+            });
+          },
+        ),
+      ));
       ageCounts.add(SizedBox(width: 30));
     }
 
-    var numberNames = ['12', '14', '16', '18', '20', '22', '24','26','28','30','32','34',
-      '36', '38', '40', '42'];
+    var numberNames = [
+      '12',
+      '14',
+      '16',
+      '18',
+      '20',
+      '22',
+      '24',
+      '26',
+      '28',
+      '30',
+      '32',
+      '34',
+      '36',
+      '38',
+      '40',
+      '42'
+    ];
     List<Widget> numberCounts = [];
     numberCounts.add(SizedBox(width: 30));
-    for(var i=0; i<numberNames.length; i++) {
-      numberCounts.add(
-          Container(
-            width: 30,
-            child: TextFormField(
-              initialValue: '${numberCountValues[i]}',
-              decoration: InputDecoration(
-                labelText: numberNames[i],
-              ),
-              onChanged: (text) {
-                setState(() {
-                  numberCountValues[i]=text;
-                });
-              },
-            ),
-          )
-      );
+    for (var i = 0; i < numberNames.length; i++) {
+      numberCounts.add(Container(
+        width: 30,
+        child: TextFormField(
+          initialValue: '${numberCountValues[i]}',
+          decoration: InputDecoration(
+            labelText: numberNames[i],
+          ),
+          onChanged: (text) {
+            setState(() {
+              numberCountValues[i] = text;
+            });
+          },
+        ),
+      ));
       numberCounts.add(SizedBox(width: 30));
     }
 
-    String getSizeCategory(){
-      for(var i=0 ; i<subcategories.length;i++){
-        if(subcategories[i]['name'] == subcategory_default)
+    String getSizeCategory() {
+      for (var i = 0; i < subcategories.length; i++) {
+        if (subcategories[i]['name'] == subcategory_default)
           return subcategories[i]['size_category'];
       }
     }
 
     return MaterialApp(
       home: Scaffold(
-        appBar: buildAppBar(context),
-        body : Container(
+        appBar: buildAppBar(context, f),
+        body: Container(
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -368,9 +395,10 @@ class _UpdateProductsState extends State<UpdateProducts> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    buildDropdownButton(category_default, category,'category'),
+                    buildDropdownButton(category_default, category, 'category'),
                     SizedBox(width: 30),
-                    buildDropdownButton(subcategory_default, sub_category,'subcategory'),
+                    buildDropdownButton(
+                        subcategory_default, sub_category, 'subcategory'),
                   ],
                 ),
                 SizedBox(height: 10),
@@ -384,7 +412,7 @@ class _UpdateProductsState extends State<UpdateProducts> {
                           labelText: 'Product Name',
                         ),
                         initialValue: productName,
-                        onChanged: (text){
+                        onChanged: (text) {
                           setState(() {
                             productName = text;
                           });
@@ -423,13 +451,17 @@ class _UpdateProductsState extends State<UpdateProducts> {
                 SizedBox(height: 30),
                 Column(
                   children: [
-                    Text('Properties',style: TextStyle(fontWeight: FontWeight.bold),),
+                    Text(
+                      'Properties',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        buildDropdownButton(property_default, property,'property'),
+                        buildDropdownButton(
+                            property_default, property, 'property'),
                         SizedBox(width: 30),
-                        buildDropdownButton(value_default, value,'value'),
+                        buildDropdownButton(value_default, value, 'value'),
                         SizedBox(width: 10),
                         Container(
                           width: 40,
@@ -450,55 +482,67 @@ class _UpdateProductsState extends State<UpdateProducts> {
                 Column(
                   children: propertiesPresent,
                 ),
-                ('size'== getSizeCategory())?
-                Column(
-                  children: [
-                    SizedBox(height: 30),
-                    Text('Sizes Count',style: TextStyle(fontWeight: FontWeight.bold),),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: sizeCounts,
-                      ),
-                    ),
-                  ],
-                ):
-                Container(),
-                ('age'== getSizeCategory())?
-                Column(
-                  children: [
-                    SizedBox(height: 30),
-                    Text('Age',style: TextStyle(fontWeight: FontWeight.bold),),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: ageCounts,
-                      ),
-                    ),
-                  ],
-                ):
-                Container(),
-                ('number'== getSizeCategory())?
-                Column(
-                  children: [
-                    SizedBox(height: 30),
-                    Text('Number',style: TextStyle(fontWeight: FontWeight.bold),),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: numberCounts,
-                      ),
-                    ),
-                  ],
-                ):
-                Container(),
+                ('size' == getSizeCategory())
+                    ? Column(
+                        children: [
+                          SizedBox(height: 30),
+                          Text(
+                            'Sizes Count',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: sizeCounts,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(),
+                ('age' == getSizeCategory())
+                    ? Column(
+                        children: [
+                          SizedBox(height: 30),
+                          Text(
+                            'Age',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: ageCounts,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(),
+                ('number' == getSizeCategory())
+                    ? Column(
+                        children: [
+                          SizedBox(height: 30),
+                          Text(
+                            'Number',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: numberCounts,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(),
                 SizedBox(height: 30),
                 Column(
                   children: [
-                    Text('Additional Points',style: TextStyle(fontWeight: FontWeight.bold),),
+                    Text(
+                      'Additional Points',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -542,12 +586,11 @@ class _UpdateProductsState extends State<UpdateProducts> {
                   scrollDirection: Axis.horizontal,
                   child: Container(
                       child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: displayImages,
-                        ),
-                      )
-                  ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: displayImages,
+                    ),
+                  )),
                 ),
                 SizedBox(height: 30),
                 Row(
@@ -556,20 +599,20 @@ class _UpdateProductsState extends State<UpdateProducts> {
                     GestureDetector(
                       onTap: () {
                         var finalProperties = [];
-                        for(var i=0; i<addedPropertyList.length; i++) {
-                          if(addedPropertiesOn[i]){
+                        for (var i = 0; i < addedPropertyList.length; i++) {
+                          if (addedPropertiesOn[i]) {
                             finalProperties.add(addedPropertyList[i]);
                           }
                         }
                         var final_Points = [];
-                        for(var i=0; i<addedPoints.length; i++) {
-                          if(addedPointsOn[i]){
+                        for (var i = 0; i < addedPoints.length; i++) {
+                          if (addedPointsOn[i]) {
                             final_Points.add(addedPoints[i]);
                           }
                         }
                         var final_images = [];
-                        for(var i=0; i<ImageFiles.length; i++) {
-                          if(imagesSelected[i]){
+                        for (var i = 0; i < ImageFiles.length; i++) {
+                          if (imagesSelected[i]) {
                             final_images.add(ImageFiles[i]);
                           }
                         }
@@ -588,7 +631,10 @@ class _UpdateProductsState extends State<UpdateProducts> {
                           'images': final_images,
                         };
                         print(productDetails);
-                        _firestore.collection('productDetails').doc(productID).update(productDetails);
+                        _firestore
+                            .collection('productDetails')
+                            .doc(productID)
+                            .update(productDetails);
                       },
                       child: Container(
                         height: 50,
@@ -613,7 +659,10 @@ class _UpdateProductsState extends State<UpdateProducts> {
                     SizedBox(width: 20),
                     GestureDetector(
                       onTap: () {
-                        _firestore.collection('productDetails').doc(productID).delete();
+                        _firestore
+                            .collection('productDetails')
+                            .doc(productID)
+                            .delete();
                       },
                       child: Container(
                         height: 50,
@@ -637,10 +686,7 @@ class _UpdateProductsState extends State<UpdateProducts> {
                     ),
                   ],
                 ),
-
                 SizedBox(height: 20),
-
-
               ],
             ),
           ),
@@ -661,70 +707,63 @@ class _UpdateProductsState extends State<UpdateProducts> {
     });
   }
 
-  void addproperty(dynamic property_default, dynamic value_default){
+  void addproperty(dynamic property_default, dynamic value_default) {
     setState(() {
       addedPropertiesOn.add(true);
-      addedPropertyList.add(
-          {
-            'name': property_default,
-            'value': value_default,
-          }
-      );
+      addedPropertyList.add({
+        'name': property_default,
+        'value': value_default,
+      });
     });
   }
 
-  void addPoints(dynamic Point){
+  void addPoints(dynamic Point) {
     setState(() {
       addedPointsOn.add(true);
       addedPoints.add(Point);
     });
   }
 
-  String getValue(dynamic default_name, List<dynamic> names, dynamic fieldname){
-    if(names.contains(default_name))
-      return default_name;
+  String getValue(
+      dynamic default_name, List<dynamic> names, dynamic fieldname) {
+    if (names.contains(default_name)) return default_name;
     setState(() {
-      if(fieldname == 'subcategory')
+      if (fieldname == 'subcategory')
         subcategory_default = names[0];
-      else if(fieldname == 'value')
-        value_default = names[0];
+      else if (fieldname == 'value') value_default = names[0];
     });
     return names[0];
   }
 
-  DropdownButton<dynamic> buildDropdownButton(dynamic default_name, List<dynamic> names, dynamic fieldname) {
+  DropdownButton<dynamic> buildDropdownButton(
+      dynamic default_name, List<dynamic> names, dynamic fieldname) {
     return DropdownButton<dynamic>(
-      value:getValue(default_name, names,fieldname),
+      value: getValue(default_name, names, fieldname),
       icon: Icon(Icons.arrow_downward),
       iconSize: 24,
       elevation: 16,
-      style: TextStyle(
-          color: Colors.indigoAccent
-      ),
+      style: TextStyle(color: Colors.indigoAccent),
       underline: Container(
         height: 2,
         color: Colors.blueGrey[900],
       ),
       onChanged: (dynamic newValue) {
         setState(() {
-          if(fieldname == 'category')
+          if (fieldname == 'category')
             category_default = newValue;
-          else if(fieldname == 'subcategory')
+          else if (fieldname == 'subcategory')
             subcategory_default = newValue;
-          else if(fieldname == 'property')
+          else if (fieldname == 'property')
             property_default = newValue;
-          else if(fieldname == 'value')
-            value_default = newValue;
+          else if (fieldname == 'value') value_default = newValue;
         });
       },
-      items: names
-          .map<DropdownMenuItem<String>>((dynamic value) {
+      items: names.map<DropdownMenuItem<String>>((dynamic value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
         );
-      })
-          .toList(),
+      }).toList(),
     );
   }
 }

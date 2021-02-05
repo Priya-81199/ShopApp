@@ -66,6 +66,10 @@ class _AdminProductsState extends State<AdminProducts> {
 
   @override
   Widget build(BuildContext context) {
+    void f() {
+      setState(() {});
+    }
+
     List<TableRow> prod_content = [];
     prod_content.add(TableRow(children: [
       Text(''),
@@ -112,7 +116,7 @@ class _AdminProductsState extends State<AdminProducts> {
     }
 
     return Scaffold(
-      appBar: buildAppBar(context),
+      appBar: buildAppBar(context, f),
       body: SingleChildScrollView(
         child: Container(
             child: Table(

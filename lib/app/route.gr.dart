@@ -31,14 +31,14 @@ class Routes {
   static const String productDetails = '/product-details';
   static const String welcomeScreen = '/welcome-screen';
   static const String registrationScreen = '/registration-screen';
-  static const String homePage = '/home-page';
+  static const String homePage = '/';
   static const String deliveryScreen = '/delivery-screen';
   static const String razorPayWeb = '/razor-pay-web';
   static const String solveQueries = '/solve-queries';
   static const String cart = '/Cart';
   static const String adminProducts = '/admin-products';
   static const String updateProducts = '/update-products';
-  static const String adminProductList = '/';
+  static const String adminProductList = '/admin-product-list';
   static const all = <String>{
     loginScreen,
     addProductsDetails,

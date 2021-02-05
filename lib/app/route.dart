@@ -24,14 +24,14 @@ import 'package:lilly_app/payment_gateway/pay.dart';
     MaterialRoute(page: ProductDetails,),
     MaterialRoute(page: WelcomeScreen,),
     MaterialRoute(page: RegistrationScreen,),
-    MaterialRoute(page: homePage,),
+    MaterialRoute(page: homePage,initial: true,),
     MaterialRoute(page: DeliveryScreen,),
     MaterialRoute(page: RazorPayWeb,),
     MaterialRoute(page: SolveQueries),
     MaterialRoute(page: Cart,),
     MaterialRoute(page: AdminProducts,),
     MaterialRoute(page: UpdateProducts,),
-    MaterialRoute(page: AdminProductList,initial: true,)
+    MaterialRoute(page: AdminProductList,)
   ],
 )
 class $Router {

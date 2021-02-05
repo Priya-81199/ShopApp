@@ -12,7 +12,10 @@ class GetUserName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('categories');
+
+
+    CollectionReference users =
+        FirebaseFirestore.instance.collection('categories');
     print(users);
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc(documentId).get(),
@@ -33,6 +36,7 @@ class GetUserName extends StatelessWidget {
     );
   }
 }
+
 //class AddUser extends StatelessWidget {
 //  final String fullName;
 //  final String company;
@@ -42,6 +46,7 @@ class GetUserName extends StatelessWidget {
 //
 //  @override
 //  Widget build(BuildContext context) {
+
 //    // Create a CollectionReference called users that references the firestore collection
 //    CollectionReference users = FirebaseFirestore.instance.collection('users');
 //

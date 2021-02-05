@@ -25,10 +25,11 @@ import 'app/route.gr.dart' as rg;
 FirebaseStorage storage = FirebaseStorage.instance;
 bool isUserSet = false;
 
-
 class Data {
   final List<dynamic> productDetails;
-  Data({this.productDetails,});
+  Data({
+    this.productDetails,
+  });
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data["productDetails"] = productDetails;
@@ -36,27 +37,27 @@ class Data {
   }
 }
 
-Future<List<dynamic>> getProductsDetails()  async{
+Future<List<dynamic>> getProductsDetails() async {
   final db = FirebaseFirestore.instance;
-  List<dynamic> productsDetails=[];
+  List<dynamic> productsDetails = [];
   await db.collection('productDetails').get().then((value) {
     value.docs.forEach((result) {
       var product = result.data();
       product['id'] = result.id;
-        productsDetails.add(product);
+      productsDetails.add(product);
     });
   });
   return productsDetails;
 }
 
-void main() async{
+void main() async {
   var session = FlutterSession();
   bool isUserSet = await session.get("isUserSet");
-  if(isUserSet != false && isUserSet != true)
+  if (isUserSet != false && isUserSet != true)
     await session.set("isUserSet", false);
   // var prod_session = await session.get('prod_details');
   // if(prod_session==null)
-    session.set("prod_details", Data(productDetails:await getProductsDetails()));
+  session.set("prod_details", Data(productDetails: await getProductsDetails()));
 
   //setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,6 +68,7 @@ void main() async{
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       builder: ExtendedNavigator.builder<rg.Router>(
         router: rg.Router(),
@@ -77,8 +79,8 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-                    //AddProducts.id,
-       //routes: {
+      //AddProducts.id,
+      //routes: {
       //   AddProduct.id : (context) => AddProduct(),
       //   homePage.id : (context) => homePage(),
       //   EditSubcat.id : (context) => EditSubcat(),
@@ -91,11 +93,10 @@ class MyApp extends StatelessWidget {
       //   AddPhotos.id : (context) => AddPhotos(),
       //   AddProducts.id : (context) => AddProducts(),
       //   ProductDetails.id : (context) => ProductDetails(),
-       //},
-       onGenerateRoute: rg.Router(),
+      //},
+      onGenerateRoute: rg.Router(),
 
       //navigatorKey: locator<NavigationService>().navigatorKey,
     );
   }
 }
-
