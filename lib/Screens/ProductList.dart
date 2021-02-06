@@ -3,14 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/Screens/Components.dart';
 import 'package:lilly_app/app/route.gr.dart';
-import 'package:lilly_app/mockData.dart'; //
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:lilly_app/mockData.dart';
 import 'dart:math';
-import 'package:lilly_app/main.dart';
-import 'ProductDetails.dart';
-
-FirebaseStorage storage = FirebaseStorage.instance;
 
 class ProductList extends StatefulWidget {
   static const String id = 'ProductList';
@@ -47,23 +41,23 @@ class _ProductListState extends State<ProductList> {
     super.initState();
     setLastVisited();
     subcategory = widget.subcategory;
-    //print(subcategory);
+
 
     getData().then((value) => value.forEach((result) {
           var len = value.length;
-
-          //storage.ref('product_images/' + result['images'][0]).getDownloadURL().then((value) {
-          var url = getImageURL(result['images'][0]);
-
+          print(result['images'].length);
+          var url = (result['images'].length > 0) ? getImageURL(result['images'][0]) :"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/480px-No_image_available.svg.png";
+          if(result['images'].length == 0)
+            print(result);
           productsDetails.add(result);
           urls.add(url);
 
           if (len == urls.length) {
+            print('here');
             setState(() {
               image_set = true;
             });
           }
-          // });
         }));
   }
 
@@ -79,6 +73,8 @@ class _ProductListState extends State<ProductList> {
     var session = FlutterSession();
     var productsDetail = await session.get("prod_details");
     return productsDetail['productDetails'];
+
+
   }
 
   @override
@@ -171,8 +167,8 @@ class _ProductListState extends State<ProductList> {
           var NamefontSize = width / 232 * 18;
           var PricefontSize = width / 232 * 16;
           var DescriptionfontSize = width / 232 * 12;
-          return GestureDetector(
-            onTap: () {
+          return FlatButton(
+            onPressed: () {
               // Navigator.push(
               //     context, new MaterialPageRoute(builder: (BuildContext context) => new ProductDetails(product))
               //   );
@@ -186,9 +182,7 @@ class _ProductListState extends State<ProductList> {
                 children: [
                   Container(
                       height: 0.65 * constraints.maxHeight,
-                      child: Image.network(url)
-                      //getURL(product['images'][0]).toString()),//TODO:Firebase storage se fetch karna
-                      ),
+                      child: Image.network(url)),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text(
@@ -230,10 +224,7 @@ class _ProductListState extends State<ProductList> {
       );
     }
 
-    //var subcategory = 'subcategory 1';
     var displayProducts = <Widget>[];
-    //var x=1;
-    //print(productsDetails[0]['price']);
     for (var i = 0; i < productsDetails.length; i++) {
       var price = productsDetails[i]['price'];
       price = int.parse(price);
@@ -274,8 +265,8 @@ class _ProductListState extends State<ProductList> {
       Color buttonColour = Color.fromRGBO(211, 224, 234, 1);
       if (i == pageIndex) buttonColour = Color.fromRGBO(22, 135, 167, 1);
       pageButtons.add(
-        GestureDetector(
-          onTap: () {
+        FlatButton(
+          onPressed: () {
             setState(() {
               pageIndex = i;
             });

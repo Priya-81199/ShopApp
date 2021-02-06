@@ -3,14 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/Screens/Components.dart';
 import 'package:lilly_app/app/route.gr.dart';
-import 'package:lilly_app/mockData.dart'; //
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:lilly_app/mockData.dart';
 import 'dart:math';
-import 'package:lilly_app/main.dart';
-import 'ProductDetails.dart';
-
-FirebaseStorage storage = FirebaseStorage.instance;
 
 class AdminProductList extends StatefulWidget {
   static const String id = 'AdminProductList';
@@ -47,8 +41,6 @@ class _AdminProductListState extends State<AdminProductList> {
     setLastVisited();
     getData().then((value) => value.forEach((result) {
           var len = value.length;
-
-          //storage.ref('product_images/' + result['images'][0]).getDownloadURL().then((value) {
           var url = getImageURL(result['images'][0]);
 
           productsDetails.add(result);
@@ -59,14 +51,12 @@ class _AdminProductListState extends State<AdminProductList> {
               image_set = true;
             });
           }
-          // });
         }));
   }
 
   void setLastVisited() async {
     var session = FlutterSession();
     await session.set("last_visited", Routes.adminProductList);
-
   }
 
   RangeValues _currentRangeValues = const RangeValues(0, 10000);
@@ -167,8 +157,8 @@ class _AdminProductListState extends State<AdminProductList> {
           var NamefontSize = width / 232 * 18;
           var PricefontSize = width / 232 * 16;
           var DescriptionfontSize = width / 232 * 12;
-          return GestureDetector(
-            onTap: () {
+          return FlatButton(
+            onPressed: () {
               // Navigator.push(
               //     context, new MaterialPageRoute(builder: (BuildContext context) => new ProductDetails(product))
               //   );
@@ -182,9 +172,7 @@ class _AdminProductListState extends State<AdminProductList> {
                 children: [
                   Container(
                       height: 0.65 * constraints.maxHeight,
-                      child: Image.network(url)
-                      //getURL(product['images'][0]).toString()),//TODO:Firebase storage se fetch karna
-                      ),
+                      child: Image.network(url)),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text(
@@ -226,17 +214,12 @@ class _AdminProductListState extends State<AdminProductList> {
       );
     }
 
-    //var subcategory = 'subcategory 1';
     var displayProducts = <Widget>[];
-    //var x=1;
-    //print(productsDetails[0]['price']);
     for (var i = 0; i < productsDetails.length; i++) {
       var price = productsDetails[i]['price'];
       price = int.parse(price);
       if (price < _currentRangeValues.start || price > _currentRangeValues.end)
         continue;
-      // if(productsDetails[i]['subcategory'] != subcategory)
-      //   continue;
       var flag = true;
       var product = productsDetails[i];
       for (var j = 0; j < product['properties'].length; j++) {
@@ -271,8 +254,8 @@ class _AdminProductListState extends State<AdminProductList> {
       Color buttonColour = Color.fromRGBO(211, 224, 234, 1);
       if (i == pageIndex) buttonColour = Color.fromRGBO(22, 135, 167, 1);
       pageButtons.add(
-        GestureDetector(
-          onTap: () {
+        FlatButton(
+          onPressed: () {
             setState(() {
               pageIndex = i;
             });

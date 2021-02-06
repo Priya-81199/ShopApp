@@ -13,7 +13,6 @@
 // import 'package:lilly_app/Screens/register.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,7 +21,6 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'app/route.gr.dart' as rg;
 
-FirebaseStorage storage = FirebaseStorage.instance;
 bool isUserSet = false;
 
 class Data {
@@ -68,11 +66,10 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       builder: ExtendedNavigator.builder<rg.Router>(
         router: rg.Router(),
-        initialRoute: rg.Routes.homePage,
+        initialRoute: rg.Routes.addProductsDetails,
         builder: (context, navigator) => Theme(
           data: ThemeData.dark(),
           child: navigator,

@@ -85,8 +85,8 @@ class _homePageState extends State<homePage> {
 
     for (var i = 0; i < categories.length; i++) {
       category.add(
-        GestureDetector(
-          onTap: () {
+        FlatButton(
+          onPressed: () {
             setState(() {
               selectedCategory = categories[i]['name'];
             });
@@ -111,8 +111,8 @@ class _homePageState extends State<homePage> {
           SizedBox(width: 5),
         );
         subcategory.add(
-          GestureDetector(
-            onTap: () {
+          FlatButton(
+            onPressed: () {
               ExtendedNavigator.of(context).push(Routes.productList,
                   arguments: ProductListArguments(
                       subcategory: subcategories[i]['name']));
@@ -144,8 +144,8 @@ class _homePageState extends State<homePage> {
         SizedBox(width: 5),
       );
       product.add(
-        GestureDetector(
-          onTap: () {},
+        FlatButton(
+          onPressed: () {},
           child: Container(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(5.0),
@@ -161,8 +161,6 @@ class _homePageState extends State<homePage> {
     product.add(
       SizedBox(width: 5),
     );
-
-
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -572,8 +570,6 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Column(

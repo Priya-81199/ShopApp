@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/Screens/Components.dart';
 import 'package:lilly_app/mockData.dart';
 import 'package:file_picker/file_picker.dart';
@@ -13,9 +14,20 @@ class UpdateProducts extends StatefulWidget {
   _UpdateProductsState createState() => _UpdateProductsState();
 }
 
+class Data {
+  final List<dynamic> productDetails;
+  Data({
+    this.productDetails,
+  });
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data["productDetails"] = productDetails;
+    return data;
+  }
+}
 class _UpdateProductsState extends State<UpdateProducts> {
   var category_default = 'Gents';
-  var subcategory_default = 'subcategory 1';
+  var subcategory_default = 'Formals';
 
   var productName = '';
   var price = '';
@@ -33,26 +45,9 @@ class _UpdateProductsState extends State<UpdateProducts> {
   List<Widget> images = [];
   List<bool> imagesSelected = [];
 
-  List<dynamic> sizeCountValues = ['0', '0', '0', '0', '0', '0', '0', '0'];
-  List<dynamic> ageCountValues = ['0', '0', '0', '0', '0', '0', '0'];
-  List<dynamic> numberCountValues = [
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0'
-  ];
+  List<dynamic> sizeCountValues = List.filled(8, '0');
+  List<dynamic> ageCountValues = List.filled(7, '0');
+  List<dynamic> numberCountValues = List.filled(16, '0');
 
   void getImages() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
@@ -70,7 +65,7 @@ class _UpdateProductsState extends State<UpdateProducts> {
           images.add(
             Stack(
               children: <Widget>[
-                GestureDetector(
+                FlatButton(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
@@ -87,8 +82,8 @@ class _UpdateProductsState extends State<UpdateProducts> {
                 Positioned(
                   top: 10,
                   right: 10,
-                  child: GestureDetector(
-                    onTap: () {
+                  child: FlatButton(
+                    onPressed: () {
                       deselectImage(imageIndex);
                     },
                     child: Text(
@@ -147,7 +142,7 @@ class _UpdateProductsState extends State<UpdateProducts> {
       images.add(
         Stack(
           children: <Widget>[
-            GestureDetector(
+            FlatButton(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
@@ -164,8 +159,8 @@ class _UpdateProductsState extends State<UpdateProducts> {
             Positioned(
               top: 10,
               right: 10,
-              child: GestureDetector(
-                onTap: () {
+              child: FlatButton(
+                onPressed: () {
                   deselectImage(imageIndex);
                 },
                 child: Text(
@@ -387,312 +382,336 @@ class _UpdateProductsState extends State<UpdateProducts> {
     return MaterialApp(
       home: Scaffold(
         appBar: buildAppBar(context, f),
-        body: Container(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    buildDropdownButton(category_default, category, 'category'),
-                    SizedBox(width: 30),
-                    buildDropdownButton(
-                        subcategory_default, sub_category, 'subcategory'),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 240,
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Product Name',
-                        ),
-                        initialValue: productName,
-                        onChanged: (text) {
-                          setState(() {
-                            productName = text;
-                          });
-                        },
+        body: Builder(
+            builder: (BuildContext context) {
+              return Container(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          buildDropdownButton(category_default, category, 'category'),
+                          SizedBox(width: 30),
+                          buildDropdownButton(
+                              subcategory_default, sub_category, 'subcategory'),
+                        ],
                       ),
-                    ),
-                    SizedBox(width: 30),
-                    Container(
-                      width: 120,
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Price',
-                        ),
-                        initialValue: price,
-                        onChanged: (text) {
-                          price = text;
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  width: 390,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Description',
-                    ),
-                    initialValue: description,
-                    onChanged: (text) {
-                      setState(() {
-                        description = text;
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(height: 30),
-                Column(
-                  children: [
-                    Text(
-                      'Properties',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        buildDropdownButton(
-                            property_default, property, 'property'),
-                        SizedBox(width: 30),
-                        buildDropdownButton(value_default, value, 'value'),
-                        SizedBox(width: 10),
-                        Container(
-                          width: 40,
-                          child: FlatButton(
-                            onPressed: () => {
-                              addproperty(property_default, value_default),
-                            },
-                            child: Icon(
-                              Icons.add_circle_outline,
-                              color: Colors.green,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Column(
-                  children: propertiesPresent,
-                ),
-                ('size' == getSizeCategory())
-                    ? Column(
-                        children: [
-                          SizedBox(height: 30),
-                          Text(
-                            'Sizes Count',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: sizeCounts,
-                            ),
-                          ),
-                        ],
-                      )
-                    : Container(),
-                ('age' == getSizeCategory())
-                    ? Column(
-                        children: [
-                          SizedBox(height: 30),
-                          Text(
-                            'Age',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: ageCounts,
-                            ),
-                          ),
-                        ],
-                      )
-                    : Container(),
-                ('number' == getSizeCategory())
-                    ? Column(
-                        children: [
-                          SizedBox(height: 30),
-                          Text(
-                            'Number',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: numberCounts,
-                            ),
-                          ),
-                        ],
-                      )
-                    : Container(),
-                SizedBox(height: 30),
-                Column(
-                  children: [
-                    Text(
-                      'Additional Points',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
+                      SizedBox(height: 10),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            width: 390,
+                            width: 240,
                             child: TextFormField(
                               decoration: InputDecoration(
-                                labelText: 'Point',
+                                labelText: 'Product Name',
                               ),
-                              initialValue: point,
+                              initialValue: productName,
                               onChanged: (text) {
-                                point = text;
+                                setState(() {
+                                  productName = text;
+                                });
                               },
                             ),
                           ),
-                          SizedBox(width: 10),
+                          SizedBox(width: 30),
                           Container(
-                            width: 40,
-                            child: FlatButton(
-                              onPressed: () => {
-                                addPoints(point),
+                            width: 120,
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                labelText: 'Price',
+                              ),
+                              initialValue: price,
+                              onChanged: (text) {
+                                price = text;
                               },
-                              child: Icon(
-                                Icons.add_circle_outline,
-                                color: Colors.green,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        width: 390,
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Description',
+                          ),
+                          initialValue: description,
+                          onChanged: (text) {
+                            setState(() {
+                              description = text;
+                            });
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Column(
+                        children: [
+                          Text(
+                            'Properties',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              buildDropdownButton(
+                                  property_default, property, 'property'),
+                              SizedBox(width: 30),
+                              buildDropdownButton(value_default, value, 'value'),
+                              SizedBox(width: 10),
+                              Container(
+                                width: 40,
+                                child: FlatButton(
+                                  onPressed: () => {
+                                    addproperty(property_default, value_default),
+                                  },
+                                  child: Icon(
+                                    Icons.add_circle_outline,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: propertiesPresent,
+                      ),
+                      ('size' == getSizeCategory())
+                          ? Column(
+                              children: [
+                                SizedBox(height: 30),
+                                Text(
+                                  'Sizes Count',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: sizeCounts,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Container(),
+                      ('age' == getSizeCategory())
+                          ? Column(
+                              children: [
+                                SizedBox(height: 30),
+                                Text(
+                                  'Age',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: ageCounts,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Container(),
+                      ('number' == getSizeCategory())
+                          ? Column(
+                              children: [
+                                SizedBox(height: 30),
+                                Text(
+                                  'Number',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: numberCounts,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Container(),
+                      SizedBox(height: 30),
+                      Column(
+                        children: [
+                          Text(
+                            'Additional Points',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 390,
+                                  child: TextFormField(
+                                    decoration: InputDecoration(
+                                      labelText: 'Point',
+                                    ),
+                                    initialValue: point,
+                                    onChanged: (text) {
+                                      point = text;
+                                    },
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Container(
+                                  width: 40,
+                                  child: FlatButton(
+                                    onPressed: () => {
+                                      addPoints(point),
+                                    },
+                                    child: Icon(
+                                      Icons.add_circle_outline,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: pointsPresent,
+                      ),
+                      SizedBox(height: 30),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Container(
+                            child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: displayImages,
+                          ),
+                        )),
+                      ),
+                      SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FlatButton(
+                            onPressed: () {
+                              var finalProperties = [];
+                              for (var i = 0; i < addedPropertyList.length; i++) {
+                                if (addedPropertiesOn[i]) {
+                                  finalProperties.add(addedPropertyList[i]);
+                                }
+                              }
+                              var final_Points = [];
+                              for (var i = 0; i < addedPoints.length; i++) {
+                                if (addedPointsOn[i]) {
+                                  final_Points.add(addedPoints[i]);
+                                }
+                              }
+                              var final_images = [];
+                              for (var i = 0; i < ImageFiles.length; i++) {
+                                if (imagesSelected[i]) {
+                                  final_images.add(ImageFiles[i]);
+                                }
+                              }
+
+                              var productDetails = {
+                                'category': category_default,
+                                'subcategory': subcategory_default,
+                                'name': productName,
+                                'price': price,
+                                'description': description,
+                                'properties': finalProperties,
+                                'points': final_Points,
+                                'sizeCounts': sizeCountValues,
+                                'ageCounts': ageCountValues,
+                                'numberCounts': numberCountValues,
+                                'images': final_images,
+                              };
+                              final snackBar = SnackBar(
+                                content: Text('Product Updated!'),
+                              );
+                              _firestore
+                                  .collection('productDetails')
+                                  .doc(productID)
+                                  .update(productDetails)
+                                  .then((value) => {
+                                    ScaffoldMessenger.of(context).showSnackBar(snackBar),
+                                    updateSession(productDetails,productID),
+                                  });
+
+                            },
+                            child: Container(
+                              height: 50,
+                              width: 120,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(5),
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Update',
+                                  style: TextStyle(
+                                    fontFamily: 'Lobster',
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          FlatButton(
+                            onPressed: () {
+                              _firestore
+                                  .collection('productDetails')
+                                  .doc(productID)
+                                  .delete();
+                              final snackBar = SnackBar(
+                                content: Text('Product Removed!'),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            },
+                            child: Container(
+                              height: 50,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                color: Colors.pink,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(5),
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Remove Product',
+                                  style: TextStyle(
+                                    fontFamily: 'Lobster',
+                                    fontSize: 20,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 20),
+                    ],
+                  ),
                 ),
-                Column(
-                  children: pointsPresent,
-                ),
-                SizedBox(height: 30),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Container(
-                      child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: displayImages,
-                    ),
-                  )),
-                ),
-                SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        var finalProperties = [];
-                        for (var i = 0; i < addedPropertyList.length; i++) {
-                          if (addedPropertiesOn[i]) {
-                            finalProperties.add(addedPropertyList[i]);
-                          }
-                        }
-                        var final_Points = [];
-                        for (var i = 0; i < addedPoints.length; i++) {
-                          if (addedPointsOn[i]) {
-                            final_Points.add(addedPoints[i]);
-                          }
-                        }
-                        var final_images = [];
-                        for (var i = 0; i < ImageFiles.length; i++) {
-                          if (imagesSelected[i]) {
-                            final_images.add(ImageFiles[i]);
-                          }
-                        }
-
-                        var productDetails = {
-                          'category': category_default,
-                          'subcategory': subcategory_default,
-                          'name': productName,
-                          'price': price,
-                          'description': description,
-                          'properties': finalProperties,
-                          'points': final_Points,
-                          'sizeCounts': sizeCountValues,
-                          'ageCounts': ageCountValues,
-                          'numberCounts': numberCountValues,
-                          'images': final_images,
-                        };
-                        print(productDetails);
-                        _firestore
-                            .collection('productDetails')
-                            .doc(productID)
-                            .update(productDetails);
-                      },
-                      child: Container(
-                        height: 50,
-                        width: 120,
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(5),
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Update',
-                            style: TextStyle(
-                              fontFamily: 'Lobster',
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    GestureDetector(
-                      onTap: () {
-                        _firestore
-                            .collection('productDetails')
-                            .doc(productID)
-                            .delete();
-                      },
-                      child: Container(
-                        height: 50,
-                        width: 200,
-                        decoration: BoxDecoration(
-                          color: Colors.pink,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(5),
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Remove Product',
-                            style: TextStyle(
-                              fontFamily: 'Lobster',
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-              ],
-            ),
-          ),
+              );
+          }
         ),
       ),
     );
+  }
+
+  void updateSession(dynamic product,dynamic id) async{
+    var session = FlutterSession();
+    var productsDetail = await session.get("prod_details");
+    productsDetail = productsDetail['productDetails'];
+    productsDetail[productsDetail.indexWhere((element) => element['id'] == id)] = product;
+    await session.set("prod_details",Data(productDetails:productsDetail ));
   }
 
   void removeProperty(dynamic PropertyIndex) {

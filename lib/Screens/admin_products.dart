@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/Screens/Components.dart';
@@ -8,7 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lilly_app/Screens/update_products.dart';
 import 'package:lilly_app/app/route.gr.dart';
 
-FirebaseStorage storage = FirebaseStorage.instance;
 final db = FirebaseFirestore.instance;
 
 class AdminProducts extends StatefulWidget {
@@ -41,20 +39,14 @@ class _AdminProductsState extends State<AdminProducts> {
     if (user == adminEmail) {
       getData().then((value) => value.forEach((result) {
             var len = value.length;
-
-            // storage.ref('product_images/' + result['images'][0])
-            //     .getDownloadURL()
-            //     .then((value) {
             var prod_results = result;
             prod_results['url'] = getImageURL(result['images'][0]);
             productsDetails.add(prod_results);
-            //urls.add(value);
             if (len == productsDetails.length) {
               setState(() {
                 image_set = true;
               });
             }
-            // });
           }));
     }
   }

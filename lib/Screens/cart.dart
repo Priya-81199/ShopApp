@@ -1,13 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/Screens/Components.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lilly_app/app/route.gr.dart';
 
-FirebaseStorage storage = FirebaseStorage.instance;
 final db = FirebaseFirestore.instance;
 
 class Cart extends StatefulWidget {
@@ -33,8 +31,6 @@ class _CartState extends State<Cart> {
       totalDetails = result.data();
       product = totalDetails['product'];
 
-      // storage.ref('product_images/' + product['images'][0])
-      //     .getDownloadURL().then((value) {
       product['image'] = getImageURL(product['images'][0]);
       product['cartID'] = result.id;
       if (_auth.currentUser != null) {
@@ -45,8 +41,6 @@ class _CartState extends State<Cart> {
       } else {
         cart_len--;
       }
-
-      //}).then((value) => {
 
       if (cart_len == CartDetails.length) {
         setState(() {

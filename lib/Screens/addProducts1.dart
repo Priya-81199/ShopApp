@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/Screens/Components.dart';
@@ -5,17 +8,32 @@ import 'package:lilly_app/app/route.gr.dart';
 import 'package:lilly_app/mockData.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:path_provider/path_provider.dart';
 
 final _firestore = FirebaseFirestore.instance;
+final storage = FirebaseStorage.instance;
 
 class AddProductsDetails extends StatefulWidget {
   @override
   _AddProductsDetailsState createState() => _AddProductsDetailsState();
 }
 
+
+class Data {
+  final List<dynamic> productDetails;
+  Data({
+    this.productDetails,
+  });
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data["productDetails"] = productDetails;
+    return data;
+  }
+}
+
 class _AddProductsDetailsState extends State<AddProductsDetails> {
   var category_default = 'Gents';
-  var subcategory_default = 'subcategory 1';
+  var subcategory_default = 'Formals';
 
   var productName = '';
   var price = '';
@@ -32,28 +50,11 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
   List ImageFiles = [];
   List<Widget> images = [];
   List<bool> imagesSelected = [];
+  List<PlatformFile> allFiles = [];
 
-  var sizeCountValues = ['0', '0', '0', '0', '0', '0', '0', '0'];
-  var ageCountValues = ['0', '0', '0', '0', '0', '0', '0'];
-  var numberCountValues = [
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0'
-  ];
-
+  var sizeCountValues = List.filled(8, '0');
+  var ageCountValues = List.filled(7, '0');
+  var numberCountValues = List.filled(16, '0');
   void getImages() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
@@ -71,30 +72,29 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
       List<PlatformFile> files = result.files;
       setState(() {
         for (int i = 0; i < files.length; i++) {
+          allFiles.add(files[i]);
           var imageIndex = images.length;
           ImageFiles.add(files[i].name);
           images.add(
             Stack(
               children: <Widget>[
-                GestureDetector(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 200,
-                      child: Image.memory(files[i].bytes),
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(color: Colors.indigo, spreadRadius: 2)
-                        ],
-                      ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: 200,
+                    child: Image.memory(files[i].bytes),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(color: Colors.indigo, spreadRadius: 2)
+                      ],
                     ),
                   ),
                 ),
                 Positioned(
                   top: 10,
                   right: 10,
-                  child: GestureDetector(
-                    onTap: () {
+                  child: FlatButton(
+                    onPressed: () {
                       deselectImage(imageIndex);
                     },
                     child: Text(
@@ -114,20 +114,20 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
           imagesSelected.add(true);
         }
       });
-    } else {
-      // User canceled the picker
     }
   }
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setLastVisited();
   }
+
   void setLastVisited() async {
     var session = FlutterSession();
     await session.set("last_visited", Routes.addProductsDetails);
   }
+
   @override
   Widget build(BuildContext context) {
     void f() {
@@ -259,7 +259,9 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
       sizeCounts.add(SizedBox(width: 30));
     }
 
-    var ageNames = ['0-1', '2-3', '4-5', '6-7', '8-9', '10-11', '12-13'];
+    var ageNames = [];
+    for(var i=0;i<13;i+=2)
+      ageNames.add(i.toString()+'-'+(i+1).toString());
     List<Widget> ageCounts = [];
     ageCounts.add(SizedBox(width: 30));
     for (var i = 0; i < ageNames.length; i++) {
@@ -280,24 +282,9 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
       ageCounts.add(SizedBox(width: 30));
     }
 
-    var numberNames = [
-      '12',
-      '14',
-      '16',
-      '18',
-      '20',
-      '22',
-      '24',
-      '26',
-      '28',
-      '30',
-      '32',
-      '34',
-      '36',
-      '38',
-      '40',
-      '42'
-    ];
+    var numberNames = [];
+    for(var i=12;i<=42;i+=2)
+      numberNames.add(i.toString());
     List<Widget> numberCounts = [];
     numberCounts.add(SizedBox(width: 30));
     for (var i = 0; i < numberNames.length; i++) {
@@ -328,295 +315,350 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
     return MaterialApp(
       home: Scaffold(
         appBar: buildAppBar(context, f),
-        body: Container(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        body: Builder(
+          builder: (BuildContext context) {
+            return Container(
+              child: SingleChildScrollView(
+                child: Column(
                   children: [
-                    buildDropdownButton(category_default, category, 'category'),
-                    SizedBox(width: 30),
-                    buildDropdownButton(
-                        subcategory_default, sub_category, 'subcategory'),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 240,
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Product Name',
-                        ),
-                        initialValue: productName,
-                        onChanged: (text) {
-                          setState(() {
-                            productName = text;
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 30),
-                    Container(
-                      width: 120,
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Price',
-                        ),
-                        initialValue: price,
-                        onChanged: (text) {
-                          price = text;
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  width: 390,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Description',
-                    ),
-                    initialValue: description,
-                    onChanged: (text) {
-                      setState(() {
-                        description = text;
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(height: 30),
-                Column(
-                  children: [
-                    Text(
-                      'Properties',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         buildDropdownButton(
-                            property_default, property, 'property'),
+                            category_default, category, 'category'),
                         SizedBox(width: 30),
-                        buildDropdownButton(value_default, value, 'value'),
-                        SizedBox(width: 10),
+                        buildDropdownButton(
+                            subcategory_default, sub_category, 'subcategory'),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                         Container(
-                          width: 40,
-                          child: FlatButton(
-                            onPressed: () => {
-                              addproperty(property_default, value_default),
-                            },
-                            child: Icon(
-                              Icons.add_circle_outline,
-                              color: Colors.green,
+                          width: 240,
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Product Name',
                             ),
+                            initialValue: productName,
+                            onChanged: (text) {
+                              setState(() {
+                                productName = text;
+                              });
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 30),
+                        Container(
+                          width: 120,
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Price',
+                            ),
+                            initialValue: price,
+                            onChanged: (text) {
+                              price = text;
+                            },
                           ),
                         ),
                       ],
                     ),
-                  ],
-                ),
-                Column(
-                  children: propertiesPresent,
-                ),
-                ('size' == getSizeCategory())
-                    ? Column(
-                        children: [
-                          SizedBox(height: 30),
-                          Text(
-                            'Sizes Count',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: sizeCounts,
-                            ),
-                          ),
-                        ],
-                      )
-                    : Container(),
-                ('age' == getSizeCategory())
-                    ? Column(
-                        children: [
-                          SizedBox(height: 30),
-                          Text(
-                            'Age',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: ageCounts,
-                            ),
-                          ),
-                        ],
-                      )
-                    : Container(),
-                ('number' == getSizeCategory())
-                    ? Column(
-                        children: [
-                          SizedBox(height: 30),
-                          Text(
-                            'Number',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: numberCounts,
-                            ),
-                          ),
-                        ],
-                      )
-                    : Container(),
-                SizedBox(height: 30),
-                Column(
-                  children: [
-                    Text(
-                      'Additional Points',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Container(
+                      width: 390,
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Description',
+                        ),
+                        initialValue: description,
+                        onChanged: (text) {
+                          setState(() {
+                            description = text;
+                          });
+                        },
+                      ),
                     ),
+                    SizedBox(height: 30),
+                    Column(
+                      children: [
+                        Text(
+                          'Properties',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            buildDropdownButton(
+                                property_default, property, 'property'),
+                            SizedBox(width: 30),
+                            buildDropdownButton(value_default, value, 'value'),
+                            SizedBox(width: 10),
+                            Container(
+                              width: 40,
+                              child: FlatButton(
+                                onPressed: () =>
+                                {
+                                  addProperty(property_default, value_default),
+                                },
+                                child: Icon(
+                                  Icons.add_circle_outline,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: propertiesPresent,
+                    ),
+                    ('size' == getSizeCategory())
+                        ? Column(
+                      children: [
+                        SizedBox(height: 30),
+                        Text(
+                          'Sizes Count',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: sizeCounts,
+                          ),
+                        ),
+                      ],
+                    )
+                        : Container(),
+                    ('age' == getSizeCategory())
+                        ? Column(
+                      children: [
+                        SizedBox(height: 30),
+                        Text(
+                          'Age',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: ageCounts,
+                          ),
+                        ),
+                      ],
+                    )
+                        : Container(),
+                    ('number' == getSizeCategory())
+                        ? Column(
+                      children: [
+                        SizedBox(height: 30),
+                        Text(
+                          'Number',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: numberCounts,
+                          ),
+                        ),
+                      ],
+                    )
+                        : Container(),
+                    SizedBox(height: 30),
+                    Column(
+                      children: [
+                        Text(
+                          'Additional Points',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 390,
+                                child: TextFormField(
+                                  decoration: InputDecoration(
+                                    labelText: 'Point',
+                                  ),
+                                  initialValue: point,
+                                  onChanged: (text) {
+                                    point = text;
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Container(
+                                width: 40,
+                                child: FlatButton(
+                                  onPressed: () =>
+                                  {
+                                    addPoints(point),
+                                  },
+                                  child: Icon(
+                                    Icons.add_circle_outline,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: pointsPresent,
+                    ),
+                    SizedBox(height: 30),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 390,
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Point',
-                              ),
-                              initialValue: point,
-                              onChanged: (text) {
-                                point = text;
-                              },
-                            ),
+                      child: Container(
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: displayImages,
                           ),
-                          SizedBox(width: 10),
-                          Container(
-                            width: 40,
-                            child: FlatButton(
-                              onPressed: () => {
-                                addPoints(point),
-                              },
-                              child: Icon(
-                                Icons.add_circle_outline,
-                                color: Colors.green,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: pointsPresent,
-                ),
-                SizedBox(height: 30),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Container(
-                      child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: displayImages,
-                    ),
-                  )),
-                ),
-                SizedBox(height: 30),
-                GestureDetector(
-                  onTap: () {
-                    var finalProperties = [];
-                    for (var i = 0; i < addedPropertyList.length; i++) {
-                      if (addedPropertiesOn[i]) {
-                        finalProperties.add(addedPropertyList[i]);
-                      }
-                    }
-                    var final_Points = [];
-                    for (var i = 0; i < addedPoints.length; i++) {
-                      if (addedPointsOn[i]) {
-                        final_Points.add(addedPoints[i]);
-                      }
-                    }
-                    var final_images = [];
-                    for (var i = 0; i < ImageFiles.length; i++) {
-                      if (imagesSelected[i]) {
-                        final_images.add(ImageFiles[i]);
-                      }
-                    }
-
-                    var productDetails = {
-                      'category': category_default,
-                      'subcategory': subcategory_default,
-                      'name': productName,
-                      'price': price,
-                      'description': description,
-                      'properties': finalProperties,
-                      'points': final_Points,
-                      'sizeCounts': sizeCountValues,
-                      'ageCounts': ageCountValues,
-                      'numberCounts': numberCountValues,
-                      'images': final_images,
-                    };
-                    print(productDetails);
-                    _firestore.collection('productDetails').add(productDetails);
-                  },
-                  child: Container(
-                    height: 50,
-                    width: 120,
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Add',
-                        style: TextStyle(
-                          fontSize: 20,
                         ),
                       ),
                     ),
-                  ),
+                    SizedBox(height: 30),
+                    ElevatedButton(
+                      onPressed: () {
+
+                        var finalProperties = [];
+                        for (var i = 0; i < addedPropertyList.length; i++) {
+                          if (addedPropertiesOn[i]) {
+                            finalProperties.add(addedPropertyList[i]);
+                          }
+                        }
+                        var final_Points = [];
+                        for (var i = 0; i < addedPoints.length; i++) {
+                          if (addedPointsOn[i]) {
+                            final_Points.add(addedPoints[i]);
+                          }
+                        }
+                        var final_images = [];
+                        for (var i = 0; i < ImageFiles.length; i++) {
+                          if (imagesSelected[i]) {
+                            final_images.add(ImageFiles[i]);
+                            uploadPhotos(ImageFiles[i],allFiles[i]);
+                          }
+                        }
+
+                        var productDetails = {
+                          'category': category_default,
+                          'subcategory': subcategory_default,
+                          'name': productName,
+                          'price': price,
+                          'description': description,
+                          'properties': finalProperties,
+                          'points': final_Points,
+                          'sizeCounts': sizeCountValues,
+                          'ageCounts': ageCountValues,
+                          'numberCounts': numberCountValues,
+                          'images': final_images,
+                        };
+
+                        if(productName!='' && price!='' && final_images.length!= 0){
+                          final snackBar = SnackBar(
+                            content: Text('Product Added!'),
+                          );
+                          _firestore.collection('productDetails').add(productDetails).then((value) => {
+
+                           ScaffoldMessenger.of(context).showSnackBar(snackBar),
+                           updateSession(productDetails,value.id),
+                          });
+
+                        }
+                        else{
+                          final snackBar = SnackBar(
+                            content: Text('Make sure to add Product name, Price and Images.'),
+                          );
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(snackBar);
+                        }
+
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 120,
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5),
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Add',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                  ],
                 ),
-                SizedBox(height: 20),
-              ],
-            ),
-          ),
+              ),
+            );
+          }
         ),
       ),
     );
   }
+  Future<File> getFile(PlatformFile file) async{
 
-  void removeProperty(dynamic PropertyIndex) {
+    String tempPath = 'D:/AndroidProjects/lilly_app/images';
+    print(tempPath);
+    File newFile;
+    var bytes = file.bytes;
+    final buffer = bytes.buffer;
+    newFile =  await new File(tempPath).writeAsBytes(buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+
+    return newFile;
+
+  }
+  void uploadPhotos(String image,PlatformFile file) async{
+
+    print(file.path);
+   //await storage.ref('product_images/$image').putFile(await getFile(file));
+
+  }
+
+  void updateSession(dynamic product, dynamic id) async{
+    product['id'] = id;
+    var session = FlutterSession();
+    var productsDetail = await session.get("prod_details");
+    productsDetail = productsDetail['productDetails'];
+    productsDetail.add(product);
+    await session.set("prod_details",Data(productDetails:productsDetail ));
+  }
+
+  void removeProperty(dynamic propertyIndex) {
     setState(() {
-      addedPropertiesOn[PropertyIndex] = false;
+      addedPropertiesOn[propertyIndex] = false;
     });
   }
 
-  void removePoint(dynamic PropertyIndex) {
+  void removePoint(dynamic propertyIndex) {
     setState(() {
-      addedPointsOn[PropertyIndex] = false;
+      addedPointsOn[propertyIndex] = false;
     });
   }
 
-  void addproperty(dynamic property_default, dynamic value_default) {
+  void addProperty(dynamic propertyDefault, dynamic valueDefault) {
     setState(() {
       addedPropertiesOn.add(true);
       addedPropertyList.add({
-        'name': property_default,
-        'value': value_default,
+        'name': propertyDefault,
+        'value': valueDefault,
       });
     });
   }
@@ -629,18 +671,17 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
   }
 
   String getValue(
-      dynamic default_name, List<dynamic> names, dynamic fieldname) {
-    if (names.contains(default_name)) return default_name;
+      dynamic defaultName, List<dynamic> names, dynamic fieldName) {
+    if (names.contains(defaultName)) return defaultName;
     setState(() {
-      if (fieldname == 'subcategory')
+      if (fieldName == 'subcategory')
         subcategory_default = names[0];
-      else if (fieldname == 'value') value_default = names[0];
+      else if (fieldName == 'value') value_default = names[0];
     });
     return names[0];
   }
 
-  DropdownButton<dynamic> buildDropdownButton(
-      dynamic default_name, List<dynamic> names, dynamic fieldname) {
+  DropdownButton<dynamic> buildDropdownButton(dynamic default_name, List<dynamic> names, dynamic fieldname) {
     return DropdownButton<dynamic>(
       value: getValue(default_name, names, fieldname),
       icon: Icon(Icons.arrow_downward),

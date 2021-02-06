@@ -3,11 +3,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lilly_app/Screens/Components.dart';
-import 'package:lilly_app/mockData.dart';
-import 'dart:io';
 import 'dart:ui';
 import 'package:file_picker/file_picker.dart';
-import 'package:image/image.dart' as img;
 
 class AddPhotos extends StatefulWidget {
   static const String id = 'AddPhotos';
@@ -44,8 +41,6 @@ class _AddPhotosState extends State<AddPhotos> {
           ));
         }
       });
-    } else {
-      // User canceled the picker
     }
   }
 

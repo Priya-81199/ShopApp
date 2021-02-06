@@ -34,9 +34,9 @@ class _SendReceiveState extends State<SendReceive> {
       addData(propertyvalues[i], 'propertyvalues');
     }
 
-    for (var i = 0; i < products.length; i++) {
-      addData(products[i], 'products');
-    }
+    // for (var i = 0; i < products.length; i++) {
+    //   addData(products[i], 'products');
+    // }
   }
 
   @override
