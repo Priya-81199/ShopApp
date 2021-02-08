@@ -23,6 +23,65 @@ String adminEmail = 'princymishra10@gmail.com';
 
 
 //Widgets
+
+Widget getCard(BuildContext context,dynamic product, dynamic width, dynamic height){
+
+  var nameFontSize = width / 232 * 18;
+  var priceFontSize = width / 232 * 16;
+  var descriptionFontSize = width / 232 * 12;
+  return FlatButton(
+    onPressed: () {
+      ExtendedNavigator.of(context).push(Routes.productDetails,
+          arguments: ProductDetailsArguments(product: product));
+    },
+    child: Container(
+      padding: EdgeInsets.all(10.0),
+      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+      child: Column(
+        children: [
+          Container(
+              height: 0.65 * height,
+              child: Image.network(getImageURL(product['images'][0]))),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              product['name'],
+              style: TextStyle(
+                fontFamily: 'Lobster',
+                fontSize: nameFontSize,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              product['description'],
+              style: TextStyle(
+                fontFamily: 'Handlee',
+                fontSize: descriptionFontSize,
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              '₹' + product['price'],
+              style: TextStyle(
+                fontFamily: 'Lobster',
+                fontSize: priceFontSize,
+                fontWeight: FontWeight.w500,
+                color: Colors.pinkAccent,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+
+}
+
 AppBar buildAppBar(BuildContext context,Function() f) {
   return AppBar(
     backgroundColor: Color.fromRGBO(39, 102, 120, 1),

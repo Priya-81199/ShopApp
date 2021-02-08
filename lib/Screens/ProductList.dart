@@ -33,7 +33,6 @@ class _ProductListState extends State<ProductList> {
   }
 
   var productsDetails = [];
-  var urls = [];
   bool imageSet = false;
   var subcategory;
   @override
@@ -45,14 +44,8 @@ class _ProductListState extends State<ProductList> {
     getData().then((value) => {
       value.forEach((result) {
         var len = value.length;
-        print(result['images'].length);
-        var url = (result['images'].length > 0) ? getImageURL(result['images'][0]) :"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/480px-No_image_available.svg.png";
-        if(result['images'].length == 0)
-          print(result);
         productsDetails.add(result);
-        urls.add(url);
-
-        if (len == urls.length) {
+        if (len == productsDetails.length) {
           setState(() {
             imageSet = true;
           });
@@ -161,64 +154,13 @@ class _ProductListState extends State<ProductList> {
       return flag;
     }
 
-    getProductCard(dynamic product, String url) {
-      //print(url);
+
+    getProductCard(dynamic product) {
       return LayoutBuilder(
         builder: (context, constraints) {
           var width = constraints.maxWidth;
-          var nameFontSize = width / 232 * 18;
-          var priceFontSize = width / 232 * 16;
-          var descriptionFontSize = width / 232 * 12;
-          return FlatButton(
-            onPressed: () {
-              ExtendedNavigator.of(context).push(Routes.productDetails,
-                  arguments: ProductDetailsArguments(product: product));
-            },
-            child: Container(
-              padding: EdgeInsets.all(10.0),
-              margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-              child: Column(
-                children: [
-                  Container(
-                      height: 0.65 * constraints.maxHeight,
-                      child: Image.network(url)),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      product['name'],
-                      style: TextStyle(
-                        fontFamily: 'Lobster',
-                        fontSize: nameFontSize,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      product['description'],
-                      style: TextStyle(
-                        fontFamily: 'Handlee',
-                        fontSize: descriptionFontSize,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      '₹' + product['price'],
-                      style: TextStyle(
-                        fontFamily: 'Lobster',
-                        fontSize: priceFontSize,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.pinkAccent,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+          var height = constraints.maxHeight;
+          return getCard(context,product, width, height);
         },
       );
     }
@@ -249,7 +191,7 @@ class _ProductListState extends State<ProductList> {
         }
       }
       if (flag && imageSet) {
-        displayProducts.add(getProductCard(product, urls[i]));
+        displayProducts.add(getProductCard(product));
       }
     }
 
