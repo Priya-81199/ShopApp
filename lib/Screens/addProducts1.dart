@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/Screens/Components.dart';
@@ -8,10 +5,10 @@ import 'package:lilly_app/app/route.gr.dart';
 import 'package:lilly_app/mockData.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:path_provider/path_provider.dart';
+
 
 final _firestore = FirebaseFirestore.instance;
-final storage = FirebaseStorage.instance;
+
 
 class AddProductsDetails extends StatefulWidget {
   @override
@@ -546,7 +543,7 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
                         for (var i = 0; i < ImageFiles.length; i++) {
                           if (imagesSelected[i]) {
                             final_images.add(ImageFiles[i]);
-                            uploadPhotos(ImageFiles[i],allFiles[i]);
+                            uploadPhotos(allFiles[i]);
                           }
                         }
 
@@ -613,24 +610,7 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
       ),
     );
   }
-  Future<File> getFile(PlatformFile file) async{
 
-    String tempPath = 'D:/AndroidProjects/lilly_app/images';
-    print(tempPath);
-    File newFile;
-    var bytes = file.bytes;
-    final buffer = bytes.buffer;
-    newFile =  await new File(tempPath).writeAsBytes(buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
-
-    return newFile;
-
-  }
-  void uploadPhotos(String image,PlatformFile file) async{
-
-    print(file.path);
-   //await storage.ref('product_images/$image').putFile(await getFile(file));
-
-  }
 
   void updateSession(dynamic product, dynamic id) async{
     product['id'] = id;

@@ -7,12 +7,8 @@ import 'package:lilly_app/Screens/Components.dart';
 import 'package:lilly_app/app/route.gr.dart';
 import 'package:lilly_app/mockData.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lilly_app/Screens/ProductDetails.dart';
 import 'dart:math';
 import 'package:flutter_session/flutter_session.dart';
-import 'package:lilly_app/Screens/ProductList.dart';
-import 'package:lilly_app/main.dart';
-import 'login.dart';
 import 'package:intl/intl.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:scroll_to_id/scroll_to_id.dart';
@@ -26,8 +22,6 @@ class homePage extends StatefulWidget {
   @override
   _homePageState createState() => _homePageState();
 }
-
-final _firestore = FirebaseFirestore.instance;
 
 class _homePageState extends State<homePage> {
   final messageTextController = TextEditingController();

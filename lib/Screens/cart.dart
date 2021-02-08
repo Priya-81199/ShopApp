@@ -22,10 +22,10 @@ class _CartState extends State<Cart> {
   bool isCartFetched = false;
 
   var totalDetails;
-  List<dynamic> CartDetails = [];
+  List<dynamic> cartDetails = [];
   void getCartDetails() async {
     var cart = await db.collection('cart').get();
-    var cart_len = cart.docs.length;
+    var cartLen = cart.docs.length;
     cart.docs.forEach((result) {
       var product;
       totalDetails = result.data();
@@ -37,23 +37,21 @@ class _CartState extends State<Cart> {
         user = FirebaseAuth.instance.currentUser.email;
       }
       if (user == totalDetails['user']) {
-        CartDetails.add(product);
+        cartDetails.add(product);
       } else {
-        cart_len--;
+        cartLen--;
       }
 
-      if (cart_len == CartDetails.length) {
+      if (cartLen == cartDetails.length) {
         setState(() {
           isCartFetched = true;
         });
       }
-      // });
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setLastVisited();
     getCartDetails();
@@ -65,16 +63,21 @@ class _CartState extends State<Cart> {
   }
 
   void viewProduct(dynamic product) {
-    ExtendedNavigator.of(context).push(Routes.productDetails,
-        arguments: ProductDetailsArguments(product: product));
+    ExtendedNavigator.of(context).push(
+      Routes.productDetails,
+      arguments: ProductDetailsArguments(product: product),
+    );
   }
 
   void removeProduct(dynamic product) {
-    db.collection('cart').doc(product['cartID']).delete().then((value) => {
-          setState(() {
-            CartDetails.remove(product);
-          })
-        });
+    db.collection('cart')
+    .doc(product['cartID'])
+    .delete()
+    .then((value) => {
+      setState(() {
+        cartDetails.remove(product);
+      }),
+    });
   }
 
   @override
@@ -83,55 +86,65 @@ class _CartState extends State<Cart> {
       setState(() {});
     }
 
-    List<TableRow> cart_content = [];
-    cart_content.add(TableRow(children: [
-      Text(''),
-      Text('Details'),
-      Text('Actions'),
-    ]));
+    List<TableRow> cartContent = [];
+    cartContent.add(
+      TableRow(
+        children: [
+          Text(''),
+          Text('Details'),
+          Text('Actions'),
+        ],
+      ),
+    );
 
     if (isCartFetched) {
-      print(CartDetails);
-      CartDetails.forEach((product) {
-        cart_content.add(TableRow(children: [
-          Container(
-              color: Colors.blue,
-              height: 200,
-              width: 200,
-              child: Image.network(product['image'])),
-          Container(
-            child: Column(children: [
-              Text(product['name']),
-              Text(product['description']),
-              Text(product['price']),
-            ]),
+      print(cartDetails);
+      cartDetails.forEach((product) {
+        cartContent.add(
+          TableRow(
+            children: [
+              Container(
+                  color: Colors.blue,
+                  height: 200,
+                  width: 200,
+                  child: Image.network(product['image']),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(product['name']),
+                    Text(product['description']),
+                    Text(product['price']),
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    FlatButton(
+                      child: Icon(
+                        Icons.remove_red_eye,
+                        color: Colors.lightGreen,
+                      ),
+                      onPressed: () {
+                        viewProduct(product);
+                      },
+                    ),
+                    FlatButton(
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.pink,
+                      ),
+                      onPressed: () {
+                        removeProduct(product);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          Container(
-            child: Column(
-              children: [
-                FlatButton(
-                  child: Icon(
-                    Icons.remove_red_eye,
-                    color: Colors.lightGreen,
-                  ),
-                  onPressed: () {
-                    viewProduct(product);
-                  },
-                ),
-                FlatButton(
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.pink,
-                  ),
-                  onPressed: () {
-                    removeProduct(product);
-                  },
-                ),
-              ],
-            ),
-          )
-          //Text(product['image'])
-        ]));
+        );
       });
     }
 
@@ -139,9 +152,10 @@ class _CartState extends State<Cart> {
       appBar: buildAppBar(context, f),
       body: SingleChildScrollView(
         child: Container(
-            child: Table(
-          children: cart_content,
-        )),
+          child: Table(
+            children: cartContent,
+          ),
+        ),
       ),
     );
   }

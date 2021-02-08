@@ -1,14 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
-import 'package:lilly_app/Screens/ProductDetails.dart';
-import 'package:lilly_app/Screens/homePage.dart';
 import 'package:lilly_app/Screens/rounded_button.dart';
 import 'package:lilly_app/Screens/Components.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lilly_app/app/route.gr.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:lilly_app/main.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';

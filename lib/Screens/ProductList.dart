@@ -18,14 +18,14 @@ class _ProductListState extends State<ProductList> {
   bool selectedData = false;
   var filterSet = [];
   var filterSetCount = [];
-  var filterMapedIndex = {};
+  var filterMappedIndex = {};
   var pageIndex = 1;
 
   _ProductListState() {
     for (var i = 0; i < properties.length; i++) {
       filterSet.add([]);
       filterSetCount.add(0);
-      filterMapedIndex[properties[i]['name']] = i;
+      filterMappedIndex[properties[i]['name']] = i;
       for (var j = 0; j < properties[i]['value'].length; j++) {
         filterSet[i].add(false);
       }
@@ -34,7 +34,7 @@ class _ProductListState extends State<ProductList> {
 
   var productsDetails = [];
   var urls = [];
-  bool image_set = false;
+  bool imageSet = false;
   var subcategory;
   @override
   void initState() {
@@ -42,23 +42,23 @@ class _ProductListState extends State<ProductList> {
     setLastVisited();
     subcategory = widget.subcategory;
 
+    getData().then((value) => {
+      value.forEach((result) {
+        var len = value.length;
+        print(result['images'].length);
+        var url = (result['images'].length > 0) ? getImageURL(result['images'][0]) :"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/480px-No_image_available.svg.png";
+        if(result['images'].length == 0)
+          print(result);
+        productsDetails.add(result);
+        urls.add(url);
 
-    getData().then((value) => value.forEach((result) {
-          var len = value.length;
-          print(result['images'].length);
-          var url = (result['images'].length > 0) ? getImageURL(result['images'][0]) :"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/480px-No_image_available.svg.png";
-          if(result['images'].length == 0)
-            print(result);
-          productsDetails.add(result);
-          urls.add(url);
-
-          if (len == urls.length) {
-            print('here');
-            setState(() {
-              image_set = true;
-            });
-          }
-        }));
+        if (len == urls.length) {
+          setState(() {
+            imageSet = true;
+          });
+        }
+      }),
+    });
   }
 
   void setLastVisited() async {
@@ -88,9 +88,9 @@ class _ProductListState extends State<ProductList> {
     for (var i = 0; i < properties.length; i++) {
       var property = properties[i]['name'];
 
-      var filteroptions = <Widget>[];
+      var filterOptions = <Widget>[];
       for (var j = 0; j < properties[i]['value'].length; j++) {
-        filteroptions.add(
+        filterOptions.add(
           CheckboxListTile(
             title: Text(
               properties[i]['value'][j],
@@ -116,18 +116,20 @@ class _ProductListState extends State<ProductList> {
             property,
             style: TextStyle(fontFamily: 'Lobster', fontSize: 16),
           ),
-          children: filteroptions,
+          children: filterOptions,
         ),
       );
     }
-    filters.add(Text(
-      'Price Range',
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-        fontFamily: 'Lobster',
+    filters.add(
+      Text(
+        'Price Range',
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Lobster',
+        ),
       ),
-    ));
+    );
     filters.add(RangeSlider(
       values: _currentRangeValues,
       min: 0,
@@ -164,14 +166,11 @@ class _ProductListState extends State<ProductList> {
       return LayoutBuilder(
         builder: (context, constraints) {
           var width = constraints.maxWidth;
-          var NamefontSize = width / 232 * 18;
-          var PricefontSize = width / 232 * 16;
-          var DescriptionfontSize = width / 232 * 12;
+          var nameFontSize = width / 232 * 18;
+          var priceFontSize = width / 232 * 16;
+          var descriptionFontSize = width / 232 * 12;
           return FlatButton(
             onPressed: () {
-              // Navigator.push(
-              //     context, new MaterialPageRoute(builder: (BuildContext context) => new ProductDetails(product))
-              //   );
               ExtendedNavigator.of(context).push(Routes.productDetails,
                   arguments: ProductDetailsArguments(product: product));
             },
@@ -189,7 +188,7 @@ class _ProductListState extends State<ProductList> {
                       product['name'],
                       style: TextStyle(
                         fontFamily: 'Lobster',
-                        fontSize: NamefontSize,
+                        fontSize: nameFontSize,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -200,7 +199,7 @@ class _ProductListState extends State<ProductList> {
                       product['description'],
                       style: TextStyle(
                         fontFamily: 'Handlee',
-                        fontSize: DescriptionfontSize,
+                        fontSize: descriptionFontSize,
                       ),
                     ),
                   ),
@@ -210,7 +209,7 @@ class _ProductListState extends State<ProductList> {
                       '₹' + product['price'],
                       style: TextStyle(
                         fontFamily: 'Lobster',
-                        fontSize: PricefontSize,
+                        fontSize: priceFontSize,
                         fontWeight: FontWeight.w500,
                         color: Colors.pinkAccent,
                       ),
@@ -235,7 +234,7 @@ class _ProductListState extends State<ProductList> {
       var product = productsDetails[i];
       for (var j = 0; j < product['properties'].length; j++) {
         var property = product['properties'][j];
-        var filterIndex = filterMapedIndex[property['name']];
+        var filterIndex = filterMappedIndex[property['name']];
         if (filterSetCount[filterIndex] > 0) {
           var valuesToBeSatisfied = [];
           if (properties[filterIndex]['select'] == 'single') {
@@ -249,19 +248,19 @@ class _ProductListState extends State<ProductList> {
           }
         }
       }
-      //
-      //print(flag);
-      if (flag && image_set) {
+      if (flag && imageSet) {
         displayProducts.add(getProductCard(product, urls[i]));
       }
     }
 
-    var ProductsPerPage = 20;
+    var productsPerPage = 20;
     var pageButtons = <Widget>[];
     pageButtons.add(SizedBox(width: 10));
-    for (var i = 1;
-        i <= ((displayProducts.length) / ProductsPerPage).ceil();
-        i++) {
+    for (
+      var i = 1;
+      i <= ((displayProducts.length) / productsPerPage).ceil();
+      i++
+    ) {
       Color buttonColour = Color.fromRGBO(211, 224, 234, 1);
       if (i == pageIndex) buttonColour = Color.fromRGBO(22, 135, 167, 1);
       pageButtons.add(
@@ -277,7 +276,7 @@ class _ProductListState extends State<ProductList> {
             color: buttonColour,
             child: Center(
                 child: Text(
-              '${i}',
+              '$i',
               style: TextStyle(fontFamily: 'Handlee'),
             )),
           ),
@@ -312,10 +311,15 @@ class _ProductListState extends State<ProductList> {
                   ),
                   delegate: SliverChildListDelegate(
                     displayProducts.sublist(
-                        min((pageIndex - 1) * ProductsPerPage,
-                            displayProducts.length),
-                        min(pageIndex * ProductsPerPage,
-                            displayProducts.length)),
+                      min(
+                        (pageIndex - 1) * productsPerPage,
+                        displayProducts.length,
+                      ),
+                      min(
+                        pageIndex * productsPerPage,
+                        displayProducts.length,
+                      ),
+                    ),
                   ),
                 ),
                 SliverList(

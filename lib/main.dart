@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       builder: ExtendedNavigator.builder<rg.Router>(
         router: rg.Router(),
-        initialRoute: rg.Routes.addProductsDetails,
+        initialRoute: rg.Routes.homePage,
         builder: (context, navigator) => Theme(
           data: ThemeData.dark(),
           child: navigator,
