@@ -29,12 +29,33 @@ class _homePageState extends State<homePage> {
   final _auth = FirebaseAuth.instance;
   User loggedInUser;
   String messageText;
+  bool newArrivalFetched = false;
+  List<dynamic> newArrivalProducts = [];
 
   @override
   void initState() {
     super.initState();
     setLastVisited();
     getCurrentUser();
+
+  }
+  void setArrivalProducts() async{
+    var session = FlutterSession();
+    var details = await session.get("prod_details");
+    details = details['productDetails'];
+    var requiredLength = details.length;
+
+    for(var i = 0 ; i < details.length ; i++){
+
+      if(details[i]['category'] == selectedCategory) {
+        newArrivalProducts.add(details[i]);
+      }
+      if(requiredLength==newArrivalProducts.length){
+        setState(() {
+          newArrivalFetched = true;
+        });
+      }
+    }
   }
 
   void setLastVisited() async {
@@ -67,11 +88,19 @@ class _homePageState extends State<homePage> {
     getData('products');
   }
 
-  var selectedCategory = 'Kids';
+  var selectedCategory = 'Gents';
   @override
   Widget build(BuildContext context) {
     void f() {
       setState(() {});
+    }
+    setArrivalProducts();
+    List<Widget> newArrivalProds = [];
+
+    if(newArrivalFetched){
+      for(var i = 0 ; i < newArrivalProducts.length ; i++){
+        newArrivalProds.add(getCard(context,newArrivalProducts[i],300,400));
+      }
     }
 
     var category = <Widget>[];
@@ -299,7 +328,7 @@ class _homePageState extends State<homePage> {
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 20.0),
-                      height: 500.0,
+                      height: 600.0,
                       child: CarouselSlider(
                         options: CarouselOptions(
                           autoPlay: true,
@@ -345,16 +374,24 @@ class _homePageState extends State<homePage> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 20.0),
-                      height: 120.0,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: product,
-                      ),
-                    ),
+                    // Container(
+                    //   margin: EdgeInsets.symmetric(vertical: 20.0),
+                    //   height: 120.0,
+                    //   child: ListView(
+                    //     scrollDirection: Axis.horizontal,
+                    //     children: product,
+                    //   ),
+                    // ),
+
                     SizedBox(
                       height: 20,
+                    ),
+
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: newArrivalProds,
+                      ),
                     ),
                   ],
                 ),

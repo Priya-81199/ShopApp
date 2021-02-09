@@ -341,6 +341,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       );
     }
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
           appBar: buildAppBar(context, f),
           body: Builder(
