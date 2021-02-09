@@ -44,7 +44,7 @@ class _homePageState extends State<homePage> {
     var details = await session.get("prod_details");
     details = details['productDetails'];
     var requiredLength = details.length;
-
+    newArrivalProducts = [];
     for(var i = 0 ; i < details.length ; i++){
 
       if(details[i]['category'] == selectedCategory) {
@@ -555,6 +555,8 @@ class _homePageState extends State<homePage> {
   void selectCat(String catName) {
     setState(() {
       selectedCategory = catName;
+      newArrivalFetched = false;
+      setArrivalProducts();
     });
     // scrollToId.animateTo(
     //     'b',
