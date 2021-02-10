@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:lilly_app/Screens/Components.dart';
 import 'package:flutter/material.dart';
 import 'package:lilly_app/Screens/rounded_button.dart';
@@ -101,28 +102,30 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         print(email);
                         print(password);
                         try {
-                          final newUser =
-                              await _auth.createUserWithEmailAndPassword(
-                                  email: email, password: password);
-
+                          final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
                           User user = FirebaseAuth.instance.currentUser;
-
                           if (!user.emailVerified) {
                             await user.sendEmailVerification();
                           }
-
                           if (newUser != null /*&& user.emailVerified*/) {
-                            Navigator.push(
-                                context,
-                                new MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        new WelcomeScreen()));
+                            ExtendedNavigator.of(context).popAndPush(Routes.welcomeScreen);
                           }
+                          // else if(){
+                          //
+                          // }
                           setState(() {
                             showSpinner = false;
                           });
                         } catch (e) {
                           print(e);
+                          final snackBar = SnackBar(
+                            content: Text(e.toString()),
+                          );
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(snackBar);
+                          setState(() {
+                            showSpinner = false;
+                          });
                         }
                       },
                     ),

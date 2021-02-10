@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/Screens/Components.dart';
@@ -19,6 +20,27 @@ class _AdminProductListState extends State<AdminProductList> {
   var filterSetCount = [];
   var filterMappedIndex = {};
   var pageIndex = 1;
+  final _auth = FirebaseAuth.instance;
+  User loggedInUser;
+
+  void getCurrentUser() async {
+    try {
+      final user = await _auth.currentUser;
+      if (user != null) {
+        if(user.email == adminEmail){
+          loggedInUser = user;
+        }
+        else{
+          ExtendedNavigator.of(context).popAndPush(Routes.homePage);
+        }
+      }
+      else{
+        ExtendedNavigator.of(context).popAndPush(Routes.welcomeScreen);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   _AdminProductListState() {
     for (var i = 0; i < properties.length; i++) {
@@ -39,6 +61,7 @@ class _AdminProductListState extends State<AdminProductList> {
   void initState() {
     super.initState();
     setLastVisited();
+    getCurrentUser();
     getData().then((value) =>
     {
       value.forEach((result) {

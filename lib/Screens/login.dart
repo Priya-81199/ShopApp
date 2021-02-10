@@ -123,11 +123,30 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ExtendedNavigator.of(context).push(lastVisited);
                               }
                             }
+                            else if(user != null && !(user1.emailVerified)){
+                              final snackBar = SnackBar(
+                                content: Text('Verify your Email First'),
+                                action: SnackBarAction(label: 'Resend Email Verification',
+                                    onPressed: (){
+                                      user1.sendEmailVerification();
+                                    }),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            }
                             setState(() {
                               showSpinner = false;
                             });
                           } catch (e) {
                             print(e);
+                            final snackBar = SnackBar(
+                              content: Text(e.toString()),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            setState(() {
+                              showSpinner = false;
+                            });
                           }
                         }),
                   ],

@@ -95,6 +95,8 @@ class _homePageState extends State<homePage> {
     void f() {
       setState(() {});
     }
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     setArrivalProducts();
     List<Widget> newArrivalProds = [];
 
@@ -329,8 +331,9 @@ class _homePageState extends State<homePage> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(vertical: 20.0),
-                      height: 600.0,
+                      color: Color.fromRGBO(34,40,49, 1),
+                      width: width,
+                      height: height-120,
                       child: CarouselSlider(
                         options: CarouselOptions(
                           autoPlay: true,
