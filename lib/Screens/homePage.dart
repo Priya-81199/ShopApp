@@ -31,6 +31,7 @@ class _homePageState extends State<homePage> {
   String messageText;
   bool newArrivalFetched = false;
   List<dynamic> newArrivalProducts = [];
+  final dataKey = new GlobalKey();
 
   @override
   void initState() {
@@ -112,6 +113,7 @@ class _homePageState extends State<homePage> {
           onPressed: () {
             setState(() {
               selectedCategory = categories[i]['name'];
+              Scrollable.ensureVisible(dataKey.currentContext);
             });
           },
           child: Container(
@@ -353,6 +355,7 @@ class _homePageState extends State<homePage> {
                     ),
 
                     Container(
+                      key: dataKey,
                       margin: EdgeInsets.symmetric(vertical: 20.0),
                       height: 300.0,
                       child: SingleChildScrollView(
@@ -557,6 +560,7 @@ class _homePageState extends State<homePage> {
       selectedCategory = catName;
       newArrivalFetched = false;
       setArrivalProducts();
+      Scrollable.ensureVisible(dataKey.currentContext);
     });
     // scrollToId.animateTo(
     //     'b',
