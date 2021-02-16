@@ -124,8 +124,9 @@ class Router extends RouterBase {
       );
     },
     DeliveryScreen: (data) {
+      final args = data.getArgs<DeliveryScreenArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => DeliveryScreen(),
+        builder: (context) => DeliveryScreen(args.product),
         settings: data,
       );
     },
@@ -183,6 +184,12 @@ class ProductListArguments {
 class ProductDetailsArguments {
   final dynamic product;
   ProductDetailsArguments({@required this.product});
+}
+
+/// DeliveryScreen arguments holder class
+class DeliveryScreenArguments {
+  final dynamic product;
+  DeliveryScreenArguments({@required this.product});
 }
 
 /// UpdateProducts arguments holder class

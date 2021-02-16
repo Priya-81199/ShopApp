@@ -521,18 +521,21 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                         builder: (context, snapshot) {
                                                           return FlatButton(
                                                             onPressed: () {
-                                                              snapshot.hasData &&
-                                                                  snapshot.data
-                                                                  ? ExtendedNavigator
-                                                                  .of(
-                                                                  context)
-                                                                  .push(Routes
-                                                                  .deliveryScreen)
-                                                                  : ExtendedNavigator
-                                                                  .of(
-                                                                  context)
-                                                                  .push(Routes
-                                                                  .welcomeScreen);
+                                                              final snackBar = SnackBar(
+                                                                content: Text('Please Select ${getSizeCategory(products['subcategory'])}'),
+                                                              );
+                                                              if(snapshot.hasData && snapshot.data){
+                                                                if(selectedSize == -1){
+                                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                }
+                                                                else{
+                                                                  products['selectedSize'] =sizeNames[selectedSize];
+                                                                  ExtendedNavigator.of(context).push(Routes.deliveryScreen,arguments: DeliveryScreenArguments(product: products));
+                                                                }
+                                                              }
+                                                              else{
+                                                                ExtendedNavigator.of(context).push(Routes.welcomeScreen);
+                                                              }
                                                             },
                                                             child: Text(
                                                               'Buy Now',

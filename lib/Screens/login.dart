@@ -101,12 +101,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           });
                           try {
                             final user = await _auth.signInWithEmailAndPassword(
-                                email: email, password: password);
+                                email: email,
+                                password: password,
+                            );
 
                             User user1 = FirebaseAuth.instance.currentUser;
 
-                            if (user != null && user1.emailVerified) {
-                              //isUserSet=true;
+                            if (user1.emailVerified) {
                               var session = FlutterSession();
                               await session.set("isUserSet", true);
                               var lastVisited = await session.get('last_visited');
@@ -123,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ExtendedNavigator.of(context).push(lastVisited);
                               }
                             }
-                            else if(user != null && !(user1.emailVerified)){
+                            else {
                               final snackBar = SnackBar(
                                 content: Text('Verify your Email First'),
                                 action: SnackBarAction(label: 'Resend Email Verification',
@@ -131,19 +132,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                       user1.sendEmailVerification();
                                     }),
                               );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
                             }
-                            setState(() {
-                              showSpinner = false;
-                            });
                           } catch (e) {
-                            print(e);
                             final snackBar = SnackBar(
-                              content: Text(e.toString()),
+                              // content: Text(e.toString().substring(30)),
+                              content: Text(
+                                'Invalid username/password!',
+                                style: TextStyle(
+                                  color: Colors.red, 
+                                ),
+                              ),
                             );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          } finally {
                             setState(() {
                               showSpinner = false;
                             });

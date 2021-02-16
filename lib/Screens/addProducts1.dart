@@ -312,9 +312,11 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
     return MaterialApp(
       home: Scaffold(
         appBar: buildAppBar(context, f),
-        body: Builder(
-          builder: (BuildContext context) {
-            return Container(
+        body:
+         // Builder(
+         //  builder: (BuildContext context) {
+         //    return
+          Container(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -561,23 +563,23 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
                           'images': final_images,
                         };
 
+
                         if(productName!='' && price!='' && final_images.length!= 0){
-                          final snackBar = SnackBar(
-                            content: Text('Product Added!'),
-                          );
+                          // final snackBar = SnackBar(
+                          //   content: Text('Product Added!'),
+                          // );
                           _firestore.collection('productDetails').add(productDetails).then((value) => {
 
-                           ScaffoldMessenger.of(context).showSnackBar(snackBar),
+                           //ScaffoldMessenger.of(context).showSnackBar(snackBar),
                            updateSession(productDetails,value.id),
                           });
 
                         }
                         else{
-                          final snackBar = SnackBar(
-                            content: Text('Make sure to add Product name, Price and Images.'),
-                          );
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(snackBar);
+                          // final snackBar = SnackBar(
+                          //   content: Text('Make sure to add Product name, Price and Images.'),
+                          // );
+                          //ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
 
                       },
@@ -604,9 +606,9 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
                   ],
                 ),
               ),
-            );
-          }
-        ),
+            ),
+          // }
+        // ),
       ),
     );
   }
@@ -673,6 +675,7 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
         color: Colors.blueGrey[900],
       ),
       onChanged: (dynamic newValue) {
+        print(newValue);
         setState(() {
           if (fieldname == 'category')
             category_default = newValue;

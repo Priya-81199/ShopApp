@@ -7,6 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 final _firestore = FirebaseFirestore.instance;
 
 class DeliveryScreen extends StatefulWidget {
+  final dynamic product;
+  DeliveryScreen(this.product);
   @override
   _DeliveryScreenState createState() => _DeliveryScreenState();
 }
@@ -30,6 +32,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
     super.initState();
     getCurrentUser();
     getAddress();
+    print(widget.product);
   }
 
   @override
@@ -204,6 +207,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     print(myController5.text);
                     print(myController6.text);
                     print(myController7.text);
+                    placeOrder();
                   },
                 ),
               ],
@@ -212,6 +216,24 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
         ),
       ),
     );
+  }
+  placeOrder() async{
+    final name = myController1.text;
+    final phone = myController2.text;
+    final address =  [myController4.text, myController5.text , myController6.text,myController7.text, myController3.text] ;
+    final product = widget.product;
+    await  _firestore.collection('order_details').add({
+      'name': name,
+      'phone': phone,
+      'address': address,
+      'email': loggedInUser.email,
+      'Timestamp': FieldValue.serverTimestamp(),
+      'DeliveryTime' : null,
+      'DeliveryStatus' : 0,
+      'PaymentMode':'COD',
+      'product' : product,
+      'IsPaid' : false,
+    });
   }
   saveAddress() async{
     final name = myController1.text;
