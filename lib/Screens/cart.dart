@@ -87,57 +87,76 @@ class _CartState extends State<Cart> {
     }
 
     List<TableRow> cartContent = [];
-    cartContent.add(
-      TableRow(
-        children: [
-          Text(''),
-          Text('Details'),
-          Text('Actions'),
-        ],
-      ),
-    );
+
 
     if (isCartFetched) {
-      print(cartDetails);
       cartDetails.forEach((product) {
         cartContent.add(
           TableRow(
             children: [
               Container(
-                  color: Colors.blue,
-                  height: 200,
-                  width: 200,
+                  //color: Colors.blue,
+                  height: 180,
+                  width: 180,
                   child: Image.network(product['image']),
               ),
               Container(
                 child: Column(
                   children: [
-                    Text(product['name']),
-                    Text(product['description']),
-                    Text(product['price']),
+                    Text(
+                      product['name'],
+                      style: TextStyle(
+                        fontFamily: 'Lobster',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
+
+                    ),
+                    Text(
+                      product['description'],
+                      style: TextStyle(
+                        fontFamily: 'Handlee',
+                        fontWeight: FontWeight.w200,
+                        fontSize:20,
+                      ),),
+                    Text(
+                      '₹' + product['price'],
+                      style: TextStyle(
+                          fontFamily: 'Lobster',
+                          fontWeight: FontWeight.w300,
+                          fontSize: 20,
+                          color: Colors.pinkAccent
+                      ),
+                    ),
                   ],
                 ),
               ),
               Container(
                 child: Column(
                   children: [
-                    FlatButton(
-                      child: Icon(
-                        Icons.remove_red_eye,
-                        color: Colors.lightGreen,
+                    Tooltip(
+                      message: 'View',
+                      child: FlatButton(
+                        child: Icon(
+                          Icons.remove_red_eye,
+                          color: Colors.lightGreen,
+                        ),
+                        onPressed: () {
+                          viewProduct(product);
+                        },
                       ),
-                      onPressed: () {
-                        viewProduct(product);
-                      },
                     ),
-                    FlatButton(
-                      child: Icon(
-                        Icons.delete,
-                        color: Colors.pink,
+                    Tooltip(
+                      message: 'Remove',
+                      child: FlatButton(
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.pink,
+                        ),
+                        onPressed: () {
+                          removeProduct(product);
+                        },
                       ),
-                      onPressed: () {
-                        removeProduct(product);
-                      },
                     ),
                   ],
                 ),
@@ -145,16 +164,76 @@ class _CartState extends State<Cart> {
             ],
           ),
         );
+        cartContent.add(
+          TableRow(
+            children: [
+              SizedBox(height: 20,),
+              SizedBox(height: 20,),
+              SizedBox(height: 20,),
+            ],
+          ),
+        );
+
       });
     }
 
     return Scaffold(
       appBar: buildAppBar(context, f),
       body: SingleChildScrollView(
-        child: Container(
-          child: Table(
-            children: cartContent,
-          ),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 40,
+            ),
+            Container(
+              child: Text(
+                'My Cart (${cartDetails.length.toString()})',
+                style: TextStyle(
+                  fontFamily: 'Handlee',
+                  fontSize: 30,
+                  color: Colors.blueGrey
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 40,
+            ),
+            Container(
+              child: Table(
+                children: cartContent,
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            FlatButton(
+              onPressed: (){
+                ExtendedNavigator.of(context).push(Routes.deliveryScreen, arguments: DeliveryScreenArguments(product: cartDetails));
+              },
+              color: Colors.deepOrange,
+              hoverColor:Colors.deepOrangeAccent,
+              child: Container(
+                height: 50,
+                width: 170,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'PLACE ORDER',
+                      style:TextStyle(
+                        color: Color.fromRGBO(49,49,49,1),
+                        fontSize: 18,
+                      ),
+                      //textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ),
+          ],
         ),
       ),
     );

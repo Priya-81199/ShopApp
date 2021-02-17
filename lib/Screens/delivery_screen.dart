@@ -1,14 +1,16 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lilly_app/Screens/Components.dart';
 import 'package:lilly_app/Screens/rounded_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lilly_app/app/route.gr.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
 class DeliveryScreen extends StatefulWidget {
-  final dynamic product;
-  DeliveryScreen(this.product);
+  final List<dynamic> products;
+  DeliveryScreen(this.products);
   @override
   _DeliveryScreenState createState() => _DeliveryScreenState();
 }
@@ -32,7 +34,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
     super.initState();
     getCurrentUser();
     getAddress();
-    print(widget.product);
+    print(widget.products);
   }
 
   @override
@@ -197,17 +199,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   tag: 'register',
                   onPressed: () {
                     saveAddress();
-                    // Navigator.push(
-                    //     context, new MaterialPageRoute(builder: (BuildContext context) => new WelcomeScreen())
-                    // );
-                    print(myController1.text);
-                    print(myController2.text);
-                    print(myController3.text);
-                    print(myController4.text);
-                    print(myController5.text);
-                    print(myController6.text);
-                    print(myController7.text);
                     placeOrder();
+                    ExtendedNavigator.of(context).popAndPush(Routes.homePage);
                   },
                 ),
               ],
@@ -221,19 +214,24 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
     final name = myController1.text;
     final phone = myController2.text;
     final address =  [myController4.text, myController5.text , myController6.text,myController7.text, myController3.text] ;
-    final product = widget.product;
-    await  _firestore.collection('order_details').add({
-      'name': name,
-      'phone': phone,
-      'address': address,
-      'email': loggedInUser.email,
-      'Timestamp': FieldValue.serverTimestamp(),
-      'DeliveryTime' : null,
-      'DeliveryStatus' : 0,
-      'PaymentMode':'COD',
-      'product' : product,
-      'IsPaid' : false,
-    });
+    final products = widget.products;
+     for(var i =0; i < products.length ; i++ ) {
+        _firestore.collection('order_details').add({
+        'name': name,
+        'phone': phone,
+        'address': address,
+        'email': loggedInUser.email,
+        'Timestamp': FieldValue.serverTimestamp(),
+        'DeliveryTime' : null,
+        'DeliveryStatus' : 0,
+        'PaymentMode':'COD',
+        'product' : products[i],
+        'IsPaid' : false,
+      });
+        _firestore.collection('cart').doc(products[i]['cartID']).delete();
+    }
+
+
   }
   saveAddress() async{
     final name = myController1.text;

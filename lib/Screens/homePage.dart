@@ -51,6 +51,9 @@ class _homePageState extends State<homePage> {
       if(details[i]['category'] == selectedCategory) {
         newArrivalProducts.add(details[i]);
       }
+      else{
+        requiredLength--;
+      }
       if(requiredLength==newArrivalProducts.length){
         setState(() {
           newArrivalFetched = true;
@@ -99,7 +102,6 @@ class _homePageState extends State<homePage> {
     double height = MediaQuery.of(context).size.height;
     setArrivalProducts();
     List<Widget> newArrivalProds = [];
-
     if(newArrivalFetched){
       for(var i = 0 ; i < newArrivalProducts.length ; i++){
         newArrivalProds.add(getCard(context,newArrivalProducts[i],300,400));

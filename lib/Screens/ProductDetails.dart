@@ -383,10 +383,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                                             constraints: BoxConstraints(
                                               maxHeight: height / 15,
                                             ),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment
-                                                  .center,
-                                              children: images,
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment
+                                                    .center,
+                                                children: images,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -436,7 +439,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                   fontFamily: 'Lobster',
                                                   fontWeight: FontWeight.w300,
                                                   fontSize: height / 40,
-                                                  color: Colors.pinkAccent),
+                                                  color: Colors.pinkAccent
+                                              ),
                                             ),
                                           ),
                                           SizedBox(height: 40),
@@ -520,7 +524,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                             'isUserSet'),
                                                         builder: (context, snapshot) {
                                                           return FlatButton(
-                                                            onPressed: () {
+                                                            onPressed: () async{
                                                               final snackBar = SnackBar(
                                                                 content: Text('Please Select ${getSizeCategory(products['subcategory'])}'),
                                                               );
@@ -530,7 +534,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                                 }
                                                                 else{
                                                                   products['selectedSize'] =sizeNames[selectedSize];
-                                                                  ExtendedNavigator.of(context).push(Routes.deliveryScreen,arguments: DeliveryScreenArguments(product: products));
+                                                                  products['cartID'] = await addToCart();
+                                                                  ExtendedNavigator.of(context).push(Routes.deliveryScreen,arguments: DeliveryScreenArguments(product: [products]));
                                                                 }
                                                               }
                                                               else{
@@ -556,8 +561,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                 ),
                                                 FlatButton(
                                                   onPressed: () {
+                                                    var cartID;
                                                     if (_auth.currentUser != null) {
-                                                      addToCart();
+                                                      products['selectedSize'] =sizeNames[selectedSize];
+                                                      cartID = addToCart();
                                                       final snackBar = SnackBar(
                                                         content: Text('Added to Cart!'),
                                                       );
@@ -608,7 +615,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 SizedBox(
                                   height: 20,
                                 ),
-
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Align(
@@ -847,7 +853,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   SizedBox(
                                     height: 20,
                                   ),
-
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Align(
@@ -919,11 +924,14 @@ class _ProductDetailsState extends State<ProductDetails> {
   final _firestore = FirebaseFirestore.instance;
   String user;
 
-  void addToCart() {
+  dynamic addToCart() async{
     if (_auth != null) {
       user = _auth.currentUser.email;
     }
-    _firestore.collection('cart').add({'product': products, 'user': user});
+    var cartID;
+    await _firestore.collection('cart').add({'product': products, 'user': user})
+        .then((value) => cartID = value.id);
+    return cartID;
   }
 
   DropdownButton<dynamic> buildDropdownButton(
