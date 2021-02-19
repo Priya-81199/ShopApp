@@ -8,6 +8,7 @@ import 'package:lilly_app/Screens/cart.dart';
 import 'package:lilly_app/Screens/delivery_screen.dart';
 import 'package:lilly_app/Screens/homePage.dart';
 import 'package:lilly_app/Screens/login.dart';
+import 'package:lilly_app/Screens/orders.dart';
 import 'package:lilly_app/Screens/register.dart';
 import 'package:lilly_app/Screens/solve_queries.dart';
 import 'package:lilly_app/Screens/update_products.dart';
@@ -31,7 +32,8 @@ import 'package:lilly_app/payment_gateway/pay.dart';
     MaterialRoute(page: Cart,),
     MaterialRoute(page: AdminProducts,),
     MaterialRoute(page: UpdateProducts,),
-    MaterialRoute(page: AdminProductList,)
+    MaterialRoute(page: AdminProductList,),
+    MaterialRoute(page: Orders,)
   ],
 )
 class $Router {

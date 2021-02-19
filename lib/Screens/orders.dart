@@ -8,13 +8,13 @@ import 'package:lilly_app/app/route.gr.dart';
 
 final db = FirebaseFirestore.instance;
 
-class Cart extends StatefulWidget {
-  static const String id = "Cart";
+class Orders extends StatefulWidget {
+  static const String id = "Orders";
   @override
-  _CartState createState() => _CartState();
+  _OrdersState createState() => _OrdersState();
 }
 
-class _CartState extends State<Cart> {
+class _OrdersState extends State<Orders> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   String user = '';
   //String user = 'priya81199@gmail.com';
@@ -24,7 +24,7 @@ class _CartState extends State<Cart> {
   var totalDetails;
   List<dynamic> cartDetails = [];
   void getCartDetails() async {
-    var cart = await db.collection('cart').get();
+    var cart = await db.collection('order_details').get();
     var cartLen = cart.docs.length;
     cart.docs.forEach((result) {
       var product;
@@ -36,7 +36,7 @@ class _CartState extends State<Cart> {
       if (_auth.currentUser != null) {
         user = FirebaseAuth.instance.currentUser.email;
       }
-      if (user == totalDetails['user']) {
+      if (user == totalDetails['email']) {
         cartDetails.add(product);
       } else {
         cartLen--;
@@ -71,9 +71,9 @@ class _CartState extends State<Cart> {
 
   void removeProduct(dynamic product) {
     db.collection('cart')
-    .doc(product['cartID'])
-    .delete()
-    .then((value) => {
+        .doc(product['cartID'])
+        .delete()
+        .then((value) => {
       setState(() {
         cartDetails.remove(product);
       }),
@@ -95,10 +95,10 @@ class _CartState extends State<Cart> {
           TableRow(
             children: [
               Container(
-                  //color: Colors.blue,
-                  height: 180,
-                  width: 180,
-                  child: Image.network(product['image']),
+                //color: Colors.blue,
+                height: 180,
+                width: 180,
+                child: Image.network(product['image']),
               ),
               Container(
                 child: Column(
@@ -132,34 +132,7 @@ class _CartState extends State<Cart> {
                 ),
               ),
               Container(
-                child: Column(
-                  children: [
-                    Tooltip(
-                      message: 'View',
-                      child: FlatButton(
-                        child: Icon(
-                          Icons.remove_red_eye,
-                          color: Colors.lightGreen,
-                        ),
-                        onPressed: () {
-                          viewProduct(product);
-                        },
-                      ),
-                    ),
-                    Tooltip(
-                      message: 'Remove',
-                      child: FlatButton(
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.pink,
-                        ),
-                        onPressed: () {
-                          removeProduct(product);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+
               ),
             ],
           ),
@@ -187,11 +160,11 @@ class _CartState extends State<Cart> {
             ),
             Container(
               child: Text(
-                'My Cart (${cartDetails.length.toString()})',
+                'My Orders (${cartDetails.length.toString()})',
                 style: TextStyle(
-                  fontFamily: 'Handlee',
-                  fontSize: 30,
-                  color: Colors.blueGrey
+                    fontFamily: 'Handlee',
+                    fontSize: 30,
+                    color: Colors.blueGrey
                 ),
               ),
             ),
@@ -206,36 +179,7 @@ class _CartState extends State<Cart> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            FlatButton(
-              onPressed: (){
-                ExtendedNavigator.of(context).push(Routes.deliveryScreen, arguments: DeliveryScreenArguments(products: cartDetails));
-              },
-              color: Colors.deepOrange,
-              hoverColor:Colors.deepOrangeAccent,
-              child: Container(
-                height: 50,
-                width: 170,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'PLACE ORDER',
-                      style:TextStyle(
-                        color: Color.fromRGBO(49,49,49,1),
-                        fontSize: 18,
-                      ),
-                      //textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-            ),
-          ],
-        ),
-      ),
+
     );
   }
 }

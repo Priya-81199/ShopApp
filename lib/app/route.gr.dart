@@ -18,6 +18,7 @@ import '../Screens/cart.dart';
 import '../Screens/delivery_screen.dart';
 import '../Screens/homePage.dart';
 import '../Screens/login.dart';
+import '../Screens/orders.dart';
 import '../Screens/register.dart';
 import '../Screens/solve_queries.dart';
 import '../Screens/update_products.dart';
@@ -39,6 +40,7 @@ class Routes {
   static const String adminProducts = '/admin-products';
   static const String updateProducts = '/update-products';
   static const String adminProductList = '/admin-product-list';
+  static const String orders = '/Orders';
   static const all = <String>{
     loginScreen,
     addProductsDetails,
@@ -54,6 +56,7 @@ class Routes {
     adminProducts,
     updateProducts,
     adminProductList,
+    orders,
   };
 }
 
@@ -75,6 +78,7 @@ class Router extends RouterBase {
     RouteDef(Routes.adminProducts, page: AdminProducts),
     RouteDef(Routes.updateProducts, page: UpdateProducts),
     RouteDef(Routes.adminProductList, page: AdminProductList),
+    RouteDef(Routes.orders, page: Orders),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -126,7 +130,7 @@ class Router extends RouterBase {
     DeliveryScreen: (data) {
       final args = data.getArgs<DeliveryScreenArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => DeliveryScreen(args.product),
+        builder: (context) => DeliveryScreen(args.products),
         settings: data,
       );
     },
@@ -167,6 +171,12 @@ class Router extends RouterBase {
         settings: data,
       );
     },
+    Orders: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => Orders(),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -188,8 +198,8 @@ class ProductDetailsArguments {
 
 /// DeliveryScreen arguments holder class
 class DeliveryScreenArguments {
-  final dynamic product;
-  DeliveryScreenArguments({@required this.product});
+  final List<dynamic> products;
+  DeliveryScreenArguments({@required this.products});
 }
 
 /// UpdateProducts arguments holder class

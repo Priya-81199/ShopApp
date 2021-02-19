@@ -535,7 +535,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                                 else{
                                                                   products['selectedSize'] =sizeNames[selectedSize];
                                                                   products['cartID'] = await addToCart();
-                                                                  ExtendedNavigator.of(context).push(Routes.deliveryScreen,arguments: DeliveryScreenArguments(product: [products]));
+                                                                  ExtendedNavigator.of(context).push(Routes.deliveryScreen,arguments: DeliveryScreenArguments(products: [products]));
                                                                 }
                                                               }
                                                               else{
