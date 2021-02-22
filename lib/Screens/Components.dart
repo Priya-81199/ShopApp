@@ -88,11 +88,17 @@ AppBar buildAppBar(BuildContext context,Function() f) {
     title: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          'Lilly',
-          style: TextStyle(
-            fontFamily: 'Lobster',
-            fontSize: 40,
+        FlatButton(
+          onPressed: (){
+            ExtendedNavigator.of(context).push(rg.Routes.homePage);
+          },
+          child: Text(
+            'Lilly',
+            style: TextStyle(
+              fontFamily: 'Lobster',
+              fontSize: 40,
+              color: Colors.white,
+            ),
           ),
         ),
         Container(
@@ -105,13 +111,23 @@ AppBar buildAppBar(BuildContext context,Function() f) {
                     snapshot.hasData ?
                       snapshot.data ?
                         IconButton(
-                          icon: Icon(Icons.shopping_cart),
+                          icon: Icon(Icons.shopping_cart_rounded),
                           onPressed: (){
                             ExtendedNavigator.of(context).push(Routes.cart);
                           }
                         ):
                         Container():
                       Container(),
+                    snapshot.hasData ?
+                    snapshot.data ?
+                    IconButton(
+                        icon: Icon(Icons.shopping_bag_rounded),
+                        onPressed: (){
+                          ExtendedNavigator.of(context).push(Routes.orders);
+                        }
+                    ):
+                    Container():
+                    Container(),
                     Container(
                       width: 150,
                       height: 100,

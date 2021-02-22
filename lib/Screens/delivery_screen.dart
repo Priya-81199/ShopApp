@@ -27,6 +27,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
   User loggedInUser;
   List<dynamic> deliveryAddresses = [];
   bool deliveryAddressesFetched = false;
+  bool isNewAddress = false;
 
   @override
   void initState() {
@@ -79,13 +80,27 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
           fullAddress += address[i];
         }
         deliveryCards.add(
-          Container(
-            child: Column(
-              children: [
-                Text(addressDetails['name']),
-                Text(addressDetails['phone']),
-                Text(fullAddress),
-              ],
+          FlatButton(
+            onPressed: (){
+              setState(() {
+                myController4.text = address[0];
+                myController5.text = address[1];
+                myController6.text = address[2];
+                myController7.text = address[3];
+                myController3.text = address[4];
+                myController1.text = addressDetails['name'];
+                myController2.text = addressDetails['phone'];
+                isNewAddress = false;
+              });
+            },
+            child: Container(
+              child: Column(
+                children: [
+                  Text(addressDetails['name']),
+                  Text(addressDetails['phone']),
+                  Text(fullAddress),
+                ],
+              ),
             ),
           )
         );
@@ -115,6 +130,11 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   height: 30,
                 ),
                 TextField(
+                  onChanged: (value){
+                    setState(() {
+                      isNewAddress = true;
+                    });
+                  },
                   controller: myController1,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
@@ -126,6 +146,11 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   height: 10,
                 ),
                 TextField(
+                  onChanged: (value){
+                    setState(() {
+                      isNewAddress = true;
+                    });
+                  },
                   controller: myController2,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
@@ -138,6 +163,11 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                 ),
 
                 TextField(
+                  onChanged: (value){
+                    setState(() {
+                      isNewAddress = true;
+                    });
+                  },
                   controller: myController4,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
@@ -149,6 +179,11 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   height: 10,
                 ),
                 TextField(
+                  onChanged: (value){
+                    setState(() {
+                      isNewAddress = true;
+                    });
+                  },
                   controller: myController5,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
@@ -160,6 +195,11 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   height: 10,
                 ),
                 TextField(
+                  onChanged: (value){
+                    setState(() {
+                      isNewAddress = true;
+                    });
+                  },
                   controller: myController6,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
@@ -171,6 +211,11 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   height: 10,
                 ),
                 TextField(
+                  onChanged: (value){
+                    setState(() {
+                      isNewAddress = true;
+                    });
+                  },
                   controller: myController7,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
@@ -182,6 +227,11 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   height: 10,
                 ),
                 TextField(
+                  onChanged: (value){
+                    setState(() {
+                      isNewAddress = true;
+                    });
+                  },
                   controller: myController3,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
@@ -198,7 +248,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   colour: Colors.indigo,
                   tag: 'register',
                   onPressed: () {
-                    saveAddress();
+                    if(isNewAddress)
+                      saveAddress();
                     placeOrder();
                     ExtendedNavigator.of(context).popAndPush(Routes.homePage);
                   },
