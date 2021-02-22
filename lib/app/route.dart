@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route_annotations.dart';
 import 'package:lilly_app/Screens/ProductDetails.dart';
 import 'package:lilly_app/Screens/ProductList.dart';
 import 'package:lilly_app/Screens/addProducts1.dart';
+import 'package:lilly_app/Screens/admin_orders.dart';
 import 'package:lilly_app/Screens/admin_product_list.dart';
 import 'package:lilly_app/Screens/admin_products.dart';
 import 'package:lilly_app/Screens/cart.dart';
@@ -33,7 +34,8 @@ import 'package:lilly_app/payment_gateway/pay.dart';
     MaterialRoute(page: AdminProducts,),
     MaterialRoute(page: UpdateProducts,),
     MaterialRoute(page: AdminProductList,),
-    MaterialRoute(page: Orders,)
+    MaterialRoute(page: Orders,),
+    MaterialRoute(page: AdminOrders,)
   ],
 )
 class $Router {

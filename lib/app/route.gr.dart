@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import '../Screens/ProductDetails.dart';
 import '../Screens/ProductList.dart';
 import '../Screens/addProducts1.dart';
+import '../Screens/admin_orders.dart';
 import '../Screens/admin_product_list.dart';
 import '../Screens/admin_products.dart';
 import '../Screens/cart.dart';
@@ -41,6 +42,7 @@ class Routes {
   static const String updateProducts = '/update-products';
   static const String adminProductList = '/admin-product-list';
   static const String orders = '/Orders';
+  static const String adminOrders = '/admin-orders';
   static const all = <String>{
     loginScreen,
     addProductsDetails,
@@ -57,6 +59,7 @@ class Routes {
     updateProducts,
     adminProductList,
     orders,
+    adminOrders,
   };
 }
 
@@ -79,6 +82,7 @@ class Router extends RouterBase {
     RouteDef(Routes.updateProducts, page: UpdateProducts),
     RouteDef(Routes.adminProductList, page: AdminProductList),
     RouteDef(Routes.orders, page: Orders),
+    RouteDef(Routes.adminOrders, page: AdminOrders),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -174,6 +178,12 @@ class Router extends RouterBase {
     Orders: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => Orders(),
+        settings: data,
+      );
+    },
+    AdminOrders: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => AdminOrders(),
         settings: data,
       );
     },

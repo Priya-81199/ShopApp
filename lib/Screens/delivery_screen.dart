@@ -223,7 +223,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
         'email': loggedInUser.email,
         'Timestamp': FieldValue.serverTimestamp(),
         'DeliveryTime' : null,
-        'DeliveryStatus' : 0,
+        'DeliveryStatus' : 1,
         'PaymentMode':'COD',
         'product' : products[i],
         'IsPaid' : false,

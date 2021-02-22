@@ -8,13 +8,13 @@ import 'package:lilly_app/app/route.gr.dart';
 
 final db = FirebaseFirestore.instance;
 
-class Orders extends StatefulWidget {
-  static const String id = "Orders";
+class AdminOrders extends StatefulWidget {
+  static const String id = "AdminOrders";
   @override
-  _OrdersState createState() => _OrdersState();
+  _AdminOrdersState createState() => _AdminOrdersState();
 }
 
-class _OrdersState extends State<Orders> {
+class _AdminOrdersState extends State<AdminOrders> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   String user = '';
   //String user = 'priya81199@gmail.com';
@@ -24,6 +24,7 @@ class _OrdersState extends State<Orders> {
   var totalDetails;
   List<dynamic> cartDetails = [];
   void getCartDetails() async {
+    cartDetails=[];
     var cart = await db.collection('order_details').get();
     var cartLen = cart.docs.length;
     cart.docs.forEach((result) {
@@ -32,16 +33,18 @@ class _OrdersState extends State<Orders> {
       product = totalDetails['product'];
 
       product['image'] = getImageURL(product['images'][0]);
-      product['cartID'] = result.id;
+      product['ordersID'] = result.id;
+      product['email'] = totalDetails['email'];
       product['Timestamp'] = totalDetails['Timestamp'];
+      product['address'] = totalDetails['address'][0]+',\n' + totalDetails['address'][1]
+          +',\n' + totalDetails['address'][2]+',\n' + totalDetails['address'][3]
+          +'-' + totalDetails['address'][4];
       product['DeliveryStatus'] = totalDetails['DeliveryStatus'];
       if (_auth.currentUser != null) {
         user = FirebaseAuth.instance.currentUser.email;
       }
-      if (user == totalDetails['email']) {
+      if (user == adminEmail) {
         cartDetails.add(product);
-      } else {
-        cartLen--;
       }
 
       if (cartLen == cartDetails.length) {
@@ -61,7 +64,7 @@ class _OrdersState extends State<Orders> {
 
   void setLastVisited() async {
     var session = FlutterSession();
-    await session.set("last_visited", Routes.orders);
+    await session.set("last_visited", Routes.adminOrders);
   }
 
   void viewProduct(dynamic product) {
@@ -71,38 +74,24 @@ class _OrdersState extends State<Orders> {
     );
   }
 
-  void removeProduct(dynamic product) {
-    db.collection('cart')
-        .doc(product['cartID'])
-        .delete()
+  void updateDeliveryStatus(var status,dynamic docID,var index){
+    db.collection('order_details')
+        .doc(docID)
+        .update({'DeliveryStatus': status})
         .then((value) => {
       setState(() {
-        cartDetails.remove(product);
+        //getCartDetails();
+        cartDetails[index]['DeliveryStatus'] = status;
       }),
     });
   }
-  String displayStatus(var status){
-    if(status == 0){
-      return 'Order Cancelled';
-    }
-    else if(status == 1){
-      return 'Order Placed';
-    }
-    else if(status == 2){
-      return 'Out for Delivery';
-    }
-    else if(status == 3){
-      return 'Order Received';
-    }
-
-  }
-
 
   @override
   Widget build(BuildContext context) {
     void f() {
       setState(() {});
     }
+
     cartDetails.sort((b, a) => a['Timestamp'].compareTo(b['Timestamp']));
 
 
@@ -110,7 +99,9 @@ class _OrdersState extends State<Orders> {
 
 
     if (isCartFetched) {
-      cartDetails.forEach((product) {
+      //cartDetails.forEach((product)
+      for(var i = 0; i < cartDetails.length ; i++){
+        var product = cartDetails[i];
         cartContent.add(
           TableRow(
             children: [
@@ -123,6 +114,15 @@ class _OrdersState extends State<Orders> {
               Container(
                 child: Column(
                   children: [
+                    Text(
+                      product['email'],
+                      style: TextStyle(
+                          fontFamily: 'Lobster',
+                          fontWeight: FontWeight.w300,
+                          fontSize: 20,
+                          color: Colors.pinkAccent
+                      ),
+                    ),
                     Text(
                       product['name'],
                       style: TextStyle(
@@ -147,18 +147,52 @@ class _OrdersState extends State<Orders> {
                           fontSize: 20,
                           color: Colors.pinkAccent
                       ),
+
                     ),
                   ],
                 ),
               ),
               Container(
                 child: Text(
-                  displayStatus(product['DeliveryStatus']),
+                  product['address'],
                   style: TextStyle(
                     fontFamily: 'Handlee',
                     fontWeight: FontWeight.w200,
                     fontSize:20,
                   ),
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    FlatButton(
+                      color: product['DeliveryStatus']==0?Colors.green:Colors.transparent,
+                      child: Text(
+                        'Reject Order'
+                      ),
+                      onPressed: () {
+                        updateDeliveryStatus(0,product['ordersID'],i);
+                      },
+                    ),
+                    FlatButton(
+                      color: product['DeliveryStatus']==2?Colors.green:Colors.transparent,
+                      child: Text(
+                        'In Transit'
+                      ),
+                      onPressed: () {
+                        updateDeliveryStatus(2,product['ordersID'],i);
+                      },
+                    ),
+                    FlatButton(
+                      color: product['DeliveryStatus']==3?Colors.green:Colors.transparent,
+                      child: Text(
+                          'Order Delivered'
+                      ),
+                      onPressed: () {
+                        updateDeliveryStatus(3,product['ordersID'],i);
+                      },
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -170,11 +204,12 @@ class _OrdersState extends State<Orders> {
               SizedBox(height: 20,),
               SizedBox(height: 20,),
               SizedBox(height: 20,),
+              SizedBox(height: 20,),
             ],
           ),
         );
 
-      });
+      }
     }
 
     return Scaffold(
