@@ -92,7 +92,7 @@ class _homePageState extends State<homePage> {
     getData('products');
   }
 
-  var selectedCategory = 'Gents';
+  var selectedCategory = 'Kids';
   @override
   Widget build(BuildContext context) {
     void f() {

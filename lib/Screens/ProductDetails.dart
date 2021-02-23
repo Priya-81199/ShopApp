@@ -686,9 +686,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     constraints: BoxConstraints(
                                       maxHeight: height / 15,
                                     ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: images,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: images,
+                                      ),
                                     ),
                                   ),
                                   SizedBox(height: 50),
