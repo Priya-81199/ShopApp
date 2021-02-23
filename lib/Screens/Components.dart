@@ -8,6 +8,9 @@ import 'package:lilly_app/app/route.gr.dart' as rg;
 import 'package:lilly_app/app/route.gr.dart';
 
 final storage = FirebaseStorage.instance;
+final _auth = FirebaseAuth.instance;
+
+User user = _auth.currentUser;
 
 //Functions
 String getImageURL(String imageName) {
@@ -109,7 +112,7 @@ AppBar buildAppBar(BuildContext context,Function() f) {
                 child: Row(
                   children: [
                     snapshot.hasData ?
-                      snapshot.data ?
+                    ((snapshot.data) && (user.email != adminEmail))?
                         IconButton(
                           icon: Icon(Icons.shopping_cart_rounded),
                           onPressed: (){
@@ -119,7 +122,7 @@ AppBar buildAppBar(BuildContext context,Function() f) {
                         Container():
                       Container(),
                     snapshot.hasData ?
-                    snapshot.data ?
+                    ((snapshot.data) && (user.email != adminEmail))?
                     IconButton(
                         icon: Icon(Icons.shopping_bag_rounded),
                         onPressed: (){

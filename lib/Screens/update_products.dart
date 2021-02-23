@@ -51,8 +51,11 @@ class _UpdateProductsState extends State<UpdateProducts> {
   List<bool> imagesSelected = [];
 
   List<dynamic> sizeCountValues = List.filled(8, '0');
+  List<bool> sizeAvailable = List.filled(8,false);
   List<dynamic> ageCountValues = List.filled(7, '0');
+  List<bool> ageAvailable = List.filled(7,false);
   List<dynamic> numberCountValues = List.filled(16, '0');
+  List<bool> numberAvailable = List.filled(16,false);
 
   void getImages() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
@@ -139,8 +142,11 @@ class _UpdateProductsState extends State<UpdateProducts> {
     addedPoints = product['points'];
     for (var i = 0; i < product['points'].length; i++) addedPointsOn.add(true);
     //sizeCountValues = product['sizeCounts'];
+    //sizeAvailable = product['sizeAvailable'];
     ageCountValues = product['ageCounts'];
+    //ageAvailable = product['ageAvailable'];
     //numberCountValues = product['numberCounts'];
+    //numberAvailable = product['numberAvailable'];
     previousListLen = product['images'].length;
     for (int i = 0; i < product['images'].length; i++) {
       var imageIndex = images.length;
@@ -302,19 +308,37 @@ class _UpdateProductsState extends State<UpdateProducts> {
     List<Widget> sizeCounts = [];
     sizeCounts.add(SizedBox(width: 30));
     for (var i = 0; i < sizeNames.length; i++) {
-      sizeCounts.add(Container(
-        width: 30,
-        child: TextFormField(
-          initialValue: '${sizeCountValues[i]}',
-          decoration: InputDecoration(
-            labelText: sizeNames[i],
+      sizeCounts.add(Column(
+        children: [
+          Container(
+            child: Row(
+              children: [
+                Text(
+                    sizeNames[i]
+                ),
+                Checkbox(
+                  value: sizeAvailable[i],
+                  onChanged: (isAvailable){
+                    setState(() {
+                      sizeAvailable[i] = isAvailable;
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
-          onChanged: (text) {
-            setState(() {
-              sizeCountValues[i] = text;
-            });
-          },
-        ),
+          Container(
+            width: 30,
+            child: TextFormField(
+              initialValue: '${sizeCountValues[i]}',
+              onChanged: (text) {
+                setState(() {
+                  sizeCountValues[i] = text;
+                });
+              },
+            ),
+          ),
+        ],
       ));
       sizeCounts.add(SizedBox(width: 30));
     }
@@ -325,19 +349,37 @@ class _UpdateProductsState extends State<UpdateProducts> {
     List<Widget> ageCounts = [];
     ageCounts.add(SizedBox(width: 30));
     for (var i = 0; i < ageNames.length; i++) {
-      ageCounts.add(Container(
-        width: 30,
-        child: TextFormField(
-          initialValue: '${ageCountValues[i]}',
-          decoration: InputDecoration(
-            labelText: ageNames[i],
+      ageCounts.add(Column(
+        children: [
+          Container(
+            child: Row(
+              children: [
+                Text(
+                    ageNames[i]
+                ),
+                Checkbox(
+                  value: ageAvailable[i],
+                  onChanged: (isAvailable){
+                    setState(() {
+                      ageAvailable[i] = isAvailable;
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
-          onChanged: (text) {
-            setState(() {
-              ageCountValues[i] = text;
-            });
-          },
-        ),
+          Container(
+            width: 30,
+            child: TextFormField(
+              initialValue: '${ageCountValues[i]}',
+              onChanged: (text) {
+                setState(() {
+                  ageCountValues[i] = text;
+                });
+              },
+            ),
+          ),
+        ],
       ));
       ageCounts.add(SizedBox(width: 30));
     }
@@ -348,19 +390,37 @@ class _UpdateProductsState extends State<UpdateProducts> {
     List<Widget> numberCounts = [];
     numberCounts.add(SizedBox(width: 30));
     for (var i = 0; i < numberNames.length; i++) {
-      numberCounts.add(Container(
-        width: 30,
-        child: TextFormField(
-          initialValue: '${numberCountValues[i]}',
-          decoration: InputDecoration(
-            labelText: numberNames[i],
+      numberCounts.add(Column(
+        children: [
+          Container(
+            child: Row(
+              children: [
+                Text(
+                    numberNames[i]
+                ),
+                Checkbox(
+                  value: numberAvailable[i],
+                  onChanged: (isAvailable){
+                    setState(() {
+                      numberAvailable[i] = isAvailable;
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
-          onChanged: (text) {
-            setState(() {
-              numberCountValues[i] = text;
-            });
-          },
-        ),
+          Container(
+            width: 30,
+            child: TextFormField(
+              initialValue: '${numberCountValues[i]}',
+              onChanged: (text) {
+                setState(() {
+                  numberCountValues[i] = text;
+                });
+              },
+            ),
+          ),
+        ],
       ));
       numberCounts.add(SizedBox(width: 30));
     }
@@ -619,6 +679,9 @@ class _UpdateProductsState extends State<UpdateProducts> {
                               'sizeCounts': sizeCountValues,
                               'ageCounts': ageCountValues,
                               'numberCounts': numberCountValues,
+                              'sizeAvailable': sizeAvailable,
+                              'ageAvailable': ageAvailable,
+                              'numberAvailable': numberAvailable,
                               'images': finalImages,
                             };
                             final snackBar = SnackBar(
