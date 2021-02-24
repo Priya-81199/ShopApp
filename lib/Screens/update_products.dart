@@ -51,11 +51,11 @@ class _UpdateProductsState extends State<UpdateProducts> {
   List<bool> imagesSelected = [];
 
   List<dynamic> sizeCountValues = List.filled(8, '0');
-  List<bool> sizeAvailable = List.filled(8,false);
+  List<dynamic> sizeAvailable = List.filled(8,false);
   List<dynamic> ageCountValues = List.filled(7, '0');
-  List<bool> ageAvailable = List.filled(7,false);
+  List<dynamic> ageAvailable = List.filled(7,false);
   List<dynamic> numberCountValues = List.filled(16, '0');
-  List<bool> numberAvailable = List.filled(16,false);
+  List<dynamic> numberAvailable = List.filled(16,false);
 
   void getImages() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
@@ -141,12 +141,12 @@ class _UpdateProductsState extends State<UpdateProducts> {
       addedPropertiesOn.add(true);
     addedPoints = product['points'];
     for (var i = 0; i < product['points'].length; i++) addedPointsOn.add(true);
-    //sizeCountValues = product['sizeCounts'];
-    //sizeAvailable = product['sizeAvailable'];
+    sizeCountValues = product['sizeCounts'];
+    sizeAvailable = product['sizeAvailable'];
     ageCountValues = product['ageCounts'];
-    //ageAvailable = product['ageAvailable'];
-    //numberCountValues = product['numberCounts'];
-    //numberAvailable = product['numberAvailable'];
+    ageAvailable = product['ageAvailable'];
+    numberCountValues = product['numberCounts'];
+    numberAvailable = product['numberAvailable'];
     previousListLen = product['images'].length;
     for (int i = 0; i < product['images'].length; i++) {
       var imageIndex = images.length;

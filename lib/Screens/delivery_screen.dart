@@ -280,6 +280,13 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
         'IsPaid' : false,
       });
         _firestore.collection('cart').doc(products[i]['cartID']).delete();
+        var sizeType = products[i]['selectedSizeType'];
+        var count = sizeType + 'Counts';
+        var index = products[i]['selectedSizeIndex'];
+        products[i][count][index] = (int.parse(products[i][count][index]) - 1).toString();
+        var productID = products[i]['id'];
+        _firestore.collection('productDetails').doc(productID).update(products[i]);
+
     }
 
 

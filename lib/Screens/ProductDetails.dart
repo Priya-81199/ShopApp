@@ -177,29 +177,12 @@ class _ProductDetailsState extends State<ProductDetails> {
     var productPrice = products['price'];
     var productAddPoints = products['points'];
     //String addDetails = '';
-    var sizes = (getSizeCategory(products['subcategory']) == 'size')
-        ? products['sizeCounts']
+    var availableSizes = (getSizeCategory(products['subcategory']) == 'size')
+        ? products['sizeAvailable']
         : (getSizeCategory(products['subcategory']) == 'age')
-        ? products['ageCounts']
-        : products['numberCounts'];
-    List<bool> availableSizes = [
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false
-    ];
+        ? products['ageAvailable']
+        : products['numberAvailable'];
+
     List<Widget> sizeWidgets = [];
 
     List<String> sizeNames =
@@ -230,11 +213,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     //   addDetails = addDetails + productAddPoints[i];
     // }
 
-    for (int i = 0; i < sizes.length; i++) {
-      if (int.parse(sizes[i]) > 0) {
-        availableSizes[i] = true;
-      }
-    }
+
     //print(availableSizes);
     images.add(
       SizedBox(width: 10),
@@ -534,6 +513,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                                 }
                                                                 else{
                                                                   products['selectedSize'] =sizeNames[selectedSize];
+                                                                  products['selectedSizeIndex'] = selectedSize;
+                                                                  products['selectedSizeType'] = getSizeCategory(products['subcategory']);
                                                                   products['cartID'] = await addToCart();
                                                                   ExtendedNavigator.of(context).push(Routes.deliveryScreen,arguments: DeliveryScreenArguments(products: [products]));
                                                                 }
