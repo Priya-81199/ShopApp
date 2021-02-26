@@ -107,6 +107,12 @@ flutter:
     - family: Roboto
       fonts:
         - asset: fonts/Roboto-Regular.ttf
+    - family: AT
+      fonts:
+        - asset: fonts/AkayaTelivigala-Regular.ttf
+    - family: RocknRoll
+      fonts:
+        - asset: fonts/RocknRollOne-Regular.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:

@@ -484,6 +484,9 @@ class _homePageState extends State<homePage> {
                               children: <Widget>[
                                 Expanded(
                                   child: TextField(
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
                                     controller: messageTextController,
                                     onChanged: (value) {
                                       //Do something with the user input.
@@ -502,6 +505,7 @@ class _homePageState extends State<homePage> {
                                     String time =
                                         '${DateFormat.jm().format(now).toString()}';
 
+                                    if(messageText != null){
                                     _firestore.collection('chat_messages').add({
                                       'text': messageText,
                                       'sender': loggedInUser.email,
@@ -509,8 +513,8 @@ class _homePageState extends State<homePage> {
                                       'time': time,
                                       'Timestamp': FieldValue.serverTimestamp(),
                                     });
-
                                     sendToAdmin();
+                                    }
                                   },
                                   child: Icon(
                                     Icons.send,
@@ -621,7 +625,8 @@ class MessageBubble extends StatelessWidget {
           Text(
             sender,
             style: TextStyle(
-                fontFamily: 'Lobster', fontSize: 12.0, color: Colors.black54),
+                fontFamily: 'Roboto',
+                fontSize: 12.0, color: Colors.black54),
           ),
           Material(
             borderRadius: isMe
@@ -639,7 +644,7 @@ class MessageBubble extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Text(text,
                   style: TextStyle(
-                    fontFamily: 'Lobster',
+                    fontFamily: 'Roboto',
                     color: isMe ? Colors.black : Colors.white,
                     fontSize: 15,
                   )),

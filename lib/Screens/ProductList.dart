@@ -243,6 +243,7 @@ class _ProductListState extends State<ProductList> {
         body: LayoutBuilder(
           builder: (context, constraints) {
             var width = constraints.maxWidth;
+            var height = constraints.maxHeight;
             var columnCount = (width / 300).round();
             return CustomScrollView(
               slivers: [
@@ -267,6 +268,22 @@ class _ProductListState extends State<ProductList> {
                 SliverList(
                   delegate: SliverChildListDelegate(
                     [
+                      subcategory.toString() == 'Formals' ||
+                      subcategory.toString() == 'Casuals' ||
+                      subcategory.toString() == 'Ethnic' ?
+                      Container(
+                        height: height,
+                        child: Center(
+                          child: Text(
+                              'Coming Soon.',
+                               style: TextStyle(
+                                 fontSize: 50,
+                                 fontFamily:'AT',
+                                 color: Colors.grey.shade600
+                               ),
+                          ),
+                        ),
+                      ) :
                       Center(
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,

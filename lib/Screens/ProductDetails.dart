@@ -542,6 +542,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                 ),
                                                 FlatButton(
                                                   onPressed: () {
+                                                      final snackBar1 = SnackBar(
+                                                        content: Text('Please Select ${getSizeCategory(products['subcategory'])}'),
+                                                      );
+                                                      if(selectedSize == -1){
+                                                        ScaffoldMessenger.of(context).showSnackBar(snackBar1);
+                                                      }
                                                     var cartID;
                                                     if (_auth.currentUser != null) {
                                                       products['selectedSize'] =sizeNames[selectedSize];
