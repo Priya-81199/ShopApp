@@ -31,7 +31,6 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getCurrentUser();
     getAddress();
@@ -94,12 +93,39 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
               });
             },
             child: Container(
-              child: Column(
-                children: [
-                  Text(addressDetails['name']),
-                  Text(addressDetails['phone']),
-                  Text(fullAddress),
-                ],
+              decoration: BoxDecoration(
+                  color: Colors.blueGrey.shade100,
+                  border: Border.all(
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(20))
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      addressDetails['name'],
+                      style: TextStyle(
+                      fontFamily: 'RocknRoll',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      addressDetails['phone'],
+                      style: TextStyle(
+                        fontFamily: 'RocknRoll',
+                        fontSize: 14,
+                      ),),
+                    Text(
+                      fullAddress,
+                      style: TextStyle(
+                        fontFamily: 'Handlee',
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           )
@@ -111,154 +137,173 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
     return Scaffold(
       appBar: buildAppBar(context, f),
       body: Center(
-        child: Container(
-          child: SizedBox(
-            width: 400,
-            child: Column(
-              children: [
-                Row(
-                  children: deliveryCards,
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Text(
-                  'Enter a shipping address',
-                  style: TextStyle(fontFamily: 'Lobster', fontSize: 20),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                TextField(
-                  onChanged: (value){
-                    setState(() {
-                      isNewAddress = true;
-                    });
-                  },
-                  controller: myController1,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Full Name',
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  onChanged: (value){
-                    setState(() {
-                      isNewAddress = true;
-                    });
-                  },
-                  controller: myController2,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Mobile Number',
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 30,
+              ),
+              Text(
+                'Saved Addresses(${deliveryCards.length})',
+                style: TextStyle(fontFamily: 'Lobster', fontSize: 20),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: deliveryCards,
+              ),
+              Container(
+                
+                child: SizedBox(
+                  width: 400,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Text(
+                        'Enter a shipping address',
+                        style: TextStyle(fontFamily: 'Lobster', fontSize: 20),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      TextField(
+                        onChanged: (value){
+                          setState(() {
+                            isNewAddress = true;
+                          });
+                        },
+                        controller: myController1,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Full Name',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        onChanged: (value){
+                          setState(() {
+                            isNewAddress = true;
+                          });
+                        },
+                        controller: myController2,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Mobile Number',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
 
-                TextField(
-                  onChanged: (value){
-                    setState(() {
-                      isNewAddress = true;
-                    });
-                  },
-                  controller: myController4,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Address Line 1',
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  onChanged: (value){
-                    setState(() {
-                      isNewAddress = true;
-                    });
-                  },
-                  controller: myController5,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Address Line 2',
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  onChanged: (value){
-                    setState(() {
-                      isNewAddress = true;
-                    });
-                  },
-                  controller: myController6,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Landmark',
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  onChanged: (value){
-                    setState(() {
-                      isNewAddress = true;
-                    });
-                  },
-                  controller: myController7,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Town/City',
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  onChanged: (value){
-                    setState(() {
-                      isNewAddress = true;
-                    });
-                  },
-                  controller: myController3,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'PIN Code',
-                  ),
-                ),
+                      TextField(
+                        onChanged: (value){
+                          setState(() {
+                            isNewAddress = true;
+                          });
+                        },
+                        controller: myController4,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Address Line 1',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        onChanged: (value){
+                          setState(() {
+                            isNewAddress = true;
+                          });
+                        },
+                        controller: myController5,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Address Line 2',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        onChanged: (value){
+                          setState(() {
+                            isNewAddress = true;
+                          });
+                        },
+                        controller: myController6,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Landmark',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        onChanged: (value){
+                          setState(() {
+                            isNewAddress = true;
+                          });
+                        },
+                        controller: myController7,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Town/City',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        onChanged: (value){
+                          setState(() {
+                            isNewAddress = true;
+                          });
+                        },
+                        controller: myController3,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'PIN Code',
+                        ),
+                      ),
 
-                SizedBox(
-                  height: 10,
+                      SizedBox(
+                        height: 10,
+                      ),
+                      RoundedButton(
+                        title: 'Deliver Here!',
+                        colour: Colors.indigo,
+                        tag: 'register',
+                        onPressed: () {
+                          if(isNewAddress)
+                            saveAddress();
+                          placeOrder();
+                          ExtendedNavigator.of(context).popAndPush(Routes.homePage);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                RoundedButton(
-                  title: 'Deliver Here!',
-                  colour: Colors.indigo,
-                  tag: 'register',
-                  onPressed: () {
-                    if(isNewAddress)
-                      saveAddress();
-                    placeOrder();
-                    ExtendedNavigator.of(context).popAndPush(Routes.homePage);
-                  },
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
+      floatingActionButton: user != null ? ChatOptions() : Container(),
     );
   }
   placeOrder() async{

@@ -2,8 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:lilly_app/Screens/rounded_button.dart';
 import 'package:lilly_app/app/route.gr.dart';
-import 'package:whatsapp_unilink/whatsapp_unilink.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'Components.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
@@ -11,8 +10,7 @@ class WelcomeScreen extends StatefulWidget {
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen>
-    with SingleTickerProviderStateMixin {
+class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
   AnimationController controller;
   Animation animation;
 
@@ -112,18 +110,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.message_rounded),
-        onPressed: launchWhatsApp,
-      ),
     );
   }
 
-  launchWhatsApp() async {
-    final link = WhatsAppUnilink(
-      phoneNumber: '+91-9699893233',
-      text: "Hey!",
-    );
-    await launch('$link');
-  }
 }

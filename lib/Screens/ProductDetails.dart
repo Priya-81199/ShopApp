@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import '../mockData.dart';
-import 'Components.dart';
+import 'Components.dart' as comp;
 import 'package:lilly_app/app/route.gr.dart';
 
 class Data {
@@ -46,7 +46,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     setLastVisited();
     setSimilarProducts();
     for (var i = 0; i < products['images'].length; i++) {
-      urls.add(getImageURL(products['images'][i]));
+      urls.add(comp.getImageURL(products['images'][i]));
       if (products['images'].length == urls.length) {
         setState(() {
           image_set = true;
@@ -153,7 +153,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
     if(similarProdFetched){
       for(var i = 0 ; i < similarProducts.length ; i++){
-        similarProds.add(getCard(context,similarProducts[i],300,400));
+        similarProds.add(comp.getCard(context,similarProducts[i],300,400));
       }
     }
 
@@ -223,6 +223,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       if (availableSizes[i]) {
         sizeWidgets.add(
           FlatButton(
+            hoverColor: Colors.transparent,
             onPressed: () {
               setState(() {
                 selectedSize = i;
@@ -262,6 +263,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       if (i == selectedImageIndex) paddingSize = 1;
 
       images.add(FlatButton(
+          hoverColor: Colors.transparent,
           onPressed: () {
             setState(() {
               selectedImageIndex = i;
@@ -322,7 +324,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          appBar: buildAppBar(context, f),
+          appBar: comp.buildAppBar(context, f),
           body: Builder(
               builder: (BuildContext context) {
                 return LayoutBuilder(
@@ -345,6 +347,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       child: Column(
                                         children: [
                                           FlatButton(
+                                            hoverColor: Colors.transparent,
                                             onPressed: () {
                                               setState(() {
                                                 isImageZoomed = true;
@@ -391,7 +394,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                               style: TextStyle(
                                                 fontFamily: 'Lobster',
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: height / 32,
+                                                fontSize: height / 28,
                                               ),
                                             ),
                                           ),
@@ -402,7 +405,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                               style: TextStyle(
                                                 fontFamily: 'Handlee',
                                                 fontWeight: FontWeight.w200,
-                                                fontSize: height / 40,
+                                                fontSize: height / 36,
                                               ),
                                             ),
                                           ),
@@ -417,7 +420,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                               style: TextStyle(
                                                   fontFamily: 'Lobster',
                                                   fontWeight: FontWeight.w300,
-                                                  fontSize: height / 40,
+                                                  fontSize: height / 36,
                                                   color: Colors.pinkAccent
                                               ),
                                             ),
@@ -430,7 +433,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                               style: TextStyle(
                                                 fontFamily: 'Lobster',
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: height / 40,
+                                                fontSize: height / 34,
                                               ),
                                             ),
                                           ),
@@ -461,7 +464,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                               style: TextStyle(
                                                 fontFamily: 'Lobster',
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: height / 40,
+                                                fontSize: height / 34,
                                               ),
                                             ),
                                           ),
@@ -503,6 +506,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                             'isUserSet'),
                                                         builder: (context, snapshot) {
                                                           return FlatButton(
+                                                            hoverColor: Colors.transparent,
                                                             onPressed: () async{
                                                               final snackBar = SnackBar(
                                                                 content: Text('Please Select ${getSizeCategory(products['subcategory'])}'),
@@ -541,6 +545,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                   ),
                                                 ),
                                                 FlatButton(
+                                                  hoverColor: Colors.transparent,
                                                   onPressed: () {
                                                       final snackBar1 = SnackBar(
                                                         content: Text('Please Select ${getSizeCategory(products['subcategory'])}'),
@@ -798,6 +803,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                           ),
                                         ),
                                         FlatButton(
+                                          hoverColor: Colors.transparent,
                                           onPressed: () {
                                             if (_auth.currentUser != null) {
                                               addToCart();
@@ -895,6 +901,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 );
               }
           ),
+          floatingActionButton: comp.user != null ? comp.ChatOptions() : Container(),
         )
     );
   }

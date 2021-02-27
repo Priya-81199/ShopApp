@@ -206,7 +206,7 @@ class _OrdersState extends State<Orders> {
           ],
         ),
       ),
-
+      floatingActionButton: user!=null? ChatOptions() : Container(),
     );
   }
 }

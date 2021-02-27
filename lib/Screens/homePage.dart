@@ -141,6 +141,7 @@ class _homePageState extends State<homePage> {
         );
         subcategory.add(
           FlatButton(
+            hoverColor: Colors.transparent,
             onPressed: () {
               ExtendedNavigator.of(context).push(Routes.productList,
                   arguments: ProductListArguments(
@@ -553,6 +554,7 @@ class _homePageState extends State<homePage> {
                     )
                   : Container();
             }),
+
       ),
     );
   }
@@ -653,5 +655,6 @@ class MessageBubble extends StatelessWidget {
         ],
       ),
     );
+
   }
 }

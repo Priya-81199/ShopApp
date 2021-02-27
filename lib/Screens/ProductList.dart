@@ -302,6 +302,7 @@ class _ProductListState extends State<ProductList> {
             );
           },
         ),
+        floatingActionButton: user!=null ? ChatOptions() : Container(),
       ),
     );
   }

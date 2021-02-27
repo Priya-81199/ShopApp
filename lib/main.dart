@@ -23,6 +23,7 @@ import 'app/route.gr.dart' as rg;
 
 bool isUserSet = false;
 
+
 class Data {
   final List<dynamic> productDetails;
   Data({
@@ -69,7 +70,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       builder: ExtendedNavigator.builder<rg.Router>(
         router: rg.Router(),
-        initialRoute: rg.Routes.solveQueries,
+        initialRoute: rg.Routes.homePage,
         builder: (context, navigator) => Theme(
           data: ThemeData.light(),
           child: navigator,

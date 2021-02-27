@@ -4,8 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lilly_app/app/route.gr.dart' as rg;
 import 'package:lilly_app/app/route.gr.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:whatsapp_unilink/whatsapp_unilink.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+
 
 final storage = FirebaseStorage.instance;
 final _auth = FirebaseAuth.instance;
@@ -20,12 +25,38 @@ void uploadPhotos(PlatformFile file) async{
   await storage.ref('product_images/${file.name}').putData(file.bytes);
 }
 
+launchWhatsApp() async {
+  final link = WhatsAppUnilink(
+    phoneNumber: '+91-9699893233',
+    text: "Hey!",
+  );
+  await launch('$link');
+}
 
 //Constants
 String adminEmail = 'princymishra10@gmail.com';
 
 
 //Widgets
+
+
+class ChatOptions extends StatelessWidget {
+  const ChatOptions({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      backgroundColor: Colors.green.shade600,
+      child: FaIcon(FontAwesomeIcons.whatsapp),
+      onPressed:(){
+        launchWhatsApp();
+      },
+    );
+  }
+}
+
 
 Widget getCard(BuildContext context,dynamic product, dynamic width, dynamic height){
 
@@ -92,6 +123,7 @@ AppBar buildAppBar(BuildContext context,Function() f) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         FlatButton(
+          hoverColor: Colors.transparent,
           onPressed: (){
             ExtendedNavigator.of(context).push(rg.Routes.homePage);
           },
@@ -113,21 +145,29 @@ AppBar buildAppBar(BuildContext context,Function() f) {
                   children: [
                     snapshot.hasData ?
                     ((snapshot.data) && (user.email != adminEmail))?
-                        IconButton(
-                          icon: Icon(Icons.shopping_cart_rounded),
-                          onPressed: (){
-                            ExtendedNavigator.of(context).push(Routes.cart);
-                          }
+                        Tooltip(
+                          message: 'My Cart',
+                          child: IconButton(
+                              hoverColor: Colors.transparent,
+                            icon: Icon(Icons.shopping_cart_rounded),
+                            onPressed: (){
+                              ExtendedNavigator.of(context).push(Routes.cart);
+                            }
+                          ),
                         ):
                         Container():
                       Container(),
                     snapshot.hasData ?
                     ((snapshot.data) && (user.email != adminEmail))?
-                    IconButton(
-                        icon: Icon(Icons.shopping_bag_rounded),
-                        onPressed: (){
-                          ExtendedNavigator.of(context).push(Routes.orders);
-                        }
+                    Tooltip(
+                      message:'My Orders',
+                      child: IconButton(
+                          hoverColor: Colors.transparent,
+                          icon: Icon(Icons.shopping_bag_rounded),
+                          onPressed: (){
+                            ExtendedNavigator.of(context).push(Routes.orders);
+                          }
+                      ),
                     ):
                     Container():
                     Container(),
@@ -152,6 +192,7 @@ AppBar buildAppBar(BuildContext context,Function() f) {
                             if (snapshot.data) {
                               FirebaseAuth.instance.signOut();
                               await FlutterSession().set('isUserSet', false);
+                              ExtendedNavigator.of(context).push(rg.Routes.homePage);
                               f();
                             } else {
                               ExtendedNavigator.of(context).push(rg.Routes.loginScreen);

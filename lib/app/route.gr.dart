@@ -24,7 +24,6 @@ import '../Screens/register.dart';
 import '../Screens/solve_queries.dart';
 import '../Screens/update_products.dart';
 import '../Screens/welcome.dart';
-import '../payment_gateway/pay.dart';
 
 class Routes {
   static const String loginScreen = '/login-screen';
@@ -35,7 +34,6 @@ class Routes {
   static const String registrationScreen = '/registration-screen';
   static const String homePage = '/';
   static const String deliveryScreen = '/delivery-screen';
-  static const String razorPayWeb = '/razor-pay-web';
   static const String solveQueries = '/solve-queries';
   static const String cart = '/Cart';
   static const String adminProducts = '/admin-products';
@@ -52,7 +50,6 @@ class Routes {
     registrationScreen,
     homePage,
     deliveryScreen,
-    razorPayWeb,
     solveQueries,
     cart,
     adminProducts,
@@ -75,7 +72,6 @@ class Router extends RouterBase {
     RouteDef(Routes.registrationScreen, page: RegistrationScreen),
     RouteDef(Routes.homePage, page: homePage),
     RouteDef(Routes.deliveryScreen, page: DeliveryScreen),
-    RouteDef(Routes.razorPayWeb, page: RazorPayWeb),
     RouteDef(Routes.solveQueries, page: SolveQueries),
     RouteDef(Routes.cart, page: Cart),
     RouteDef(Routes.adminProducts, page: AdminProducts),
@@ -135,12 +131,6 @@ class Router extends RouterBase {
       final args = data.getArgs<DeliveryScreenArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => DeliveryScreen(args.products),
-        settings: data,
-      );
-    },
-    RazorPayWeb: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => RazorPayWeb(),
         settings: data,
       );
     },

@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,15 @@ class _SolveQueriesState extends State<SolveQueries> {
     try {
       final user = await _auth.currentUser;
       if (user != null) {
-        loggedInUser = user;
+        if(user.email == adminEmail){
+          loggedInUser = user;
+        }
+        else{
+          ExtendedNavigator.of(context).popAndPush(Routes.homePage);
+        }
+      }
+      else{
+        ExtendedNavigator.of(context).popAndPush(Routes.welcomeScreen);
       }
     } catch (e) {
       print(e);
@@ -64,21 +73,24 @@ class _SolveQueriesState extends State<SolveQueries> {
       getActiveQueries();
     else {
       activeQueries.forEach((result) {
-        activeQueriesWidget.add(Container(
-          color: Color.fromRGBO(211, 224, 234, 1),
-          height: 75,
-          width: 400,
-          child: FlatButton(
-            onPressed: () {
-              setState(() {
-                selectedUser = result['username'];
-              });
-              print(result['username']);
-            },
-            child: Text(
-              result['username'],
-              style: TextStyle(
-                color: Colors.black45,
+        activeQueriesWidget.add(SingleChildScrollView(
+          child: Container(
+            color: Colors.blueGrey.shade400,
+            height: 75,
+            width: 400,
+            child: FlatButton(
+              onPressed: () {
+                setState(() {
+                  selectedUser = result['username'];
+                });
+                print(result['username']);
+              },
+              child: Text(
+                result['username'],
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'RocknRoll'
+                ),
               ),
             ),
           ),
@@ -97,6 +109,7 @@ class _SolveQueriesState extends State<SolveQueries> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.black87,
       appBar: buildAppBar(context, f),
       body: LayoutBuilder(builder: (context, constraints) {
         var width = constraints.maxWidth - 400;
@@ -105,8 +118,12 @@ class _SolveQueriesState extends State<SolveQueries> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                children: activeQueriesWidget,
+              Container(
+                height: height,
+                color: Colors.blueGrey.shade100,
+                child: Column(
+                  children: activeQueriesWidget,
+                ),
               ),
               Container(
                 width: width,
@@ -183,15 +200,16 @@ class _SolveQueriesState extends State<SolveQueries> {
                                   '${now.day.toString()}/${now.month.toString()}';
                               String time =
                                   '${DateFormat.jm().format(now).toString()}';
-
-                              _firestore.collection('chat_messages').add({
-                                'text': messageText,
-                                'sender': adminEmail,
-                                'date': date,
-                                'time': time,
-                                'Timestamp': FieldValue.serverTimestamp(),
-                                'receiver': selectedUser,
-                              });
+                              if(messageText != null) {
+                                _firestore.collection('chat_messages').add({
+                                  'text': messageText,
+                                  'sender': adminEmail,
+                                  'date': date,
+                                  'time': time,
+                                  'Timestamp': FieldValue.serverTimestamp(),
+                                  'receiver': selectedUser,
+                                });
+                              }
                             },
                             child: Icon(
                               Icons.send,
@@ -243,11 +261,12 @@ class MessageBubble extends StatelessWidget {
                     bottomLeft: Radius.circular(30),
                     bottomRight: Radius.circular(30)),
             elevation: 5.0,
-            color: isMe ? Colors.white : Colors.blueGrey.shade300,
+            color: isMe ? Colors.white : Colors.blueGrey,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Text(text,
                   style: TextStyle(
+                    fontFamily: 'RocknRoll',
                     color: isMe ? Colors.black : Colors.white,
                     fontSize: 15,
                   )),

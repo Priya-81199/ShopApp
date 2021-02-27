@@ -14,7 +14,7 @@ import 'package:lilly_app/Screens/register.dart';
 import 'package:lilly_app/Screens/solve_queries.dart';
 import 'package:lilly_app/Screens/update_products.dart';
 import 'package:lilly_app/Screens/welcome.dart';
-import 'package:lilly_app/payment_gateway/pay.dart';
+import 'package:lilly_app/main.dart';
 
 
 @MaterialAutoRouter(
@@ -26,16 +26,15 @@ import 'package:lilly_app/payment_gateway/pay.dart';
     MaterialRoute(page: ProductDetails,),
     MaterialRoute(page: WelcomeScreen,),
     MaterialRoute(page: RegistrationScreen,),
-    MaterialRoute(page: homePage,initial: true,),
+    MaterialRoute(page: homePage,initial: true),
     MaterialRoute(page: DeliveryScreen,),
-    MaterialRoute(page: RazorPayWeb,),
     MaterialRoute(page: SolveQueries),
     MaterialRoute(page: Cart,),
     MaterialRoute(page: AdminProducts,),
     MaterialRoute(page: UpdateProducts,),
     MaterialRoute(page: AdminProductList,),
     MaterialRoute(page: Orders,),
-    MaterialRoute(page: AdminOrders,)
+    MaterialRoute(page: AdminOrders,),
   ],
 )
 class $Router {

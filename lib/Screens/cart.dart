@@ -62,11 +62,13 @@ class _CartState extends State<Cart> {
     await session.set("last_visited", Routes.cart);
   }
 
-  void viewProduct(dynamic product) {
-    ExtendedNavigator.of(context).push(
+  void viewProduct(dynamic product) async{
+    print(product);
+    await ExtendedNavigator.of(context).push(
       Routes.productDetails,
       arguments: ProductDetailsArguments(product: product),
     );
+    print(product);
   }
 
   void removeProduct(dynamic product) {
@@ -236,6 +238,7 @@ class _CartState extends State<Cart> {
           ],
         ),
       ),
+      floatingActionButton: user!=null? ChatOptions() : Container(),
     );
   }
 }
