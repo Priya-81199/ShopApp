@@ -118,7 +118,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               await session.set("isUserSet", true);
                               var lastVisited = await session.get('last_visited');
                               var arguments = await session.get('arguments');
-                              if (lastVisited == Routes.productList) {
+
+                              if(user1.email == adminEmail){
+                                ExtendedNavigator.of(context).popAndPush(Routes.adminPortal);
+                              }
+                              else if (lastVisited == Routes.productList) {
                                 ExtendedNavigator.of(context).push(lastVisited);
                                     // arguments: ProductListArguments(
                                     //     subcategory: arguments));
@@ -148,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               content: Text(
                                 'Invalid username/password!',
                                 style: TextStyle(
-                                  color: Colors.red, 
+                                  color: Colors.white,
                                 ),
                               ),
                             );

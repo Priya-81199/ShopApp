@@ -438,6 +438,32 @@ AppBar buildAppBar(BuildContext context, Function() f) {
                   children: [
                     snapshot.hasData
                         ? ((snapshot.data) && (user.email != adminEmail))
+                        ? Tooltip(
+                      message: 'Whatsapp Us',
+                      child: IconButton(
+                          hoverColor: Colors.transparent,
+                          icon: FaIcon(FontAwesomeIcons.whatsapp),
+                          onPressed: () {
+                            launchWhatsApp();
+                          }),
+                    )
+                        : Container()
+                        : Container(),
+                    snapshot.hasData
+                        ? ((snapshot.data) && (user.email != adminEmail))
+                        ? Tooltip(
+                      message: 'Need help? Ask us',
+                      child: IconButton(
+                          hoverColor: Colors.transparent,
+                          icon: Icon(Icons.chat),
+                          onPressed: () {
+                            ExtendedNavigator.of(context).push(Routes.homePage);
+                          }),
+                    )
+                        : Container()
+                        : Container(),
+                    snapshot.hasData
+                        ? ((snapshot.data) && (user.email != adminEmail))
                             ? Tooltip(
                                 message: 'My Cart',
                                 child: IconButton(
@@ -464,6 +490,7 @@ AppBar buildAppBar(BuildContext context, Function() f) {
                               )
                             : Container()
                         : Container(),
+
                     Container(
                       width: 150,
                       height: 100,
