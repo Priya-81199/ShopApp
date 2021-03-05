@@ -12,7 +12,17 @@ class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
-
+class Data {
+  final dynamic product;
+  Data({
+    this.product,
+  });
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data["product"] = product;
+    return data;
+  }
+}
 class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
@@ -25,7 +35,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     return Scaffold(
-      //resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: Container(
         decoration: BoxDecoration(
@@ -45,12 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 50,
                 ),
-                Hero(
-                  tag: 'logo',
-                  child: Container(
-                    height: 200.0,
-                    child: Image.asset('images/avatar.png'),
-                  ),
+                Container(
+                  height: 200.0,
+                  child: Image.asset('images/avatar.png'),
                 ),
                 SizedBox(
                   height: 48.0,
@@ -113,13 +119,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               var lastVisited = await session.get('last_visited');
                               var arguments = await session.get('arguments');
                               if (lastVisited == Routes.productList) {
-                                ExtendedNavigator.of(context).push(lastVisited,
-                                    arguments: ProductListArguments(
-                                        subcategory: arguments));
+                                ExtendedNavigator.of(context).push(lastVisited);
+                                    // arguments: ProductListArguments(
+                                    //     subcategory: arguments));
                               } else if (lastVisited == Routes.productDetails) {
-                                ExtendedNavigator.of(context).push(lastVisited,
-                                    arguments: ProductDetailsArguments(
-                                        product: arguments['product']));
+                                var session = FlutterSession();
+                                await session.set("argument_prod", Data(product:arguments['product']));
+                                ExtendedNavigator.of(context).push(lastVisited);
+                                    // arguments: ProductDetailsArguments(
+                                    //     product: arguments['product']));
                               } else {
                                 ExtendedNavigator.of(context).push(lastVisited);
                               }

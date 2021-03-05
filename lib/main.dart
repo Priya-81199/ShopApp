@@ -23,7 +23,6 @@ import 'app/route.gr.dart' as rg;
 
 bool isUserSet = false;
 
-
 class Data {
   final List<dynamic> productDetails;
   Data({
@@ -37,6 +36,7 @@ class Data {
 }
 
 Future<List<dynamic>> getProductsDetails() async {
+  Firebase.initializeApp();
   final db = FirebaseFirestore.instance;
   List<dynamic> productsDetails = [];
   await db.collection('productDetails').get().then((value) {

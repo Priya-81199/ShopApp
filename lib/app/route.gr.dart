@@ -13,8 +13,9 @@ import '../Screens/ProductDetails.dart';
 import '../Screens/ProductList.dart';
 import '../Screens/addProducts1.dart';
 import '../Screens/admin_orders.dart';
+import '../Screens/admin_portal.dart';
+import '../Screens/admin_prod_details.dart';
 import '../Screens/admin_product_list.dart';
-import '../Screens/admin_products.dart';
 import '../Screens/cart.dart';
 import '../Screens/delivery_screen.dart';
 import '../Screens/homePage.dart';
@@ -36,11 +37,12 @@ class Routes {
   static const String deliveryScreen = '/delivery-screen';
   static const String solveQueries = '/solve-queries';
   static const String cart = '/Cart';
-  static const String adminProducts = '/admin-products';
   static const String updateProducts = '/update-products';
   static const String adminProductList = '/admin-product-list';
   static const String orders = '/Orders';
   static const String adminOrders = '/admin-orders';
+  static const String adminProdDetails = '/admin-prod-details';
+  static const String adminPortal = '/admin-portal';
   static const all = <String>{
     loginScreen,
     addProductsDetails,
@@ -52,11 +54,12 @@ class Routes {
     deliveryScreen,
     solveQueries,
     cart,
-    adminProducts,
     updateProducts,
     adminProductList,
     orders,
     adminOrders,
+    adminProdDetails,
+    adminPortal,
   };
 }
 
@@ -74,11 +77,12 @@ class Router extends RouterBase {
     RouteDef(Routes.deliveryScreen, page: DeliveryScreen),
     RouteDef(Routes.solveQueries, page: SolveQueries),
     RouteDef(Routes.cart, page: Cart),
-    RouteDef(Routes.adminProducts, page: AdminProducts),
     RouteDef(Routes.updateProducts, page: UpdateProducts),
     RouteDef(Routes.adminProductList, page: AdminProductList),
     RouteDef(Routes.orders, page: Orders),
     RouteDef(Routes.adminOrders, page: AdminOrders),
+    RouteDef(Routes.adminProdDetails, page: AdminProdDetails),
+    RouteDef(Routes.adminPortal, page: AdminPortal),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -96,16 +100,14 @@ class Router extends RouterBase {
       );
     },
     ProductList: (data) {
-      final args = data.getArgs<ProductListArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => ProductList(args.subcategory),
+        builder: (context) => ProductList(),
         settings: data,
       );
     },
     ProductDetails: (data) {
-      final args = data.getArgs<ProductDetailsArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => ProductDetails(args.product),
+        builder: (context) => ProductDetails(),
         settings: data,
       );
     },
@@ -128,9 +130,8 @@ class Router extends RouterBase {
       );
     },
     DeliveryScreen: (data) {
-      final args = data.getArgs<DeliveryScreenArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => DeliveryScreen(args.products),
+        builder: (context) => DeliveryScreen(),
         settings: data,
       );
     },
@@ -146,16 +147,9 @@ class Router extends RouterBase {
         settings: data,
       );
     },
-    AdminProducts: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => AdminProducts(),
-        settings: data,
-      );
-    },
     UpdateProducts: (data) {
-      final args = data.getArgs<UpdateProductsArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => UpdateProducts(args.product),
+        builder: (context) => UpdateProducts(),
         settings: data,
       );
     },
@@ -177,33 +171,17 @@ class Router extends RouterBase {
         settings: data,
       );
     },
+    AdminProdDetails: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => AdminProdDetails(),
+        settings: data,
+      );
+    },
+    AdminPortal: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => AdminPortal(),
+        settings: data,
+      );
+    },
   };
-}
-
-/// ************************************************************************
-/// Arguments holder classes
-/// *************************************************************************
-
-/// ProductList arguments holder class
-class ProductListArguments {
-  final dynamic subcategory;
-  ProductListArguments({@required this.subcategory});
-}
-
-/// ProductDetails arguments holder class
-class ProductDetailsArguments {
-  final dynamic product;
-  ProductDetailsArguments({@required this.product});
-}
-
-/// DeliveryScreen arguments holder class
-class DeliveryScreenArguments {
-  final List<dynamic> products;
-  DeliveryScreenArguments({@required this.products});
-}
-
-/// UpdateProducts arguments holder class
-class UpdateProductsArguments {
-  final dynamic product;
-  UpdateProductsArguments({@required this.product});
 }

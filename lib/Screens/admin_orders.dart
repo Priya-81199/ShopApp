@@ -8,6 +8,18 @@ import 'package:lilly_app/app/route.gr.dart';
 
 final db = FirebaseFirestore.instance;
 
+class Data {
+  final dynamic product;
+  Data({
+    this.product,
+  });
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data["product"] = product;
+    return data;
+  }
+}
+
 class AdminOrders extends StatefulWidget {
   static const String id = "AdminOrders";
   @override
@@ -24,7 +36,7 @@ class _AdminOrdersState extends State<AdminOrders> {
   var totalDetails;
   List<dynamic> cartDetails = [];
   void getCartDetails() async {
-    cartDetails=[];
+    cartDetails = [];
     var cart = await db.collection('order_details').get();
     var cartLen = cart.docs.length;
     cart.docs.forEach((result) {
@@ -36,9 +48,15 @@ class _AdminOrdersState extends State<AdminOrders> {
       product['ordersID'] = result.id;
       product['email'] = totalDetails['email'];
       product['Timestamp'] = totalDetails['Timestamp'];
-      product['address'] = totalDetails['address'][0]+',\n' + totalDetails['address'][1]
-          +',\n' + totalDetails['address'][2]+',\n' + totalDetails['address'][3]
-          +'-' + totalDetails['address'][4];
+      product['address'] = totalDetails['address'][0] +
+          ',\n' +
+          totalDetails['address'][1] +
+          ',\n' +
+          totalDetails['address'][2] +
+          ',\n' +
+          totalDetails['address'][3] +
+          '-' +
+          totalDetails['address'][4];
       product['DeliveryStatus'] = totalDetails['DeliveryStatus'];
       if (_auth.currentUser != null) {
         user = FirebaseAuth.instance.currentUser.email;
@@ -67,23 +85,25 @@ class _AdminOrdersState extends State<AdminOrders> {
     await session.set("last_visited", Routes.adminOrders);
   }
 
-  void viewProduct(dynamic product) {
-    ExtendedNavigator.of(context).push(
-      Routes.productDetails,
-      arguments: ProductDetailsArguments(product: product),
-    );
+  void viewProduct(dynamic product) async {
+    product['Timestamp'] = '';
+    var session = FlutterSession();
+    await session.set("argument_aprod", Data(product: product));
+    ExtendedNavigator.of(context).push(Routes.adminProdDetails);
+    //   arguments: ProductDetailsArguments(product: product),
+    // );
   }
 
-  void updateDeliveryStatus(var status,dynamic docID,var index){
-    db.collection('order_details')
+  void updateDeliveryStatus(var status, dynamic docID, var index) {
+    db
+        .collection('order_details')
         .doc(docID)
-        .update({'DeliveryStatus': status})
-        .then((value) => {
-      setState(() {
-        //getCartDetails();
-        cartDetails[index]['DeliveryStatus'] = status;
-      }),
-    });
+        .update({'DeliveryStatus': status}).then((value) => {
+              setState(() {
+                //getCartDetails();
+                cartDetails[index]['DeliveryStatus'] = status;
+              }),
+            });
   }
 
   @override
@@ -94,13 +114,11 @@ class _AdminOrdersState extends State<AdminOrders> {
 
     cartDetails.sort((b, a) => a['Timestamp'].compareTo(b['Timestamp']));
 
-
     List<TableRow> cartContent = [];
-
 
     if (isCartFetched) {
       //cartDetails.forEach((product)
-      for(var i = 0; i < cartDetails.length ; i++){
+      for (var i = 0; i < cartDetails.length; i++) {
         var product = cartDetails[i];
         cartContent.add(
           TableRow(
@@ -120,8 +138,7 @@ class _AdminOrdersState extends State<AdminOrders> {
                           fontFamily: 'Lobster',
                           fontWeight: FontWeight.w300,
                           fontSize: 20,
-                          color: Colors.pinkAccent
-                      ),
+                          color: Colors.pinkAccent),
                     ),
                     Text(
                       product['name'],
@@ -130,24 +147,22 @@ class _AdminOrdersState extends State<AdminOrders> {
                         fontWeight: FontWeight.bold,
                         fontSize: 22,
                       ),
-
                     ),
                     Text(
                       product['description'],
                       style: TextStyle(
                         fontFamily: 'Handlee',
                         fontWeight: FontWeight.w200,
-                        fontSize:20,
-                      ),),
+                        fontSize: 20,
+                      ),
+                    ),
                     Text(
                       '₹' + product['price'],
                       style: TextStyle(
                           fontFamily: 'Lobster',
                           fontWeight: FontWeight.w300,
                           fontSize: 20,
-                          color: Colors.pinkAccent
-                      ),
-
+                          color: Colors.pinkAccent),
                     ),
                   ],
                 ),
@@ -158,7 +173,21 @@ class _AdminOrdersState extends State<AdminOrders> {
                   style: TextStyle(
                     fontFamily: 'Handlee',
                     fontWeight: FontWeight.w200,
-                    fontSize:20,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+              Container(
+                child: Tooltip(
+                  message: 'View',
+                  child: FlatButton(
+                    child: Icon(
+                      Icons.remove_red_eye,
+                      color: Colors.lightGreen,
+                    ),
+                    onPressed: () {
+                      viewProduct(product);
+                    },
                   ),
                 ),
               ),
@@ -166,30 +195,30 @@ class _AdminOrdersState extends State<AdminOrders> {
                 child: Column(
                   children: [
                     FlatButton(
-                      color: product['DeliveryStatus']==0?Colors.green:Colors.transparent,
-                      child: Text(
-                        'Reject Order'
-                      ),
+                      color: product['DeliveryStatus'] == 0
+                          ? Colors.green
+                          : Colors.transparent,
+                      child: Text('Reject Order'),
                       onPressed: () {
-                        updateDeliveryStatus(0,product['ordersID'],i);
+                        updateDeliveryStatus(0, product['ordersID'], i);
                       },
                     ),
                     FlatButton(
-                      color: product['DeliveryStatus']==2?Colors.green:Colors.transparent,
-                      child: Text(
-                        'In Transit'
-                      ),
+                      color: product['DeliveryStatus'] == 2
+                          ? Colors.green
+                          : Colors.transparent,
+                      child: Text('In Transit'),
                       onPressed: () {
-                        updateDeliveryStatus(2,product['ordersID'],i);
+                        updateDeliveryStatus(2, product['ordersID'], i);
                       },
                     ),
                     FlatButton(
-                      color: product['DeliveryStatus']==3?Colors.green:Colors.transparent,
-                      child: Text(
-                          'Order Delivered'
-                      ),
+                      color: product['DeliveryStatus'] == 3
+                          ? Colors.green
+                          : Colors.transparent,
+                      child: Text('Order Delivered'),
                       onPressed: () {
-                        updateDeliveryStatus(3,product['ordersID'],i);
+                        updateDeliveryStatus(3, product['ordersID'], i);
                       },
                     ),
                   ],
@@ -201,14 +230,24 @@ class _AdminOrdersState extends State<AdminOrders> {
         cartContent.add(
           TableRow(
             children: [
-              SizedBox(height: 20,),
-              SizedBox(height: 20,),
-              SizedBox(height: 20,),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 20,
+              ),
             ],
           ),
         );
-
       }
     }
 
@@ -226,8 +265,7 @@ class _AdminOrdersState extends State<AdminOrders> {
                 style: TextStyle(
                     fontFamily: 'Handlee',
                     fontSize: 30,
-                    color: Colors.blueGrey
-                ),
+                    color: Colors.blueGrey),
               ),
             ),
             SizedBox(
@@ -241,7 +279,6 @@ class _AdminOrdersState extends State<AdminOrders> {
           ],
         ),
       ),
-
     );
   }
 }

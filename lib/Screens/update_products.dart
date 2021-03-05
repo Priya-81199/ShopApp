@@ -10,8 +10,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 final _firestore = FirebaseFirestore.instance;
 
 class UpdateProducts extends StatefulWidget {
-  final dynamic product;
-  UpdateProducts(this.product);
   @override
   _UpdateProductsState createState() => _UpdateProductsState();
 }
@@ -27,7 +25,10 @@ class Data {
     return data;
   }
 }
+
 class _UpdateProductsState extends State<UpdateProducts> {
+  bool loading = true;
+
   var categoryDefault = 'Gents';
   var subcategoryDefault = 'Formals';
 
@@ -51,11 +52,11 @@ class _UpdateProductsState extends State<UpdateProducts> {
   List<bool> imagesSelected = [];
 
   List<dynamic> sizeCountValues = List.filled(8, '0');
-  List<dynamic> sizeAvailable = List.filled(8,false);
+  List<dynamic> sizeAvailable = List.filled(8, false);
   List<dynamic> ageCountValues = List.filled(7, '0');
-  List<dynamic> ageAvailable = List.filled(7,false);
+  List<dynamic> ageAvailable = List.filled(7, false);
   List<dynamic> numberCountValues = List.filled(16, '0');
-  List<dynamic> numberAvailable = List.filled(16,false);
+  List<dynamic> numberAvailable = List.filled(16, false);
 
   void getImages() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
@@ -124,12 +125,12 @@ class _UpdateProductsState extends State<UpdateProducts> {
   }
 
   var productID;
+  var product;
 
-  @override
-  void initState() {
-    super.initState();
-    var product = widget.product;
-    print(product);
+  getArguments() async {
+    var session = FlutterSession();
+    product = await session.get('argument_aprod');
+    product = product['product'];
     productID = product['id'];
     categoryDefault = product['category'];
     subcategoryDefault = product['subcategory'];
@@ -191,7 +192,15 @@ class _UpdateProductsState extends State<UpdateProducts> {
       );
       imagesSelected.add(true);
     }
-    print(product);
+    setState(() {
+      loading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getArguments();
   }
 
   @override
@@ -201,30 +210,39 @@ class _UpdateProductsState extends State<UpdateProducts> {
     }
 
     var category = [];
+    var subCategory = [];
+    var property = [];
+    var value = [];
+    List<Widget> pointsPresent = [];
+    List<Widget> propertiesPresent = [];
+    List<Widget> displayImages = [];
+    var sizeNames = ['4XS', '3XS', '2XS', 'XS', 'S', 'M', 'L', 'XL'];
+    List<Widget> sizeCounts = [];
+    var ageNames = [];
+    List<Widget> ageCounts = [];
+    var numberNames = [];
+    List<Widget> numberCounts = [];
+
     for (var i = 0; i < categories.length; i++) {
       category.add(categories[i]['name']);
     }
 
-    var subCategory = [];
     for (var i = 0; i < subcategories.length; i++) {
       if (subcategories[i]['category'] == categoryDefault) {
         subCategory.add(subcategories[i]['name']);
       }
     }
 
-    var property = [];
     for (var i = 0; i < properties.length; i++) {
       property.add(properties[i]['name']);
     }
 
-    var value = [];
     for (var i = 0; i < propertyvalues.length; i++) {
       if (propertyvalues[i]['property'] == propertyDefault) {
         value.add(propertyvalues[i]['name']);
       }
     }
 
-    List<Widget> propertiesPresent = [];
     for (var i = 0; i < addedPropertyList.length; i++) {
       if (addedPropertiesOn[i]) {
         propertiesPresent.add(
@@ -259,7 +277,6 @@ class _UpdateProductsState extends State<UpdateProducts> {
       }
     }
 
-    List<Widget> pointsPresent = [];
     for (var i = 0; i < addedPoints.length; i++) {
       if (addedPointsOn[i]) {
         pointsPresent.add(
@@ -291,7 +308,6 @@ class _UpdateProductsState extends State<UpdateProducts> {
       }
     }
 
-    List<Widget> displayImages = [];
     for (var i = 0; i < images.length; i++) {
       if (imagesSelected[i]) {
         displayImages.add(images[i]);
@@ -304,8 +320,6 @@ class _UpdateProductsState extends State<UpdateProducts> {
       ),
     );
 
-    var sizeNames = ['4XS', '3XS', '2XS', 'XS', 'S', 'M', 'L', 'XL'];
-    List<Widget> sizeCounts = [];
     sizeCounts.add(SizedBox(width: 30));
     for (var i = 0; i < sizeNames.length; i++) {
       sizeCounts.add(Column(
@@ -313,12 +327,10 @@ class _UpdateProductsState extends State<UpdateProducts> {
           Container(
             child: Row(
               children: [
-                Text(
-                    sizeNames[i]
-                ),
+                Text(sizeNames[i]),
                 Checkbox(
                   value: sizeAvailable[i],
-                  onChanged: (isAvailable){
+                  onChanged: (isAvailable) {
                     setState(() {
                       sizeAvailable[i] = isAvailable;
                     });
@@ -343,10 +355,8 @@ class _UpdateProductsState extends State<UpdateProducts> {
       sizeCounts.add(SizedBox(width: 30));
     }
 
-    var ageNames = [];
-    for(var i=0;i<13;i+=2)
-      ageNames.add(i.toString()+'-'+(i+1).toString());
-    List<Widget> ageCounts = [];
+    for (var i = 0; i < 13; i += 2)
+      ageNames.add(i.toString() + '-' + (i + 1).toString());
     ageCounts.add(SizedBox(width: 30));
     for (var i = 0; i < ageNames.length; i++) {
       ageCounts.add(Column(
@@ -354,12 +364,10 @@ class _UpdateProductsState extends State<UpdateProducts> {
           Container(
             child: Row(
               children: [
-                Text(
-                    ageNames[i]
-                ),
+                Text(ageNames[i]),
                 Checkbox(
                   value: ageAvailable[i],
-                  onChanged: (isAvailable){
+                  onChanged: (isAvailable) {
                     setState(() {
                       ageAvailable[i] = isAvailable;
                     });
@@ -384,10 +392,7 @@ class _UpdateProductsState extends State<UpdateProducts> {
       ageCounts.add(SizedBox(width: 30));
     }
 
-    var numberNames = [];
-    for(var i=12;i<=42;i+=2)
-      numberNames.add(i.toString());
-    List<Widget> numberCounts = [];
+    for (var i = 12; i <= 42; i += 2) numberNames.add(i.toString());
     numberCounts.add(SizedBox(width: 30));
     for (var i = 0; i < numberNames.length; i++) {
       numberCounts.add(Column(
@@ -395,12 +400,10 @@ class _UpdateProductsState extends State<UpdateProducts> {
           Container(
             child: Row(
               children: [
-                Text(
-                    numberNames[i]
-                ),
+                Text(numberNames[i]),
                 Checkbox(
                   value: numberAvailable[i],
-                  onChanged: (isAvailable){
+                  onChanged: (isAvailable) {
                     setState(() {
                       numberAvailable[i] = isAvailable;
                     });
@@ -433,124 +436,127 @@ class _UpdateProductsState extends State<UpdateProducts> {
       return '';
     }
 
-    return MaterialApp(
-      home: Scaffold(
-        appBar: buildAppBar(context, f),
-        body: Builder(
-          builder: (BuildContext context) {
-            return Container(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        buildDropdownButton(categoryDefault, category, 'category'),
-                        SizedBox(width: 30),
-                        buildDropdownButton(subcategoryDefault, subCategory, 'subcategory'),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 240,
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Product Name',
-                            ),
-                            initialValue: productName,
-                            onChanged: (text) {
-                              setState(() {
-                                productName = text;
-                              });
-                            },
+    if (loading) return CircularProgressIndicator();
+    return Scaffold(
+      appBar: buildAppBar(context, f),
+      body: Builder(
+        builder: (BuildContext context) {
+          return Container(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      buildDropdownButton(
+                          categoryDefault, category, 'category'),
+                      SizedBox(width: 30),
+                      buildDropdownButton(
+                          subcategoryDefault, subCategory, 'subcategory'),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 240,
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Product Name',
                           ),
+                          initialValue: productName,
+                          onChanged: (text) {
+                            setState(() {
+                              productName = text;
+                            });
+                          },
                         ),
-                        SizedBox(width: 30),
-                        Container(
-                          width: 120,
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Price',
-                            ),
-                            initialValue: price,
-                            onChanged: (text) {
-                              price = text;
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: 390,
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Description',
-                        ),
-                        initialValue: description,
-                        onChanged: (text) {
-                          setState(() {
-                            description = text;
-                          });
-                        },
                       ),
-                    ),
-                    SizedBox(height: 30),
-                    Column(
-                      children: [
-                        Text(
-                          'Properties',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            buildDropdownButton(propertyDefault, property, 'property'),
-                            SizedBox(width: 30),
-                            buildDropdownButton(valueDefault, value, 'value'),
-                            SizedBox(width: 10),
-                            Container(
-                              width: 40,
-                              child: FlatButton(
-                                onPressed: () => {
-                                  addproperty(propertyDefault, valueDefault),
-                                },
-                                child: Icon(
-                                  Icons.add_circle_outline,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: propertiesPresent,
-                    ),
-                    ('size' == getSizeCategory()) ?
-                      Column(
-                        children: [
-                          SizedBox(height: 30),
-                          Text(
-                            'Sizes Count',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                      SizedBox(width: 30),
+                      Container(
+                        width: 120,
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Price',
                           ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: sizeCounts,
+                          initialValue: price,
+                          onChanged: (text) {
+                            price = text;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: 390,
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Description',
+                      ),
+                      initialValue: description,
+                      onChanged: (text) {
+                        setState(() {
+                          description = text;
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Column(
+                    children: [
+                      Text(
+                        'Properties',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          buildDropdownButton(
+                              propertyDefault, property, 'property'),
+                          SizedBox(width: 30),
+                          buildDropdownButton(valueDefault, value, 'value'),
+                          SizedBox(width: 10),
+                          Container(
+                            width: 40,
+                            child: FlatButton(
+                              onPressed: () => {
+                                addproperty(propertyDefault, valueDefault),
+                              },
+                              child: Icon(
+                                Icons.add_circle_outline,
+                                color: Colors.green,
+                              ),
                             ),
                           ),
                         ],
-                      ) :
-                      Container(),
-                      ('age' == getSizeCategory()) ?
-                        Column(
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: propertiesPresent,
+                  ),
+                  ('size' == getSizeCategory())
+                      ? Column(
+                          children: [
+                            SizedBox(height: 30),
+                            Text(
+                              'Sizes Count',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: sizeCounts,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(),
+                  ('age' == getSizeCategory())
+                      ? Column(
                           children: [
                             SizedBox(height: 30),
                             Text(
@@ -565,10 +571,10 @@ class _UpdateProductsState extends State<UpdateProducts> {
                               ),
                             ),
                           ],
-                        ) :
-                        Container(),
-                      ('number' == getSizeCategory()) ?
-                        Column(
+                        )
+                      : Container(),
+                  ('number' == getSizeCategory())
+                      ? Column(
                           children: [
                             SizedBox(height: 30),
                             Text(
@@ -583,238 +589,244 @@ class _UpdateProductsState extends State<UpdateProducts> {
                               ),
                             ),
                           ],
-                        ) :
-                      Container(),
-                    SizedBox(height: 30),
-                    Column(
-                      children: [
-                        Text(
-                          'Additional Points',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )
+                      : Container(),
+                  SizedBox(height: 30),
+                  Column(
+                    children: [
+                      Text(
+                        'Additional Points',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 390,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Point',
+                                ),
+                                initialValue: point,
+                                onChanged: (text) {
+                                  point = text;
+                                },
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Container(
+                              width: 40,
+                              child: FlatButton(
+                                onPressed: () => {
+                                  addPoints(point),
+                                },
+                                child: Icon(
+                                  Icons.add_circle_outline,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: pointsPresent,
+                  ),
+                  SizedBox(height: 30),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Container(
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: displayImages,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FlatButton(
+                        onPressed: () {
+                          var finalProperties = [];
+                          for (var i = 0; i < addedPropertyList.length; i++) {
+                            if (addedPropertiesOn[i]) {
+                              finalProperties.add(addedPropertyList[i]);
+                            }
+                          }
+                          var finalPoints = [];
+                          for (var i = 0; i < addedPoints.length; i++) {
+                            if (addedPointsOn[i]) {
+                              finalPoints.add(addedPoints[i]);
+                            }
+                          }
+                          var finalImages = [];
+                          for (var i = 0; i < imageFiles.length; i++) {
+                            if (imagesSelected[i]) {
+                              finalImages.add(imageFiles[i]);
+                              if (i >= previousListLen)
+                                uploadPhotos(allFiles[i - previousListLen]);
+                            }
+                          }
+                          var productDetails = {
+                            'category': categoryDefault,
+                            'subcategory': subcategoryDefault,
+                            'name': productName,
+                            'price': price,
+                            'description': description,
+                            'properties': finalProperties,
+                            'points': finalPoints,
+                            'sizeCounts': sizeCountValues,
+                            'ageCounts': ageCountValues,
+                            'numberCounts': numberCountValues,
+                            'sizeAvailable': sizeAvailable,
+                            'ageAvailable': ageAvailable,
+                            'numberAvailable': numberAvailable,
+                            'images': finalImages,
+                          };
+                          final snackBar = SnackBar(
+                            content: Text('Product Updated!'),
+                          );
+                          _firestore
+                              .collection('productDetails')
+                              .doc(productID)
+                              .update(productDetails)
+                              .then((value) async => {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar),
+                                    updateSession(productDetails, productID),
+                                    await Future.delayed(Duration(seconds: 1)),
+                                  })
+                              .then(
+                                (value) => ExtendedNavigator.of(context)
+                                    .popAndPush(Routes.adminProductList),
+                              );
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 120,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(5),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Update',
+                              style: TextStyle(
+                                fontFamily: 'Lobster',
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      FlatButton(
+                        onPressed: () {
+                          final snackBar = SnackBar(
+                            content: Text('Product Removed!'),
+                          );
+                          _firestore
+                              .collection('productDetails')
+                              .doc(productID)
+                              .delete()
+                              .then((value) async => {
+                                    removeProdSession(productID),
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar),
+                                    await Future.delayed(Duration(seconds: 1)),
+                                  })
+                              .then((value) => {
+                                    ExtendedNavigator.of(context)
+                                        .popAndPush(Routes.adminProductList)
+                                  });
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            color: Colors.pink,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(5),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Remove Product',
+                              style: TextStyle(
+                                fontFamily: 'Lobster',
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      FlatButton(
+                        onPressed: () {
+                          ExtendedNavigator.of(context).pop();
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 120,
+                          decoration: BoxDecoration(
+                            color: Colors.pink.shade900,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(5),
+                            ),
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
-                                width: 390,
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Point',
-                                  ),
-                                  initialValue: point,
-                                  onChanged: (text) {
-                                    point = text;
-                                  },
+                              Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  fontFamily: 'Lobster',
+                                  fontSize: 20,
                                 ),
                               ),
-                              SizedBox(width: 10),
-                              Container(
-                                width: 40,
-                                child: FlatButton(
-                                  onPressed: () => {
-                                    addPoints(point),
-                                  },
-                                  child: Icon(
-                                    Icons.add_circle_outline,
-                                    color: Colors.green,
-                                  ),
-                                ),
+                              Icon(
+                                Icons.highlight_remove_rounded,
                               ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                    Column(
-                      children: pointsPresent,
-                    ),
-                    SizedBox(height: 30),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Container(
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: displayImages,
-                          ),
-                        ),
                       ),
-                    ),
-                    SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FlatButton(
-                          onPressed: () {
-                            var finalProperties = [];
-                            for (var i = 0; i < addedPropertyList.length; i++) {
-                              if (addedPropertiesOn[i]) {
-                                finalProperties.add(addedPropertyList[i]);
-                              }
-                            }
-                            var finalPoints = [];
-                            for (var i = 0; i < addedPoints.length; i++) {
-                              if (addedPointsOn[i]) {
-                                finalPoints.add(addedPoints[i]);
-                              }
-                            }
-                            var finalImages = [];
-                            for (var i = 0; i < imageFiles.length; i++) {
-                              if (imagesSelected[i]) {
-                                finalImages.add(imageFiles[i]);
-                                if(i >= previousListLen)
-                                  uploadPhotos(allFiles[i-previousListLen]);
-                              }
-                            }
-                            var productDetails = {
-                              'category': categoryDefault,
-                              'subcategory': subcategoryDefault,
-                              'name': productName,
-                              'price': price,
-                              'description': description,
-                              'properties': finalProperties,
-                              'points': finalPoints,
-                              'sizeCounts': sizeCountValues,
-                              'ageCounts': ageCountValues,
-                              'numberCounts': numberCountValues,
-                              'sizeAvailable': sizeAvailable,
-                              'ageAvailable': ageAvailable,
-                              'numberAvailable': numberAvailable,
-                              'images': finalImages,
-                            };
-                            final snackBar = SnackBar(
-                              content: Text('Product Updated!'),
-                            );
-                            _firestore
-                            .collection('productDetails')
-                            .doc(productID)
-                            .update(productDetails)
-                            .then((value) async => {
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar),
-                              updateSession(productDetails,productID),
-                              await Future.delayed(Duration(seconds: 1)),
-                            })
-                            .then((value) => ExtendedNavigator.of(context).popAndPush(Routes.adminProductList),);
-                          },
-                          child: Container(
-                            height: 50,
-                            width: 120,
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Update',
-                                style: TextStyle(
-                                  fontFamily: 'Lobster',
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        FlatButton(
-                          onPressed: () {
-                            final snackBar = SnackBar(
-                              content: Text('Product Removed!'),
-                            );
-                            _firestore
-                            .collection('productDetails')
-                            .doc(productID)
-                            .delete()
-                            .then((value)  async => {
-                              removeProdSession(productID),
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar),
-                              await Future.delayed(Duration(seconds: 1)),
-                            })
-                            .then((value)=> {
-                              ExtendedNavigator.of(context).popAndPush(Routes.adminProductList)
-                            });
-                          },
-                          child: Container(
-                            height: 50,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              color: Colors.pink,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Remove Product',
-                                style: TextStyle(
-                                  fontFamily: 'Lobster',
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        FlatButton(
-                          onPressed: () {
-                            ExtendedNavigator.of(context).pop();
-                          },
-                          child: Container(
-                            height: 50,
-                            width: 120,
-                            decoration: BoxDecoration(
-                              color: Colors.pink.shade900,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Cancel',
-                                  style: TextStyle(
-                                    fontFamily: 'Lobster',
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.highlight_remove_rounded,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                  ],
-                ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  void updateSession(dynamic product,dynamic id) async{
+  void updateSession(dynamic product, dynamic id) async {
     var session = FlutterSession();
     var productsDetail = await session.get("prod_details");
     productsDetail = productsDetail['productDetails'];
-    productsDetail[productsDetail.indexWhere((element) => element['id'] == id)] = product;
-    await session.set("prod_details",Data(productDetails:productsDetail ));
+    productsDetail[
+        productsDetail.indexWhere((element) => element['id'] == id)] = product;
+    await session.set("prod_details", Data(productDetails: productsDetail));
   }
 
-  void removeProdSession(dynamic id) async{
+  void removeProdSession(dynamic id) async {
     var session = FlutterSession();
     var productsDetail = await session.get("prod_details");
     productsDetail = productsDetail['productDetails'];
     productsDetail.removeWhere((element) => element['id'] == id);
-    await session.set("prod_details",Data(productDetails:productsDetail ));
+    await session.set("prod_details", Data(productDetails: productsDetail));
   }
 
   void removeProperty(dynamic propertyIndex) {

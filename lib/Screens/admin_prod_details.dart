@@ -7,8 +7,6 @@ import '../mockData.dart';
 import 'Components.dart' as comp;
 import 'package:lilly_app/app/route.gr.dart';
 
-import 'Components.dart';
-
 class Data {
   final dynamic product;
   Data({
@@ -21,19 +19,17 @@ class Data {
   }
 }
 
-class ProductDetails extends StatefulWidget {
-  static const String id = 'ProductDetails';
+class AdminProdDetails extends StatefulWidget {
+  static const String id = 'AdminProdDetails';
   @override
-  _ProductDetailsState createState() => _ProductDetailsState();
+  _AdminProdDetailsState createState() => _AdminProdDetailsState();
 }
 
-class _ProductDetailsState extends State<ProductDetails> {
+class _AdminProdDetailsState extends State<AdminProdDetails> {
   var productIndex = 1;
   var selectedImageIndex = 0;
   var isImageZoomed = false;
   var size_default = 'L';
-  bool similarProdFetched = false;
-  List<dynamic> similarProducts = [];
 
   var urls = [];
   bool image_set = false;
@@ -41,10 +37,9 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   void getArguments() async {
     var session = FlutterSession();
-    products = await session.get('argument_prod');
+    products = await session.get('argument_aprod');
     products = products['product'];
     setLastVisited();
-    setSimilarProducts();
     for (var i = 0; i < products['images'].length; i++) {
       urls.add(comp.getImageURL(products['images'][i]));
       if (products['images'].length == urls.length) {
@@ -61,30 +56,9 @@ class _ProductDetailsState extends State<ProductDetails> {
     getArguments();
   }
 
-  void setSimilarProducts() async {
-    var session = FlutterSession();
-    var details = await session.get("prod_details");
-    details = details['productDetails'];
-    var requiredLength = details.length;
-
-    for (var i = 0; i < details.length; i++) {
-      if (products['subcategory'] == details[i]['subcategory'] &&
-          products['id'] != details[i]['id']) {
-        similarProducts.add(details[i]);
-      } else {
-        requiredLength--;
-      }
-      if (requiredLength == similarProducts.length) {
-        setState(() {
-          similarProdFetched = true;
-        });
-      }
-    }
-  }
-
   void setLastVisited() async {
     var session = FlutterSession();
-    await session.set("last_visited", Routes.productDetails);
+    await session.set("last_visited", Routes.adminProdDetails);
     print(Routes.productDetails);
     await session.set("arguments", Data(product: products));
   }
@@ -149,14 +123,6 @@ class _ProductDetailsState extends State<ProductDetails> {
   Widget build(BuildContext context) {
     void f() {
       setState(() {});
-    }
-
-    List<Widget> similarProds = [];
-
-    if (similarProdFetched) {
-      for (var i = 0; i < similarProducts.length; i++) {
-        similarProds.add(comp.getCard(context, similarProducts[i], 300, 400));
-      }
     }
 
     String getSizeCategory(String subcategory) {
@@ -421,7 +387,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           Container(
             alignment: Alignment.topLeft,
             child: Text(
-              'Available ${getSizeCategory(products['subcategory'])}',
+              'Selected ${getSizeCategory(products['subcategory'])}',
               style: TextStyle(
                 fontFamily: 'Lobster',
                 fontWeight: FontWeight.bold,
@@ -440,134 +406,6 @@ class _ProductDetailsState extends State<ProductDetails> {
             ),
           ),
           SizedBox(height: 20),
-        ],
-      );
-    }
-
-    Column actionSection(height) {
-      return Column(
-        children: [
-          FlatButton(
-            hoverColor: Colors.transparent,
-            onPressed: () async {
-              final snackBar1 = SnackBar(
-                content: Text(
-                    'Please Select ${getSizeCategory(products['subcategory'])}'),
-              );
-              if (selectedSize == -1) {
-                ScaffoldMessenger.of(context).showSnackBar(snackBar1);
-              } else {
-                if (_auth.currentUser != null) {
-                  products['selectedSize'] = sizeNames[selectedSize];
-                  products['selectedSizeIndex'] = selectedSize;
-                  products['selectedSizeType'] =
-                      getSizeCategory(products['subcategory']);
-                  products['cartID'] = await addToCart();
-
-                  var session = FlutterSession();
-                  await session.set("argument_prod", Data(product: [products]));
-                  ExtendedNavigator.of(context).push(Routes.deliveryScreen);
-                } else {
-                  ExtendedNavigator.of(context).push(Routes.welcomeScreen);
-                }
-              }
-            },
-            child: Container(
-              height: height / 20,
-              margin: EdgeInsets.fromLTRB(
-                  height / 32, height / 64, height / 32, height / 32),
-              padding: EdgeInsets.all(height / 100),
-              child: Center(
-                child: Text(
-                  'Buy Now',
-                  style: TextStyle(
-                    fontFamily: 'Lobster',
-                  ),
-                ),
-              ),
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(22, 135, 167, 1),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(15),
-                ),
-              ),
-            ),
-          ),
-          FlatButton(
-            hoverColor: Colors.transparent,
-            onPressed: () async {
-              final snackBar1 = SnackBar(
-                content: Text(
-                    'Please Select ${getSizeCategory(products['subcategory'])}'),
-              );
-              if (selectedSize == -1) {
-                ScaffoldMessenger.of(context).showSnackBar(snackBar1);
-              } else {
-                var cartID;
-                if (_auth.currentUser != null) {
-                  products['selectedSize'] = sizeNames[selectedSize];
-                  products['selectedSizeIndex'] = selectedSize;
-                  products['selectedSizeType'] =
-                      getSizeCategory(products['subcategory']);
-                  products['cartID'] = await addToCart();
-
-                  final snackBar = SnackBar(
-                    content: Text('Added to Cart!'),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                } else {
-                  ExtendedNavigator.of(context).push(Routes.welcomeScreen);
-                }
-              }
-            },
-            child: Container(
-              height: height / 20,
-              margin: EdgeInsets.fromLTRB(
-                  height / 32, height / 64, height / 32, height / 32),
-              padding: EdgeInsets.all(height / 100),
-              child: Center(
-                child: Text(
-                  'Add to Cart',
-                  style: TextStyle(
-                    fontFamily: 'Lobster',
-                  ),
-                ),
-              ),
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(211, 224, 234, 1),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(15),
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-
-    Column similarProductSection() {
-      return Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                'Similar Products',
-                style: TextStyle(
-                  fontFamily: 'Lobster',
-                  fontSize: 30,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: similarProds,
-            ),
-          ),
         ],
       );
     }
@@ -595,164 +433,76 @@ class _ProductDetailsState extends State<ProductDetails> {
 
     return Scaffold(
       appBar: comp.buildAppBar(context, f),
-      body: Stack(
-        children: [
-          Builder(builder: (BuildContext context) {
-            return LayoutBuilder(
-              builder: (context, constraints) {
-                var width = constraints.maxWidth;
-                var height = constraints.maxHeight;
-                if (height < width)
-                  return Stack(
-                    children: [
-                      SingleChildScrollView(
-                        child: Column(
+      body: Builder(builder: (BuildContext context) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            var width = constraints.maxWidth;
+            var height = constraints.maxHeight;
+            if (height < width)
+              return Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: width * 2 / 5,
-                                  height: height,
-                                  padding: EdgeInsets.all(height / 50),
-                                  child: imageSection(height),
-                                ),
-                                Container(
-                                  width: width * 2 / 5,
-                                  height: height,
-                                  padding: EdgeInsets.fromLTRB(
-                                      height / 50, height / 25, height / 50, 0),
-                                  alignment: Alignment.topLeft,
-                                  child: Column(
-                                    //crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      detailSection(height, width * 2 / 5, 0),
-                                      Container(
-                                        height: height * 0.20,
-                                        width: width / 5,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(width: 1),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15),
-                                          ),
-                                        ),
-                                        child: actionSection(height),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                            Container(
+                              width: width * 2 / 5,
+                              height: height,
+                              padding: EdgeInsets.all(height / 50),
+                              child: imageSection(height),
                             ),
-                            SizedBox(
-                              height: 20,
+                            Container(
+                              width: width * 2 / 5,
+                              height: height,
+                              padding: EdgeInsets.fromLTRB(
+                                  height / 50, height / 25, height / 50, 0),
+                              alignment: Alignment.topLeft,
+                              child: Column(
+                                //crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  detailSection(height, width * 2 / 5, 0),
+                                ],
+                              ),
                             ),
-                            similarProductSection(),
                           ],
                         ),
-                      ),
-                      isImageZoomed
-                          ? zoomImage(height, width, BoxFit.fitHeight)
-                          : Container(),
-                    ],
-                  );
-                else {
-                  return Stack(
-                    children: [
-                      SingleChildScrollView(
-                        child: Container(
-                          padding: EdgeInsets.all(height / 50),
-                          child: Column(
-                            children: [
-                              imageSection(height),
-                              SizedBox(height: 50),
-                              detailSection(height, width, 4),
-                              Container(
-                                height: height * 0.2,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(width: 1),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
-                                child: actionSection(height),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              similarProductSection(),
-                            ],
+                      ],
+                    ),
+                  ),
+                  isImageZoomed
+                      ? zoomImage(height, width, BoxFit.fitHeight)
+                      : Container(),
+                ],
+              );
+            else {
+              return Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.all(height / 50),
+                      child: Column(
+                        children: [
+                          imageSection(height),
+                          SizedBox(height: 50),
+                          detailSection(height, width, 4),
+                          SizedBox(
+                            height: 20,
                           ),
-                        ),
+                        ],
                       ),
-                      isImageZoomed
-                          ? zoomImage(height, width, BoxFit.fitWidth)
-                          : Container(),
-                    ],
-                  );
-                }
-              },
-            );
-          }),
-        ],
-      ),
-    );
-  }
-
-  String getValue(dynamic default_name, List<dynamic> names) {
-    if (names.contains(default_name))
-      return default_name;
-    else {
-      setState(() {
-        size_default = names[0];
-      });
-      return names[0];
-    }
-  }
-
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  final _firestore = FirebaseFirestore.instance;
-  String user;
-
-  dynamic addToCart() async {
-    if (_auth != null) {
-      user = _auth.currentUser.email;
-    }
-    var cartID;
-    await _firestore.collection('cart').add(
-        {'product': products, 'user': user}).then((value) => cartID = value.id);
-    return cartID;
-  }
-
-  DropdownButton<dynamic> buildDropdownButton(
-      dynamic default_name, List<dynamic> names) {
-    return DropdownButton<dynamic>(
-      value: getValue(default_name, names),
-      icon: Icon(Icons.arrow_downward),
-      iconSize: 24,
-      elevation: 16,
-      style: TextStyle(fontFamily: 'Lobster', color: Colors.indigoAccent),
-      underline: Container(
-        height: 2,
-        color: Colors.blueGrey[900],
-      ),
-      onChanged: (dynamic newValue) {
-        setState(() {
-          size_default = newValue;
-        });
-      },
-      items: names.map<DropdownMenuItem<String>>((dynamic value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(
-            value,
-            style: TextStyle(
-              fontFamily: 'Lobster',
-            ),
-          ),
+                    ),
+                  ),
+                  isImageZoomed
+                      ? zoomImage(height, width, BoxFit.fitWidth)
+                      : Container(),
+                ],
+              );
+            }
+          },
         );
-      }).toList(),
+      }),
     );
   }
 }

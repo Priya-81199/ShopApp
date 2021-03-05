@@ -7,12 +7,12 @@ import 'package:lilly_app/Screens/Components.dart';
 import 'package:intl/intl.dart';
 import 'package:lilly_app/app/route.gr.dart';
 
-class SolveQueries extends StatefulWidget {
+class SolveQueries extends StatefulWidget{
   @override
   _SolveQueriesState createState() => _SolveQueriesState();
 }
 
-class _SolveQueriesState extends State<SolveQueries> {
+class _SolveQueriesState extends State<SolveQueries>{
   final messageTextController = TextEditingController();
   final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
@@ -21,14 +21,20 @@ class _SolveQueriesState extends State<SolveQueries> {
   var selectedUser;
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
     setLastVisited();
     getCurrentUser();
+    setSelectedUser();
+  }
+
+  void setSelectedUser() async{
+    var session = FlutterSession();
+    selectedUser = await session.get('selectedUser');
   }
 
   void getCurrentUser() async {
-    try {
+    try{
       final user = await _auth.currentUser;
       if (user != null) {
         if(user.email == adminEmail){
@@ -79,11 +85,11 @@ class _SolveQueriesState extends State<SolveQueries> {
             height: 75,
             width: 400,
             child: FlatButton(
-              onPressed: () {
-                setState(() {
-                  selectedUser = result['username'];
-                });
-                print(result['username']);
+              onPressed: () async{
+                  // selectedUser = result['username'];
+                  var session = FlutterSession();
+                  selectedUser = await session.set('selectedUser', result['username']);
+                  ExtendedNavigator.of(context).push(Routes.solveQueries);
               },
               child: Text(
                 result['username'],

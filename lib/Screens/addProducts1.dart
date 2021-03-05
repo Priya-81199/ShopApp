@@ -367,8 +367,7 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
       }
     }
 
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: buildAppBar(context, f),
         body:
          // Builder(
@@ -670,8 +669,7 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
             ),
           // }
         // ),
-      ),
-    );
+      );
   }
 
 
