@@ -27,6 +27,7 @@ class homePage extends StatefulWidget {
 
 class _homePageState extends State<homePage> {
   final messageTextController = TextEditingController();
+  final scrollImages = ScrollController();
   bool newArrivalFetched = false;
   List<dynamic> newArrivalProducts = [];
   final dataKey = new GlobalKey();
@@ -234,7 +235,7 @@ class _homePageState extends State<homePage> {
 
                       Container(
                         color: Color.fromRGBO(211, 224, 234, 1),
-                        child: Row(
+                        child: width > height ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             FlatButton(
@@ -243,7 +244,7 @@ class _homePageState extends State<homePage> {
                                 selectCat('Gents');
                               },
                               child: Container(
-                                width: 250,
+                                width:width/5,
                                 height: 70,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -266,7 +267,7 @@ class _homePageState extends State<homePage> {
                                 selectCat('Ladies');
                               },
                               child: Container(
-                                width: 250,
+                                width: width/5,
                                 height: 70,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -289,7 +290,7 @@ class _homePageState extends State<homePage> {
                                 selectCat('Kids');
                               },
                               child: Container(
-                                width: 250,
+                                width: width/5,
                                 height: 70,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -312,7 +313,104 @@ class _homePageState extends State<homePage> {
                                 selectCat('Accessories');
                               },
                               child: Container(
-                                width: 250,
+                                width: width/5,
+                                height: 70,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: Text(
+                                      'Accessories',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Handlee',
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ):
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FlatButton(
+                              hoverColor: Color.fromRGBO(246, 245, 245, 1),
+                              onPressed: () {
+                                selectCat('Gents');
+                              },
+                              child: Container(
+                                width: width,
+                                height: 70,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: Text(
+                                      'Men Clothing',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Handlee',
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            FlatButton(
+                              hoverColor: Color.fromRGBO(246, 245, 245, 1),
+                              onPressed: () {
+                                selectCat('Ladies');
+                              },
+                              child: Container(
+                                width: width,
+                                height: 70,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: Text(
+                                      'Women Clothing',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Handlee',
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            FlatButton(
+                              hoverColor: Color.fromRGBO(246, 245, 245, 1),
+                              onPressed: () {
+                                selectCat('Kids');
+                              },
+                              child: Container(
+                                width: width,
+                                height: 70,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: Text(
+                                      'Kids Clothing',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Handlee',
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            FlatButton(
+                              hoverColor: Color.fromRGBO(246, 245, 245, 1),
+                              onPressed: () {
+                                selectCat('Accessories');
+                              },
+                              child: Container(
+                                width: width,
                                 height: 70,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -351,7 +449,7 @@ class _homePageState extends State<homePage> {
                       ),
 
                       Text(
-                        'Sub Categories',
+                        selectedCategory,
                         style: TextStyle(
                           fontFamily: 'Lobster',
                           fontSize: 30,
@@ -374,13 +472,48 @@ class _homePageState extends State<homePage> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text(
-                        'New Arrivals',
-                        style: TextStyle(
-                          fontFamily: 'Lobster',
-                          fontSize: 30,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          FlatButton(
+                            onPressed: (){
+                              scrollImages.animateTo(0, duration: Duration(seconds: 1), curve: Curves.easeIn);
+                            },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.chevron_left_rounded,
+                                ),
+                                Icon(
+                                    Icons.chevron_left_rounded
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            'New Arrivals',
+                            style: TextStyle(
+                              fontFamily: 'Lobster',
+                              fontSize: 30,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          FlatButton(
+                            onPressed: (){
+                              scrollImages.animateTo(20000, duration: Duration(seconds: 1), curve: Curves.easeIn);
+                            },
+                            child: Row(
+                              children: [
+                                Icon(
+                                    Icons.chevron_right_rounded,
+                                ),
+                                Icon(
+                                    Icons.chevron_right_rounded
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                       // Container(
                       //   margin: EdgeInsets.symmetric(vertical: 20.0),
@@ -397,6 +530,7 @@ class _homePageState extends State<homePage> {
 
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
+                        controller: scrollImages,
                         child: Row(
                           children: newArrivalProds,
                         ),

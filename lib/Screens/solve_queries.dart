@@ -100,7 +100,8 @@ class _SolveQueriesState extends State<SolveQueries>{
               ),
             ),
           ),
-        ));
+        )
+        );
         activeQueriesWidget.add(
           Container(
             width: 400,

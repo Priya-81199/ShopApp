@@ -12,11 +12,13 @@ import 'package:flutter/material.dart';
 import '../Screens/ProductDetails.dart';
 import '../Screens/ProductList.dart';
 import '../Screens/addProducts1.dart';
+import '../Screens/admin_chat_screen.dart';
 import '../Screens/admin_orders.dart';
 import '../Screens/admin_portal.dart';
 import '../Screens/admin_prod_details.dart';
 import '../Screens/admin_product_list.dart';
 import '../Screens/cart.dart';
+import '../Screens/chat_screen.dart';
 import '../Screens/delivery_screen.dart';
 import '../Screens/homePage.dart';
 import '../Screens/login.dart';
@@ -43,6 +45,8 @@ class Routes {
   static const String adminOrders = '/admin-orders';
   static const String adminProdDetails = '/admin-prod-details';
   static const String adminPortal = '/admin-portal';
+  static const String chatScreen = '/chat-screen';
+  static const String adminChatScreen = '/admin-chat-screen';
   static const all = <String>{
     loginScreen,
     addProductsDetails,
@@ -60,6 +64,8 @@ class Routes {
     adminOrders,
     adminProdDetails,
     adminPortal,
+    chatScreen,
+    adminChatScreen,
   };
 }
 
@@ -83,6 +89,8 @@ class Router extends RouterBase {
     RouteDef(Routes.adminOrders, page: AdminOrders),
     RouteDef(Routes.adminProdDetails, page: AdminProdDetails),
     RouteDef(Routes.adminPortal, page: AdminPortal),
+    RouteDef(Routes.chatScreen, page: ChatScreen),
+    RouteDef(Routes.adminChatScreen, page: AdminChatScreen),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -180,6 +188,18 @@ class Router extends RouterBase {
     AdminPortal: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => AdminPortal(),
+        settings: data,
+      );
+    },
+    ChatScreen: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => ChatScreen(),
+        settings: data,
+      );
+    },
+    AdminChatScreen: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => AdminChatScreen(),
         settings: data,
       );
     },

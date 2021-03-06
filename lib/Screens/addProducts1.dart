@@ -9,7 +9,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
-
 class AddProductsDetails extends StatefulWidget {
   @override
   _AddProductsDetailsState createState() => _AddProductsDetailsState();

@@ -86,7 +86,7 @@ class _AdminPortalState extends State<AdminPortal> {
                 hoverColor: Colors.black38,
                 color: Color.fromRGBO(39, 102, 120, 0.8),
                 onPressed: (){
-                  ExtendedNavigator.of(context).push(Routes.solveQueries);
+                  ExtendedNavigator.of(context).push(Routes.adminChatScreen);
                 },
                 child: Container(
                     child:Text(

@@ -457,7 +457,7 @@ AppBar buildAppBar(BuildContext context, Function() f) {
                           hoverColor: Colors.transparent,
                           icon: Icon(Icons.chat),
                           onPressed: () {
-                            ExtendedNavigator.of(context).push(Routes.homePage);
+                            ExtendedNavigator.of(context).push(Routes.chatScreen);
                           }),
                     )
                         : Container()
@@ -491,21 +491,15 @@ AppBar buildAppBar(BuildContext context, Function() f) {
                             : Container()
                         : Container(),
 
-                    Container(
-                      width: 150,
-                      height: 100,
-                      child: FlatButton(
-                        hoverColor: Color.fromRGBO(211, 224, 234, 1),
-                        child: Text(
+                    Tooltip(
+                      message:snapshot.hasData? snapshot.data? 'Logout': 'Login': 'Loading',
+                      child: IconButton(
+                        icon: Icon(
                           snapshot.hasData
                               ? snapshot.data
-                                  ? 'Logout'
-                                  : 'Login'
-                              : 'Loading',
-                          style: TextStyle(
-                            fontFamily: 'Lobster',
-                            fontSize: 24,
-                          ),
+                                  ? Icons.logout
+                                  : Icons.login
+                              : Icons.autorenew_rounded,
                         ),
                         onPressed: () async {
                           if (snapshot.hasData) {
