@@ -59,10 +59,12 @@ launchWhatsApp() async {
 
 void sendToAdmin() async {
   bool flag;
-  var username = loggedInUser.email;
+  var username = user.email;
   var Timestamp = FieldValue.serverTimestamp();
+  print('here 1');
   await _firestore.collection('active_queries').get().then((value) => {
         flag = true,
+        print('here 2'),
         value.docs.forEach((result) {
           // print(result['username']);
           if (result['username'] == username) {
@@ -77,7 +79,7 @@ void sendToAdmin() async {
         if (flag)
           {
             _firestore.collection('active_queries').add({
-              'username': loggedInUser.email,
+              'username': user.email,
               'Timestamp': Timestamp,
             })
           }
@@ -411,6 +413,7 @@ Widget getCard(
 
 AppBar buildAppBar(BuildContext context, Function() f) {
   return AppBar(
+    automaticallyImplyLeading: false,
     backgroundColor: Color.fromRGBO(39, 102, 120, 1),
     title: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -494,6 +497,7 @@ AppBar buildAppBar(BuildContext context, Function() f) {
                     Tooltip(
                       message:snapshot.hasData? snapshot.data? 'Logout': 'Login': 'Loading',
                       child: IconButton(
+                        hoverColor: Colors.transparent,
                         icon: Icon(
                           snapshot.hasData
                               ? snapshot.data

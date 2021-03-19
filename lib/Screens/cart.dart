@@ -79,8 +79,7 @@ class _CartState extends State<Cart> {
     print(product);
     var session = FlutterSession();
     await session.set("argument_prod", Data(product:product));
-    await ExtendedNavigator.of(context).push(
-      Routes.productDetails);
+    await ExtendedNavigator.of(context).push(Routes.productDetails);
     //   arguments: ProductDetailsArguments(product: product),
     // );
     print(product);
@@ -235,8 +234,9 @@ class _CartState extends State<Cart> {
           children: <Widget>[
             FlatButton(
               onPressed: () async{
+                print(cartDetails);
                 var session = FlutterSession();
-                await session.set("argument_prod", cartDetails);
+                await session.set("argument_prod", Data(product: cartDetails));
                 ExtendedNavigator.of(context).push(Routes.deliveryScreen);
                     //arguments: DeliveryScreenArguments(products: cartDetails));
               },

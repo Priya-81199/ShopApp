@@ -164,6 +164,15 @@ class _AdminOrdersState extends State<AdminOrders> {
                           fontSize: 20,
                           color: Colors.pinkAccent),
                     ),
+                    Text(
+                      'Size : ' + product['selectedSize'],
+                      style: TextStyle(
+                          fontFamily: 'Handlee',
+                          fontWeight: FontWeight.w300,
+                          fontSize: 20,
+                          color: Colors.black87
+                      ),
+                    ),
                   ],
                 ),
               ),

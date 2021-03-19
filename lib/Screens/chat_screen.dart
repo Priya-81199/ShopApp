@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:lilly_app/Screens/Components.dart';
 
 class ChatMessage{
   String messageContent;
@@ -23,20 +25,38 @@ class _ChatScreenState extends State<ChatScreen> {
   final _auth = FirebaseAuth.instance;
   User loggedInUser;
   String messageText;
-  bool send=false;
+  bool isChanged=true;
   List<ChatMessage> messages = [
-    ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
-    ChatMessage(messageContent: "How have you been?", messageType: "receiver"),
-    ChatMessage(messageContent: "Hey Kriss, I am doing fine dude. wbu?", messageType: "sender"),
-    ChatMessage(messageContent: "ehhhh, doing OK.", messageType: "receiver"),
-    ChatMessage(messageContent: "Is there any thing wrong?", messageType: "sender"),
+    //ChatMessage(messageContent: "Hello, Will", messageType: "sender"),
   ];
+  var messageIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    getMessages();
+  }
 
-    getCurrentUser();
+  void getMessages() async{
+    await getCurrentUser();
+    var chats = await _firestore.collection(loggedInUser.email + '_chat').get();
+    List<ChatMessage> tempmessages = [];
+    var allchats = chats.docs;
+    allchats.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
+    for(messageIndex=messageIndex; messageIndex<allchats.length; messageIndex++){
+      var chat = allchats[messageIndex];
+      if(chat['sender']==loggedInUser.email){
+        tempmessages.add(ChatMessage(messageContent: chat['message'], messageType: "sender"),);
+      }
+      else{
+        tempmessages.add(ChatMessage(messageContent: chat['message'], messageType: "receiver"),);
+      }
+    };
+    tempmessages = tempmessages.reversed.toList();
+
+    setState(() {
+      messages = [...tempmessages, ...messages];
+    });
   }
 
   void getCurrentUser() async {
@@ -44,123 +64,112 @@ class _ChatScreenState extends State<ChatScreen> {
       final user = await _auth.currentUser;
       if(user != null){
         loggedInUser = user;
-        print(loggedInUser.email);
       } }
     catch(e){
       print(e);
     }
   }
+  void printing(){
+    getMessages();
+  }
+  void f(){
+    setState(() {
 
-
-
-
+    });
+  }
   @override
   Widget build(BuildContext context) {
+    Timer(const Duration(milliseconds: 60000), printing);
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
-          flexibleSpace: SafeArea(
-            child: Container(
-              padding: EdgeInsets.only(right: 16),
-              child: Row(
-                children: <Widget>[
-                  IconButton(
-                    onPressed: (){
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(Icons.arrow_back,color: Colors.black,),
-                  ),
-                  SizedBox(width: 2,),
-                  CircleAvatar(
-                    backgroundImage: NetworkImage("https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png"),
-                    maxRadius: 20,
-                  ),
-                  SizedBox(width: 12,),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text("Raj Shah",style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.w600),),
-                        SizedBox(height: 6,),
-                        Text("Offline",style: TextStyle(color: Colors.grey.shade600, fontSize: 13),),
-                      ],
+        appBar:buildAppBar(context, f),
+      body: Column(
+        children: <Widget>[
+          Container(
+            height: height*0.82,
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: messages.length,
+              shrinkWrap: true,
+              padding: EdgeInsets.only(top: 10,bottom: 10),
+              //physics: NeverScrollableScrollPhysics(),
+              reverse: true,
+              itemBuilder: (context, index){
+                return Container(
+                  padding: EdgeInsets.only(left: 16,right: 16,top: 10,bottom: 10),
+                  child: Align(
+                    alignment: (messages[index].messageType == "receiver"?Alignment.topLeft:Alignment.topRight),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: (messages[index].messageType  == "receiver"?Colors.grey.shade200:Colors.blue[200]),
+                      ),
+                      padding: EdgeInsets.all(16),
+                      child: Text(messages[index].messageContent, style: TextStyle(fontSize: 15),),
                     ),
                   ),
-                  Icon(Icons.settings,color: Colors.black54,),
-                ],
-              ),
+                );
+              },
             ),
           ),
-        ),
-      body: Stack(
-        children: <Widget>[
-          ListView.builder(
-            itemCount: messages.length,
-            shrinkWrap: true,
-            padding: EdgeInsets.only(top: 10,bottom: 10),
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index){
-              return Container(
-                padding: EdgeInsets.only(left: 16,right: 16,top: 10,bottom: 10),
-                child: Align(
-                  alignment: (messages[index].messageType == "receiver"?Alignment.topLeft:Alignment.topRight),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: (messages[index].messageType  == "receiver"?Colors.grey.shade200:Colors.blue[200]),
+          Container(
+            padding: EdgeInsets.only(left: 10,bottom: 10,top: 10),
+            height: 60,
+            width: double.infinity,
+            color: Colors.white,
+            child: Row(
+              children: <Widget>[
+
+                SizedBox(width: 15,),
+                Expanded(
+                  child: TextField(
+                    onSubmitted: (value) async{
+                      setState(() {
+                        messageTextController.text = '';
+                      });
+                      await _firestore.collection(loggedInUser.email + '_chat').add({
+                        'sender':loggedInUser.email,
+                        'receiver':adminEmail,
+                        'message':messageText,
+                        'timestamp':FieldValue.serverTimestamp(),
+                      });
+                      getMessages();
+                      sendToAdmin();
+                    },
+                    controller: messageTextController,
+                    onChanged: (value){
+                      setState(() {
+                        messageText = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                        hintText: "Write message...",
+                        hintStyle: TextStyle(color: Colors.black54),
+                        border: InputBorder.none
                     ),
-                    padding: EdgeInsets.all(16),
-                    child: Text(messages[index].messageContent, style: TextStyle(fontSize: 15),),
                   ),
                 ),
-              );
-            },
-          ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Container(
-              padding: EdgeInsets.only(left: 10,bottom: 10,top: 10),
-              height: 60,
-              width: double.infinity,
-              color: Colors.white,
-              child: Row(
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: (){
-                    },
-                    child: Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.lightBlue,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Icon(Icons.add, color: Colors.white, size: 20, ),
-                    ),
-                  ),
-                  SizedBox(width: 15,),
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                          hintText: "Write message...",
-                          hintStyle: TextStyle(color: Colors.black54),
-                          border: InputBorder.none
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 15,),
-                  FloatingActionButton(
-                    onPressed: (){},
-                    child: Icon(Icons.send,color: Colors.white,size: 18,),
-                    backgroundColor: Colors.blue,
-                    elevation: 0,
-                  ),
-                ],
+                SizedBox(width: 15,),
+                FloatingActionButton(
+                  onPressed: () async{
+                    setState(() {
+                      messageTextController.text = '';
+                    });
+                    await _firestore.collection(loggedInUser.email + '_chat').add({
+                      'sender':loggedInUser.email,
+                      'receiver':adminEmail,
+                      'message':messageText,
+                      'timestamp':FieldValue.serverTimestamp(),
+                    });
+                    getMessages();
+                    sendToAdmin();
+                  },
+                  child: Icon(Icons.send,color: Colors.white,size: 18,),
+                  backgroundColor: Colors.blue,
+                  elevation: 0,
+                ),
+              ],
 
-              ),
             ),
           ),
         ],

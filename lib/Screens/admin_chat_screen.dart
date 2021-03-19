@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:lilly_app/Screens/Components.dart';
+import 'package:lilly_app/app/route.gr.dart';
 
-class ChatMessage{
+class ChatMessage {
   String messageContent;
   String messageType;
   ChatMessage({@required this.messageContent, @required this.messageType});
@@ -22,152 +26,236 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
   final messageTextController = TextEditingController();
   final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
-  User loggedInUser;
+  var selectedUser = 'rajs80266@gmail.com';
   String messageText;
-  bool send=false;
+  bool isChanged = true;
   List<ChatMessage> messages = [
-    ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
-    ChatMessage(messageContent: "How have you been?", messageType: "receiver"),
-    ChatMessage(messageContent: "Hey Kriss, I am doing fine dude. wbu?", messageType: "sender"),
-    ChatMessage(messageContent: "ehhhh, doing OK.", messageType: "receiver"),
-    ChatMessage(messageContent: "Is there any thing wrong?", messageType: "sender"),
+    //ChatMessage(messageContent: "Hello, Will", messageType: "sender"),
   ];
+  var messageIndex = 0;
 
   @override
   void initState() {
     super.initState();
-
-    getCurrentUser();
+    getMessages();
   }
 
-  void getCurrentUser() async {
-    try{
-      final user = await _auth.currentUser;
-      if(user != null){
-        loggedInUser = user;
-        print(loggedInUser.email);
-      } }
-    catch(e){
-      print(e);
+  void getMessages() async {
+
+    var chats = await _firestore.collection(selectedUser + '_chat').get();
+    List<ChatMessage> tempmessages = [];
+    var allchats = chats.docs;
+    allchats.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
+    for (messageIndex = messageIndex;
+        messageIndex < allchats.length;
+        messageIndex++) {
+      var chat = allchats[messageIndex];
+      if (chat['receiver'] == selectedUser) {
+        tempmessages.add(
+          ChatMessage(messageContent: chat['message'], messageType: "sender"),
+        );
+      } else {
+        tempmessages.add(
+          ChatMessage(messageContent: chat['message'], messageType: "receiver"),
+        );
+      }
     }
+    tempmessages = tempmessages.reversed.toList();
+
+    setState(() {
+      messages = [...tempmessages, ...messages]; //aare solveQueries jaisa... ha wo baki hai
+    });
   }
 
 
 
+  bool activeQueriesFetched = false;
+  List<dynamic> activeQueries = [];
+  void getActiveQueries() async {
+    await _firestore.collection('active_queries').get().then((value) => {
+      activeQueries = value.docs,
+    });
+    setState(() {
+      activeQueriesFetched = true;
+    });
+  }
+
+  void printing() {
+    getMessages();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        flexibleSpace: SafeArea(
+    Timer(const Duration(milliseconds: 60000), printing);
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    List<Widget> activeQueriesWidget = [];
+    if (!activeQueriesFetched)
+      getActiveQueries();
+    else {
+      activeQueries.forEach((result) {
+        activeQueriesWidget.add(SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.only(right: 16),
-            child: Row(
+            color: Colors.blueGrey.shade400,
+            height: 75,
+            width: 400,
+            child: FlatButton(
+              onPressed: () async{
+                selectedUser = result['username'];
+                getMessages();
+                // var session = FlutterSession();
+                // selectedUser = await session.set('selectedUser', result['username']);
+                // ExtendedNavigator.of(context).push(Routes.adminChatScreen);
+              },
+              child: Text(
+                result['username'],
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'RocknRoll'
+                ),
+              ),
+            ),
+          ),
+        )
+        );
+        activeQueriesWidget.add(
+          Container(
+            width: 400,
+            child: Divider(
+              color: Colors.black26,
+              height: 2,
+              thickness: 1,
+            ),
+          ),
+        );
+      });
+    }
+    void f(){
+      setState(() {
+
+      });
+    }
+    return Scaffold(
+      appBar: buildAppBar(context, f),
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            height: height,
+            width: 200,
+            color: Colors.blueGrey.shade100,
+            child: Column(
+              children: activeQueriesWidget,
+            ),
+          ),
+          Container(
+            height: height,
+            width: width - 200,
+            child: Column(
               children: <Widget>[
-                IconButton(
-                  onPressed: (){
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.arrow_back,color: Colors.black,),
+                Container(
+                  height: height * 0.82,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: messages.length,
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    //physics: NeverScrollableScrollPhysics(),
+                    reverse: true,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        padding:
+                            EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+                        child: Align(
+                          alignment: (messages[index].messageType == "receiver"
+                              ? Alignment.topLeft
+                              : Alignment.topRight),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: (messages[index].messageType == "receiver"
+                                  ? Colors.grey.shade200
+                                  : Colors.blue[200]),
+                            ),
+                            padding: EdgeInsets.all(16),
+                            child: Text(
+                              messages[index].messageContent,
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-                SizedBox(width: 2,),
-                CircleAvatar(
-                  backgroundImage: NetworkImage("https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png"),
-                  maxRadius: 20,
-                ),
-                SizedBox(width: 12,),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                Container(
+                  padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                  height: 60,
+                  width: double.infinity,
+                  color: Colors.white,
+                  child: Row(
                     children: <Widget>[
-                      Text("Priya Mishra",style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.w600),),
-                      SizedBox(height: 6,),
-                      Text("Online",style: TextStyle(color: Colors.grey.shade600, fontSize: 13),),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Expanded(
+                        child: TextField(
+                          onSubmitted: (value) async{
+                            setState(() {
+                              messageTextController.text = '';
+                            });
+                            await _firestore.collection(loggedInUser.email + '_chat').add({
+                              'sender':loggedInUser.email,
+                              'receiver':adminEmail,
+                              'message':messageText,
+                              'timestamp':FieldValue.serverTimestamp(),
+                            });
+                            getMessages();
+                          },
+                          controller: messageTextController,
+                          onChanged: (value) {
+                            setState(() {
+                              messageText = value;
+                            });
+                          },
+                          decoration: InputDecoration(
+                              hintText: "Write message...",
+                              hintStyle: TextStyle(color: Colors.black54),
+                              border: InputBorder.none),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      FloatingActionButton(
+                        onPressed: () async {
+                          setState(() {
+                            messageTextController.text = '';
+                          });
+                          await _firestore.collection(selectedUser + '_chat').add({
+                            'sender': adminEmail,
+                            'receiver': selectedUser,
+                            'message': messageText,
+                            'timestamp': FieldValue.serverTimestamp(),
+                          });
+                          printing();
+                        },
+                        child: Icon(
+                          Icons.send,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        backgroundColor: Colors.blue,
+                        elevation: 0,
+                      ),
                     ],
                   ),
                 ),
-                Icon(Icons.settings,color: Colors.black54,),
               ],
-            ),
-          ),
-        ),
-      ),
-      body: Stack(
-        children: <Widget>[
-          ListView.builder(
-            itemCount: messages.length,
-            shrinkWrap: true,
-            padding: EdgeInsets.only(top: 10,bottom: 10),
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index){
-              return Container(
-                padding: EdgeInsets.only(left: 16,right: 16,top: 10,bottom: 10),
-                child: Align(
-                  alignment: (messages[index].messageType == "receiver"?Alignment.topLeft:Alignment.topRight),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: (messages[index].messageType  == "receiver"?Colors.grey.shade200:Colors.blue[200]),
-                    ),
-                    padding: EdgeInsets.all(16),
-                    child: Text(messages[index].messageContent, style: TextStyle(fontSize: 15),),
-                  ),
-                ),
-              );
-            },
-          ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Container(
-              padding: EdgeInsets.only(left: 10,bottom: 10,top: 10),
-              height: 60,
-              width: double.infinity,
-              color: Colors.white,
-              child: Row(
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: (){
-                    },
-                    child: Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.lightBlue,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Icon(Icons.add, color: Colors.white, size: 20, ),
-                    ),
-                  ),
-                  SizedBox(width: 15,),
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                          hintText: "Write message...",
-                          hintStyle: TextStyle(color: Colors.black54),
-                          border: InputBorder.none
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 15,),
-                  FloatingActionButton(
-                    onPressed: (){},
-                    child: Icon(Icons.send,color: Colors.white,size: 18,),
-                    backgroundColor: Colors.blue,
-                    elevation: 0,
-                  ),
-                ],
-
-              ),
             ),
           ),
         ],
       ),
     );
-
   }
 }
-

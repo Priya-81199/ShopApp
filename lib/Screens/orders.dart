@@ -154,6 +154,14 @@ class _OrdersState extends State<Orders> {
                           fontSize: 20,
                           color: Colors.pinkAccent),
                     ),
+                    Text(
+                      'Size : ' + product['selectedSize'],
+                      style: TextStyle(
+                          fontFamily: 'Handlee',
+                          fontWeight: FontWeight.w300,
+                          fontSize: 20,
+                          color: Colors.black87),
+                    ),
                   ],
                 ),
               ),
