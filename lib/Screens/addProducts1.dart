@@ -9,7 +9,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
-
 class AddProductsDetails extends StatefulWidget {
   @override
   _AddProductsDetailsState createState() => _AddProductsDetailsState();
@@ -367,8 +366,7 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
       }
     }
 
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: buildAppBar(context, f),
         body:
          // Builder(
@@ -670,8 +668,7 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
             ),
           // }
         // ),
-      ),
-    );
+      );
   }
 
 

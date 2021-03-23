@@ -7,6 +7,8 @@ import '../mockData.dart';
 import 'Components.dart' as comp;
 import 'package:lilly_app/app/route.gr.dart';
 
+import 'Components.dart';
+
 class Data {
   final dynamic product;
   Data({
@@ -21,8 +23,6 @@ class Data {
 
 class ProductDetails extends StatefulWidget {
   static const String id = 'ProductDetails';
-  final dynamic product;
-  ProductDetails(this.product);
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
 }
@@ -35,14 +35,14 @@ class _ProductDetailsState extends State<ProductDetails> {
   bool similarProdFetched = false;
   List<dynamic> similarProducts = [];
 
-
   var urls = [];
   bool image_set = false;
   var products;
-  @override
-  void initState() {
-    super.initState();
-    products = widget.product;
+
+  void getArguments() async {
+    var session = FlutterSession();
+    products = await session.get('argument_prod');
+    products = products['product'];
     setLastVisited();
     setSimilarProducts();
     for (var i = 0; i < products['images'].length; i++) {
@@ -55,20 +55,26 @@ class _ProductDetailsState extends State<ProductDetails> {
     }
   }
 
-  void setSimilarProducts() async{
+  @override
+  void initState() {
+    super.initState();
+    getArguments();
+  }
+
+  void setSimilarProducts() async {
     var session = FlutterSession();
     var details = await session.get("prod_details");
     details = details['productDetails'];
     var requiredLength = details.length;
 
-    for(var i = 0 ; i < details.length ; i++){
-      if(widget.product['subcategory']==details[i]['subcategory'] && widget.product['id']!=details[i]['id']){
-          similarProducts.add(details[i]);
-      }
-      else{
+    for (var i = 0; i < details.length; i++) {
+      if (products['subcategory'] == details[i]['subcategory'] &&
+          products['id'] != details[i]['id']) {
+        similarProducts.add(details[i]);
+      } else {
         requiredLength--;
       }
-      if(requiredLength==similarProducts.length){
+      if (requiredLength == similarProducts.length) {
         setState(() {
           similarProdFetched = true;
         });
@@ -80,8 +86,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     var session = FlutterSession();
     await session.set("last_visited", Routes.productDetails);
     print(Routes.productDetails);
-    await session.set("arguments", Data(product: widget.product));
-    print(widget.product);
+    await session.set("arguments", Data(product: products));
   }
 
   // getProductCard(dynamic product) {
@@ -139,9 +144,6 @@ class _ProductDetailsState extends State<ProductDetails> {
   //
   // }
 
-
-
-
   var selectedSize = -1;
   @override
   Widget build(BuildContext context) {
@@ -151,9 +153,9 @@ class _ProductDetailsState extends State<ProductDetails> {
 
     List<Widget> similarProds = [];
 
-    if(similarProdFetched){
-      for(var i = 0 ; i < similarProducts.length ; i++){
-        similarProds.add(comp.getCard(context,similarProducts[i],300,400));
+    if (similarProdFetched) {
+      for (var i = 0; i < similarProducts.length; i++) {
+        similarProds.add(comp.getCard(context, similarProducts[i], 300, 400));
       }
     }
 
@@ -169,7 +171,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       image = urls[selectedImageIndex];
     else
       image =
-      'https://www.bluechipexterminating.com/wp-content/uploads/2020/02/loading-gif-png-5.gif';
+          'https://www.bluechipexterminating.com/wp-content/uploads/2020/02/loading-gif-png-5.gif';
     List<Widget> images = [];
     List<Widget> displayProperty = [];
     var productName = products['name'];
@@ -180,39 +182,38 @@ class _ProductDetailsState extends State<ProductDetails> {
     var availableSizes = (getSizeCategory(products['subcategory']) == 'size')
         ? products['sizeAvailable']
         : (getSizeCategory(products['subcategory']) == 'age')
-        ? products['ageAvailable']
-        : products['numberAvailable'];
+            ? products['ageAvailable']
+            : products['numberAvailable'];
 
     List<Widget> sizeWidgets = [];
 
     List<String> sizeNames =
-    (getSizeCategory(products['subcategory']) == 'size')
-        ? ['4XS', '3XS', '2XS', 'XS', 'S', 'M', 'L', 'XL']
-        : (getSizeCategory(products['subcategory']) == 'age')
-        ? ['0-1', '2-3', '4-5', '6-7', '8-9', '10-11', '12-13']
-        : [
-      '12',
-      '14',
-      '16',
-      '18',
-      '20',
-      '22',
-      '24',
-      '26',
-      '28',
-      '30',
-      '32',
-      '34',
-      '36',
-      '38',
-      '40',
-      '42'
-    ];
+        (getSizeCategory(products['subcategory']) == 'size')
+            ? ['4XS', '3XS', '2XS', 'XS', 'S', 'M', 'L', 'XL']
+            : (getSizeCategory(products['subcategory']) == 'age')
+                ? ['0-1', '2-3', '4-5', '6-7', '8-9', '10-11', '12-13']
+                : [
+                    '12',
+                    '14',
+                    '16',
+                    '18',
+                    '20',
+                    '22',
+                    '24',
+                    '26',
+                    '28',
+                    '30',
+                    '32',
+                    '34',
+                    '36',
+                    '38',
+                    '40',
+                    '42'
+                  ];
 
     // for(int i = 0; i < productAddPoints.length;i++){
     //   addDetails = addDetails + productAddPoints[i];
     // }
-
 
     //print(availableSizes);
     images.add(
@@ -235,11 +236,11 @@ class _ProductDetailsState extends State<ProductDetails> {
               padding: EdgeInsets.all(5),
               child: Center(
                   child: Text(
-                    sizeNames[i],
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )),
+                sizeNames[i],
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
               decoration: BoxDecoration(
                 color: (i == selectedSize)
                     ? Color.fromRGBO(22, 135, 167, 1)
@@ -271,10 +272,10 @@ class _ProductDetailsState extends State<ProductDetails> {
           },
           child: urls.length > i
               ? Container(
-            color: Colors.black,
-            padding: EdgeInsets.all(paddingSize),
-            child: Image.network(urls[i]),
-          )
+                  color: Colors.black,
+                  padding: EdgeInsets.all(paddingSize),
+                  child: Image.network(urls[i]),
+                )
               : CircularProgressIndicator()));
       images.add(
         SizedBox(width: 10),
@@ -321,588 +322,381 @@ class _ProductDetailsState extends State<ProductDetails> {
         ),
       );
     }
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          appBar: comp.buildAppBar(context, f),
-          body: Builder(
-              builder: (BuildContext context) {
-                return LayoutBuilder(
-                  builder: (context, constraints) {
-                    var width = constraints.maxWidth;
-                    var height = constraints.maxHeight;
-                    if (height < width)
-                      return Stack(
-                        children: [
-                          SingleChildScrollView(
-                            child: Column(
+
+    Column imageSection(height) {
+      return Column(
+        children: [
+          FlatButton(
+            hoverColor: Colors.transparent,
+            onPressed: () {
+              setState(() {
+                isImageZoomed = true;
+              });
+            },
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: height * 17 / 20,
+              ),
+              child: Image.network(image),
+            ),
+          ),
+          SizedBox(height: 20),
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: height / 15,
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: images,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    Column detailSection(height, width, difference) {
+      return Column(
+        children: [
+          Container(
+            width: width,
+            alignment: Alignment.topLeft,
+            child: Text(
+              productName,
+              style: TextStyle(
+                fontFamily: 'Lobster',
+                fontWeight: FontWeight.bold,
+                fontSize: height / (28 - difference),
+              ),
+            ),
+          ),
+          Container(
+            alignment: Alignment.topLeft,
+            child: Text(
+              productDetail,
+              style: TextStyle(
+                fontFamily: 'Handlee',
+                fontWeight: FontWeight.w200,
+                fontSize: height / (36 - difference),
+              ),
+            ),
+          ),
+          Divider(
+            thickness: 1,
+            color: Colors.grey,
+          ),
+          Container(
+            alignment: Alignment.topLeft,
+            child: Text(
+              '₹ $productPrice',
+              style: TextStyle(
+                  fontFamily: 'Lobster',
+                  fontWeight: FontWeight.w300,
+                  fontSize: height / (36 - difference),
+                  color: Colors.pinkAccent),
+            ),
+          ),
+          SizedBox(height: 40),
+          Container(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'Properties',
+              style: TextStyle(
+                fontFamily: 'Lobster',
+                fontWeight: FontWeight.bold,
+                fontSize: height / (34 - difference),
+              ),
+            ),
+          ),
+          SizedBox(height: 5),
+          Container(
+            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+            child: Column(
+              children: displayProperty,
+            ),
+          ),
+          SizedBox(height: 50),
+          Container(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'Available ${getSizeCategory(products['subcategory'])}',
+              style: TextStyle(
+                fontFamily: 'Lobster',
+                fontWeight: FontWeight.bold,
+                fontSize: height / (34 - difference),
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+          Container(
+            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: sizeWidgets,
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+        ],
+      );
+    }
+
+    Column actionSection(height) {
+      return Column(
+        children: [
+          FlatButton(
+            hoverColor: Colors.transparent,
+            onPressed: () async {
+              final snackBar1 = SnackBar(
+                content: Text(
+                    'Please Select ${getSizeCategory(products['subcategory'])}'),
+              );
+              if (selectedSize == -1) {
+                ScaffoldMessenger.of(context).showSnackBar(snackBar1);
+              } else {
+                if (_auth.currentUser != null) {
+                  products['selectedSize'] = sizeNames[selectedSize];
+                  products['selectedSizeIndex'] = selectedSize;
+                  products['selectedSizeType'] =
+                      getSizeCategory(products['subcategory']);
+                  products['cartID'] = await addToCart();
+
+                  var session = FlutterSession();
+                  await session.set("argument_prod", Data(product: [products]));
+                  ExtendedNavigator.of(context).push(Routes.deliveryScreen);
+                } else {
+                  ExtendedNavigator.of(context).push(Routes.welcomeScreen);
+                }
+              }
+            },
+            child: Container(
+              height: height / 20,
+              margin: EdgeInsets.fromLTRB(
+                  height / 32, height / 64, height / 32, height / 32),
+              padding: EdgeInsets.all(height / 100),
+              child: Center(
+                child: Text(
+                  'Buy Now',
+                  style: TextStyle(
+                    fontFamily: 'Lobster',
+                  ),
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(22, 135, 167, 1),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(15),
+                ),
+              ),
+            ),
+          ),
+          FlatButton(
+            hoverColor: Colors.transparent,
+            onPressed: () async {
+              final snackBar1 = SnackBar(
+                content: Text(
+                    'Please Select ${getSizeCategory(products['subcategory'])}'),
+              );
+              if (selectedSize == -1) {
+                ScaffoldMessenger.of(context).showSnackBar(snackBar1);
+              } else {
+                var cartID;
+                if (_auth.currentUser != null) {
+                  products['selectedSize'] = sizeNames[selectedSize];
+                  products['selectedSizeIndex'] = selectedSize;
+                  products['selectedSizeType'] =
+                      getSizeCategory(products['subcategory']);
+                  products['cartID'] = await addToCart();
+
+                  final snackBar = SnackBar(
+                    content: Text('Added to Cart!'),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                } else {
+                  ExtendedNavigator.of(context).push(Routes.welcomeScreen);
+                }
+              }
+            },
+            child: Container(
+              height: height / 20,
+              margin: EdgeInsets.fromLTRB(
+                  height / 32, height / 64, height / 32, height / 32),
+              padding: EdgeInsets.all(height / 100),
+              child: Center(
+                child: Text(
+                  'Add to Cart',
+                  style: TextStyle(
+                    fontFamily: 'Lobster',
+                  ),
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(211, 224, 234, 1),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(15),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    Column similarProductSection() {
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'Similar Products',
+                style: TextStyle(
+                  fontFamily: 'Lobster',
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: similarProds,
+            ),
+          ),
+        ],
+      );
+    }
+
+    FlatButton zoomImage(height, width, fit) {
+      return FlatButton(
+        onPressed: () {
+          setState(() {
+            isImageZoomed = false;
+          });
+        },
+        child: Center(
+          child: Container(
+            color: Colors.black.withOpacity(0.5),
+            height: height * 0.95,
+            width: width * 0.95,
+            child: Image.network(
+              image,
+              fit: fit,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Scaffold(
+      appBar: comp.buildAppBar(context, f),
+      body: Stack(
+        children: [
+          Builder(builder: (BuildContext context) {
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                var width = constraints.maxWidth;
+                var height = constraints.maxHeight;
+                if (height < width)
+                  return Stack(
+                    children: [
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: width * 2 / 5,
-                                      height: height,
-                                      padding: EdgeInsets.all(height / 50),
-                                      child: Column(
-                                        children: [
-                                          FlatButton(
-                                            hoverColor: Colors.transparent,
-                                            onPressed: () {
-                                              setState(() {
-                                                isImageZoomed = true;
-                                              });
-                                            },
-                                            child: ConstrainedBox(
-                                              constraints: BoxConstraints(
-                                                maxHeight: height * 17 / 20,
-                                              ),
-                                              child: Image.network(image),
-                                            ),
-                                          ),
-                                          SizedBox(height: 20),
-                                          ConstrainedBox(
-                                            constraints: BoxConstraints(
-                                              maxHeight: height / 15,
-                                            ),
-                                            child: SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment
-                                                    .center,
-                                                children: images,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      width: width * 2 / 5,
-                                      height: height,
-                                      padding: EdgeInsets.fromLTRB(
-                                          height / 50, height / 25, height / 50, 0),
-                                      alignment: Alignment.topLeft,
-                                      child: Column(
-                                        //crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            width: width * 2 / 5,
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                              productName,
-                                              style: TextStyle(
-                                                fontFamily: 'Lobster',
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: height / 28,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                              productDetail,
-                                              style: TextStyle(
-                                                fontFamily: 'Handlee',
-                                                fontWeight: FontWeight.w200,
-                                                fontSize: height / 36,
-                                              ),
-                                            ),
-                                          ),
-                                          Divider(
-                                            thickness: 1,
-                                            color: Colors.grey,
-                                          ),
-                                          Container(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                              '₹ $productPrice',
-                                              style: TextStyle(
-                                                  fontFamily: 'Lobster',
-                                                  fontWeight: FontWeight.w300,
-                                                  fontSize: height / 36,
-                                                  color: Colors.pinkAccent
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 40),
-                                          Container(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                              'Properties',
-                                              style: TextStyle(
-                                                fontFamily: 'Lobster',
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: height / 34,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 5),
-                                          Container(
-                                            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                            child: Column(
-                                              children: displayProperty,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 20,
-                                          ),
-                                          // Container(
-                                          //   padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                          //   child: Column(
-                                          //     children:[
-                                          //       Text(addDetails),
-                                          //     ]
-                                          //   ),
-                                          // ),
-                                          SizedBox(height: 20),
-                                          Container(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                              'Available ${getSizeCategory(
-                                                  products['subcategory'])}',
-                                              style: TextStyle(
-                                                fontFamily: 'Lobster',
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: height / 34,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 20),
-                                          Container(
-                                            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                            child: SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: Row(
-                                                children: sizeWidgets,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 20),
-                                          Container(
-                                            height: height * 0.20,
-                                            width: width / 5,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              border: Border.all(width: 1),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(15),
-                                              ),
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  width: width * 0.1,
-                                                  height: height / 20,
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      height / 32,
-                                                      height / 32, height / 32,
-                                                      height / 64),
-                                                  padding: EdgeInsets.all(height / 100),
-                                                  child: Center(
-                                                    child: FutureBuilder(
-                                                        future:
-                                                        FlutterSession().get(
-                                                            'isUserSet'),
-                                                        builder: (context, snapshot) {
-                                                          return FlatButton(
-                                                            hoverColor: Colors.transparent,
-                                                            onPressed: () async{
-                                                              final snackBar = SnackBar(
-                                                                content: Text('Please Select ${getSizeCategory(products['subcategory'])}'),
-                                                              );
-                                                              if(snapshot.hasData && snapshot.data){
-                                                                if(selectedSize == -1){
-                                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                                }
-                                                                else{
-                                                                  products['selectedSize'] =sizeNames[selectedSize];
-                                                                  products['selectedSizeIndex'] = selectedSize;
-                                                                  products['selectedSizeType'] = getSizeCategory(products['subcategory']);
-                                                                  products['cartID'] = await addToCart();
-                                                                  ExtendedNavigator.of(context).push(Routes.deliveryScreen,arguments: DeliveryScreenArguments(products: [products]));
-                                                                }
-                                                              }
-                                                              else{
-                                                                ExtendedNavigator.of(context).push(Routes.welcomeScreen);
-                                                              }
-                                                            },
-                                                            child: Text(
-                                                              'Buy Now',
-                                                              style: TextStyle(
-                                                                fontFamily: 'Lobster',
-                                                              ),
-                                                            ),
-                                                          );
-                                                        }),
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: Color.fromRGBO(
-                                                        22, 135, 167, 1),
-                                                    borderRadius: BorderRadius.all(
-                                                      Radius.circular(15),
-                                                    ),
-                                                  ),
-                                                ),
-                                                FlatButton(
-                                                  hoverColor: Colors.transparent,
-                                                  onPressed: () {
-                                                      final snackBar1 = SnackBar(
-                                                        content: Text('Please Select ${getSizeCategory(products['subcategory'])}'),
-                                                      );
-                                                      if(selectedSize == -1){
-                                                        ScaffoldMessenger.of(context).showSnackBar(snackBar1);
-                                                      }
-                                                    var cartID;
-                                                    if (_auth.currentUser != null) {
-                                                      products['selectedSize'] =sizeNames[selectedSize];
-                                                      cartID = addToCart();
-                                                      final snackBar = SnackBar(
-                                                        content: Text('Added to Cart!'),
-                                                      );
-                                                      ScaffoldMessenger.of(context)
-                                                          .showSnackBar(snackBar);
-                                                    }
-                                                    else {
-                                                      ExtendedNavigator.of(context)
-                                                          .push(
-                                                          Routes.welcomeScreen);
-                                                    }
-                                                  },
-                                                  child: Container(
-                                                    width: width * 0.1,
-                                                    height: height / 20,
-                                                    margin: EdgeInsets.fromLTRB(
-                                                        height / 32,
-                                                        height / 64,
-                                                        height / 32,
-                                                        height / 32),
-                                                    padding: EdgeInsets.all(
-                                                        height / 100),
-                                                    child: Center(
-                                                      child: Text(
-                                                        'Add to Cart',
-                                                        style: TextStyle(
-                                                          fontFamily: 'Lobster',
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      color: Color.fromRGBO(
-                                                          211, 224, 234, 1),
-                                                      borderRadius: BorderRadius.all(
-                                                        Radius.circular(15),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                                Container(
+                                  width: width * 2 / 5,
+                                  height: height,
+                                  padding: EdgeInsets.all(height / 50),
+                                  child: imageSection(height),
                                 ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Similar Products',
-                                      style: TextStyle(
-                                        fontFamily: 'Lobster',
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.w700,
+                                Container(
+                                  width: width * 2 / 5,
+                                  height: height,
+                                  padding: EdgeInsets.fromLTRB(
+                                      height / 50, height / 25, height / 50, 0),
+                                  alignment: Alignment.topLeft,
+                                  child: Column(
+                                    //crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      detailSection(height, width * 2 / 5, 0),
+                                      Container(
+                                        height: height * 0.20,
+                                        width: width / 5,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(width: 1),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                        ),
+                                        child: actionSection(height),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: similarProds,
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          isImageZoomed
-                              ? FlatButton(
-                            onPressed: () {
-                              setState(() {
-                                isImageZoomed = false;
-                              });
-                            },
-                            child: Center(
-                              child: Container(
-                                color: Colors.black.withOpacity(0.5),
-                                height: height * 0.95,
-                                width: width * 0.95,
-                                child: Image.network(
-                                  image,
-                                  fit: BoxFit.fitHeight,
+                            SizedBox(
+                              height: 20,
+                            ),
+                            similarProductSection(),
+                          ],
+                        ),
+                      ),
+                      isImageZoomed
+                          ? zoomImage(height, width, BoxFit.fitHeight)
+                          : Container(),
+                    ],
+                  );
+                else {
+                  return Stack(
+                    children: [
+                      SingleChildScrollView(
+                        child: Container(
+                          padding: EdgeInsets.all(height / 50),
+                          child: Column(
+                            children: [
+                              imageSection(height),
+                              SizedBox(height: 50),
+                              detailSection(height, width, 4),
+                              Container(
+                                height: height * 0.2,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(width: 1),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(15),
+                                  ),
                                 ),
+                                child: actionSection(height),
                               ),
-                            ),
-                          )
-                              : Container(),
-                        ],
-                      );
-                    else {
-                      return Stack(
-                        children: [
-                          SingleChildScrollView(
-                            child: Container(
-                              padding: EdgeInsets.all(height / 50),
-                              child: Column(
-                                children: [
-                                  FlatButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        isImageZoomed = true;
-                                      });
-                                    },
-                                    child: ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                        maxHeight: height * 17 / 20,
-                                      ),
-                                      child: Image.network(image),
-                                    ),
-                                  ),
-                                  SizedBox(height: 20),
-                                  ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                      maxHeight: height / 15,
-                                    ),
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: images,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 50),
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      productName,
-                                      style: TextStyle(
-                                        fontFamily: 'Lobster',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: height / 32,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      productDetail,
-                                      style: TextStyle(
-                                        fontFamily: 'Lobster',
-                                        fontWeight: FontWeight.w200,
-                                        fontSize: height / 40,
-                                      ),
-                                    ),
-                                  ),
-                                  Divider(
-                                    thickness: 1,
-                                    color: Colors.grey,
-                                  ),
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      '₹ $productPrice',
-                                      style: TextStyle(
-                                          fontFamily: 'Lobster',
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: height / 40,
-                                          color: Colors.pinkAccent),
-                                    ),
-                                  ),
-                                  SizedBox(height: 40),
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Properties',
-                                      style: TextStyle(
-                                        fontFamily: 'Lobster',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: height / 40,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Container(
-                                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                    child: Column(
-                                      children: displayProperty,
-                                    ),
-                                  ),
-                                  SizedBox(height: 50),
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Available ${getSizeCategory(
-                                          products['subcategory'])}',
-                                      style: TextStyle(
-                                        fontFamily: 'Lobster',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: height / 40,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        children: sizeWidgets,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 20),
-                                  Container(
-                                    height: height * 0.2,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(width: 1),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(15),
-                                      ),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          height: height / 20,
-                                          margin: EdgeInsets.fromLTRB(height / 32,
-                                              height / 32, height / 32,
-                                              height / 64),
-                                          padding: EdgeInsets.all(height / 100),
-                                          child: Center(
-                                            child: Text(
-                                              'Buy Now',
-                                              style: TextStyle(
-                                                fontFamily: 'Lobster',
-                                              ),
-                                            ),
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: Color.fromRGBO(
-                                                22, 135, 167, 1),
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(15),
-                                            ),
-                                          ),
-                                        ),
-                                        FlatButton(
-                                          hoverColor: Colors.transparent,
-                                          onPressed: () {
-                                            if (_auth.currentUser != null) {
-                                              addToCart();
-                                              final snackBar = SnackBar(
-                                                content: Text('Added to Cart!'),
-                                              );
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(snackBar);
-                                            }
-                                            else {
-                                              ExtendedNavigator.of(context)
-                                                  .push(
-                                                  Routes.welcomeScreen);
-                                            }
-                                          },
-                                          child: Container(
-                                            height: height / 20,
-                                            margin: EdgeInsets.fromLTRB(
-                                                height / 32,
-                                                height / 64, height / 32,
-                                                height / 32),
-                                            padding: EdgeInsets.all(height / 100),
-                                            child: Center(
-                                              child: Text(
-                                                'Add to Cart',
-                                                style: TextStyle(
-                                                  fontFamily: 'Lobster',
-                                                ),
-                                              ),
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: Color.fromRGBO(
-                                                  211, 224, 234, 1),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(15),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        'Similar Products',
-                                        style: TextStyle(
-                                          fontFamily: 'Lobster',
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: similarProds,
-                                    ),
-                                  ),
-                                ],
+                              SizedBox(
+                                height: 20,
                               ),
-                            ),
+                              similarProductSection(),
+                            ],
                           ),
-
-                          isImageZoomed
-                              ? FlatButton(
-                            onPressed: () {
-                              setState(() {
-                                isImageZoomed = false;
-                              });
-                            },
-                            child: Center(
-                              child: Container(
-                                color: Colors.black.withOpacity(0.5),
-                                height: height * 0.95,
-                                width: width * 0.95,
-                                child: Image.network(
-                                  image,
-                                  fit: BoxFit.fitWidth,
-                                ),
-                              ),
-                            ),
-                          )
-                              : Container(),
-                        ],
-                      );
-                    }
-                  },
-                );
-              }
-          ),
-          floatingActionButton: comp.user != null ? comp.ChatOptions() : Container(),
-        )
+                        ),
+                      ),
+                      isImageZoomed
+                          ? zoomImage(height, width, BoxFit.fitWidth)
+                          : Container(),
+                    ],
+                  );
+                }
+              },
+            );
+          }),
+        ],
+      ),
     );
   }
 
@@ -921,13 +715,13 @@ class _ProductDetailsState extends State<ProductDetails> {
   final _firestore = FirebaseFirestore.instance;
   String user;
 
-  dynamic addToCart() async{
+  dynamic addToCart() async {
     if (_auth != null) {
       user = _auth.currentUser.email;
     }
     var cartID;
-    await _firestore.collection('cart').add({'product': products, 'user': user})
-        .then((value) => cartID = value.id);
+    await _firestore.collection('cart').add(
+        {'product': products, 'user': user}).then((value) => cartID = value.id);
     return cartID;
   }
 

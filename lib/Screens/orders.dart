@@ -14,6 +14,18 @@ class Orders extends StatefulWidget {
   _OrdersState createState() => _OrdersState();
 }
 
+class Data {
+  final dynamic product;
+  Data({
+    this.product,
+  });
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data["product"] = product;
+    return data;
+  }
+}
+
 class _OrdersState extends State<Orders> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   String user = '';
@@ -64,50 +76,45 @@ class _OrdersState extends State<Orders> {
     await session.set("last_visited", Routes.orders);
   }
 
-  void viewProduct(dynamic product) {
-    ExtendedNavigator.of(context).push(
-      Routes.productDetails,
-      arguments: ProductDetailsArguments(product: product),
-    );
+  void viewProduct(dynamic product) async {
+    print(product);
+    product['Timestamp'] = '';
+    var session = FlutterSession();
+    await session.set("argument_prod", Data(product: product));
+    ExtendedNavigator.of(context).push(Routes.productDetails);
+    //   arguments: ProductDetailsArguments(product: product),
+    // );
   }
 
   void removeProduct(dynamic product) {
-    db.collection('cart')
-        .doc(product['cartID'])
-        .delete()
-        .then((value) => {
-      setState(() {
-        cartDetails.remove(product);
-      }),
-    });
+    db.collection('cart').doc(product['cartID']).delete().then((value) => {
+          setState(() {
+            cartDetails.remove(product);
+          }),
+        });
   }
-  String displayStatus(var status){
-    if(status == 0){
+
+  String displayStatus(var status) {
+    if (status == 0) {
       return 'Order Cancelled';
-    }
-    else if(status == 1){
+    } else if (status == 1) {
       return 'Order Placed';
-    }
-    else if(status == 2){
+    } else if (status == 2) {
       return 'Out for Delivery';
-    }
-    else if(status == 3){
+    } else if (status == 3) {
       return 'Order Received';
     }
-
   }
-
 
   @override
   Widget build(BuildContext context) {
     void f() {
       setState(() {});
     }
+
     cartDetails.sort((b, a) => a['Timestamp'].compareTo(b['Timestamp']));
 
-
     List<TableRow> cartContent = [];
-
 
     if (isCartFetched) {
       cartDetails.forEach((product) {
@@ -130,25 +137,46 @@ class _OrdersState extends State<Orders> {
                         fontWeight: FontWeight.bold,
                         fontSize: 22,
                       ),
-
                     ),
                     Text(
                       product['description'],
                       style: TextStyle(
                         fontFamily: 'Handlee',
                         fontWeight: FontWeight.w200,
-                        fontSize:20,
-                      ),),
+                        fontSize: 20,
+                      ),
+                    ),
                     Text(
                       '₹' + product['price'],
                       style: TextStyle(
                           fontFamily: 'Lobster',
                           fontWeight: FontWeight.w300,
                           fontSize: 20,
-                          color: Colors.pinkAccent
-                      ),
+                          color: Colors.pinkAccent),
+                    ),
+                    Text(
+                      'Size : ' + product['selectedSize'],
+                      style: TextStyle(
+                          fontFamily: 'Handlee',
+                          fontWeight: FontWeight.w300,
+                          fontSize: 20,
+                          color: Colors.black87),
                     ),
                   ],
+                ),
+              ),
+              Container(
+                child: Tooltip(
+                  message: 'View',
+                  child: FlatButton(
+                    child: Icon(
+                      Icons.remove_red_eye,
+                      color: Colors.lightGreen,
+                    ),
+                    onPressed: () {
+                      viewProduct(product);
+                    },
+                  ),
                 ),
               ),
               Container(
@@ -157,7 +185,7 @@ class _OrdersState extends State<Orders> {
                   style: TextStyle(
                     fontFamily: 'Handlee',
                     fontWeight: FontWeight.w200,
-                    fontSize:20,
+                    fontSize: 20,
                   ),
                 ),
               ),
@@ -167,46 +195,56 @@ class _OrdersState extends State<Orders> {
         cartContent.add(
           TableRow(
             children: [
-              SizedBox(height: 20,),
-              SizedBox(height: 20,),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 20,
+              ),
             ],
           ),
         );
-
       });
     }
 
     return Scaffold(
       appBar: buildAppBar(context, f),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 40,
-            ),
-            Container(
-              child: Text(
-                'My Orders (${cartDetails.length.toString()})',
-                style: TextStyle(
-                    fontFamily: 'Handlee',
-                    fontSize: 30,
-                    color: Colors.blueGrey
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 40,
                 ),
-              ),
+                Container(
+                  child: Text(
+                    'My Orders (${cartDetails.length.toString()})',
+                    style: TextStyle(
+                        fontFamily: 'Handlee',
+                        fontSize: 30,
+                        color: Colors.blueGrey),
+                  ),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                Container(
+                  child: Table(
+                    children: cartContent,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(
-              height: 40,
-            ),
-            Container(
-              child: Table(
-                children: cartContent,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
-      floatingActionButton: user!=null? ChatOptions() : Container(),
     );
   }
 }

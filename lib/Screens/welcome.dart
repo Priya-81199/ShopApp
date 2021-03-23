@@ -63,12 +63,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Hero(
-                    tag: 'logo',
-                    child: Container(
-                      child: Image.asset('images/avatar.png'),
-                      height: 300.0,
-                    ),
+                  Container(
+                    child: Image.asset('images/avatar.png'),
+                    height: 300.0,
                   ),
                   Flexible(
                     child: Text(
@@ -100,8 +97,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                     colour: Colors.indigo,
                     tag: 'register',
                     onPressed: () {
-                      ExtendedNavigator.of(context)
-                          .push(Routes.registrationScreen);
+                      ExtendedNavigator.of(context).push(Routes.registrationScreen);
                     },
                   ),
                 ],

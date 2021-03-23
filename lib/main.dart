@@ -23,7 +23,6 @@ import 'app/route.gr.dart' as rg;
 
 bool isUserSet = false;
 
-
 class Data {
   final List<dynamic> productDetails;
   Data({
@@ -37,6 +36,7 @@ class Data {
 }
 
 Future<List<dynamic>> getProductsDetails() async {
+  Firebase.initializeApp();
   final db = FirebaseFirestore.instance;
   List<dynamic> productsDetails = [];
   await db.collection('productDetails').get().then((value) {
@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       builder: ExtendedNavigator.builder<rg.Router>(
         router: rg.Router(),
-        initialRoute: rg.Routes.homePage,
+        //initialRoute: rg.Routes.homePage,
         builder: (context, navigator) => Theme(
           data: ThemeData.light(),
           child: navigator,

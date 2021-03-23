@@ -8,6 +8,19 @@ import 'package:lilly_app/app/route.gr.dart';
 
 final db = FirebaseFirestore.instance;
 
+
+class Data {
+  final dynamic product;
+  Data({
+    this.product,
+  });
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data["product"] = product;
+    return data;
+  }
+}
+
 class Cart extends StatefulWidget {
   static const String id = "Cart";
   @override
@@ -64,10 +77,11 @@ class _CartState extends State<Cart> {
 
   void viewProduct(dynamic product) async{
     print(product);
-    await ExtendedNavigator.of(context).push(
-      Routes.productDetails,
-      arguments: ProductDetailsArguments(product: product),
-    );
+    var session = FlutterSession();
+    await session.set("argument_prod", Data(product:product));
+    await ExtendedNavigator.of(context).push(Routes.productDetails);
+    //   arguments: ProductDetailsArguments(product: product),
+    // );
     print(product);
   }
 
@@ -181,32 +195,37 @@ class _CartState extends State<Cart> {
 
     return Scaffold(
       appBar: buildAppBar(context, f),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 40,
-            ),
-            Container(
-              child: Text(
-                'My Cart (${cartDetails.length.toString()})',
-                style: TextStyle(
-                  fontFamily: 'Handlee',
-                  fontSize: 30,
-                  color: Colors.blueGrey
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 40,
                 ),
-              ),
+                Container(
+                  child: Text(
+                    'My Cart (${cartDetails.length.toString()})',
+                    style: TextStyle(
+                        fontFamily: 'Handlee',
+                        fontSize: 30,
+                        color: Colors.blueGrey
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                Container(
+                  child: Table(
+                    children: cartContent,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(
-              height: 40,
-            ),
-            Container(
-              child: Table(
-                children: cartContent,
-              ),
-            ),
-          ],
-        ),
+          ),
+          // buildChatStack(f),
+        ],
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.white,
@@ -214,8 +233,12 @@ class _CartState extends State<Cart> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             FlatButton(
-              onPressed: (){
-                ExtendedNavigator.of(context).push(Routes.deliveryScreen, arguments: DeliveryScreenArguments(products: cartDetails));
+              onPressed: () async{
+                print(cartDetails);
+                var session = FlutterSession();
+                await session.set("argument_prod", Data(product: cartDetails));
+                ExtendedNavigator.of(context).push(Routes.deliveryScreen);
+                    //arguments: DeliveryScreenArguments(products: cartDetails));
               },
               color: Colors.deepOrange,
               hoverColor:Colors.deepOrangeAccent,
@@ -238,7 +261,6 @@ class _CartState extends State<Cart> {
           ],
         ),
       ),
-      floatingActionButton: user!=null? ChatOptions() : Container(),
     );
   }
 }

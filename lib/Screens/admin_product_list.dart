@@ -13,6 +13,17 @@ class AdminProductList extends StatefulWidget {
   @override
   _AdminProductListState createState() => _AdminProductListState();
 }
+class Data {
+  final dynamic product;
+  Data({
+    this.product,
+  });
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data["product"] = product;
+    return data;
+  }
+}
 
 class _AdminProductListState extends State<AdminProductList> {
   bool selectedData = false;
@@ -184,11 +195,13 @@ class _AdminProductListState extends State<AdminProductList> {
           var priceFontSize = width / 232 * 16;
           var descriptionFontSize = width / 232 * 12;
           return FlatButton(
-            onPressed: () {
+            onPressed: () async{
+              var session = FlutterSession();
+              await session.set("argument_aprod", Data(product:product));
               ExtendedNavigator.of(context).push(
-                Routes.updateProducts,
-                arguments: UpdateProductsArguments(product: product),
-              );
+                Routes.updateProducts);
+                //arguments: UpdateProductsArguments(product: product),
+              //);
             },
             child: Container(
               padding: EdgeInsets.all(10.0),
@@ -299,8 +312,7 @@ class _AdminProductListState extends State<AdminProductList> {
       pageButtons.add(SizedBox(width: 10));
     }
 
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         drawer: Drawer(
           child: Container(
             padding: EdgeInsets.all(32.0),
@@ -357,7 +369,6 @@ class _AdminProductListState extends State<AdminProductList> {
             );
           },
         ),
-      ),
-    );
+      );
   }
 }

@@ -8,8 +8,6 @@ import 'dart:math';
 
 class ProductList extends StatefulWidget {
   static const String id = 'ProductList';
-  final dynamic subcategory;
-  ProductList(this.subcategory);
   @override
   _ProductListState createState() => _ProductListState();
 }
@@ -39,25 +37,29 @@ class _ProductListState extends State<ProductList> {
   void initState() {
     super.initState();
     setLastVisited();
-    subcategory = widget.subcategory;
-
+    getArguments();
     getData().then((value) => {
-      value.forEach((result) {
-        var len = value.length;
-        productsDetails.add(result);
-        if (len == productsDetails.length) {
-          setState(() {
-            imageSet = true;
-          });
-        }
-      }),
-    });
+          value.forEach((result) {
+            var len = value.length;
+            productsDetails.add(result);
+            if (len == productsDetails.length) {
+              setState(() {
+                imageSet = true;
+              });
+            }
+          }),
+        });
+  }
+
+  void getArguments() async {
+    var session = FlutterSession();
+    subcategory = await session.get('argument_subcat');
   }
 
   void setLastVisited() async {
     var session = FlutterSession();
     await session.set("last_visited", Routes.productList);
-    await session.set("arguments", widget.subcategory);
+    await session.set("arguments", subcategory);
   }
 
   RangeValues _currentRangeValues = const RangeValues(0, 10000);
@@ -66,8 +68,6 @@ class _ProductListState extends State<ProductList> {
     var session = FlutterSession();
     var productsDetail = await session.get("prod_details");
     return productsDetail['productDetails'];
-
-
   }
 
   @override
@@ -154,13 +154,12 @@ class _ProductListState extends State<ProductList> {
       return flag;
     }
 
-
     getProductCard(dynamic product) {
       return LayoutBuilder(
         builder: (context, constraints) {
           var width = constraints.maxWidth;
           var height = constraints.maxHeight;
-          return getCard(context,product, width, height);
+          return getCard(context, product, width, height);
         },
       );
     }
@@ -198,11 +197,9 @@ class _ProductListState extends State<ProductList> {
     var productsPerPage = 20;
     var pageButtons = <Widget>[];
     pageButtons.add(SizedBox(width: 10));
-    for (
-      var i = 1;
-      i <= ((displayProducts.length) / productsPerPage).ceil();
-      i++
-    ) {
+    for (var i = 1;
+        i <= ((displayProducts.length) / productsPerPage).ceil();
+        i++) {
       Color buttonColour = Color.fromRGBO(211, 224, 234, 1);
       if (i == pageIndex) buttonColour = Color.fromRGBO(22, 135, 167, 1);
       pageButtons.add(
@@ -227,82 +224,82 @@ class _ProductListState extends State<ProductList> {
       pageButtons.add(SizedBox(width: 10));
     }
 
-    return MaterialApp(
-      home: Scaffold(
-        drawer: Drawer(
-          child: Container(
-            padding: EdgeInsets.all(32.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: filters,
-              ),
+    return Scaffold(
+      drawer: Drawer(
+        child: Container(
+          padding: EdgeInsets.all(32.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: filters,
             ),
           ),
         ),
-        appBar: buildAppBar(context, f),
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            var width = constraints.maxWidth;
-            var height = constraints.maxHeight;
-            var columnCount = (width / 300).round();
-            return CustomScrollView(
-              slivers: [
-                SliverGrid(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: columnCount,
-                    childAspectRatio: 0.65,
-                  ),
-                  delegate: SliverChildListDelegate(
-                    displayProducts.sublist(
-                      min(
-                        (pageIndex - 1) * productsPerPage,
-                        displayProducts.length,
-                      ),
-                      min(
-                        pageIndex * productsPerPage,
-                        displayProducts.length,
+      ),
+      appBar: buildAppBar(context, f),
+      body: Stack(
+        children: [
+          LayoutBuilder(
+            builder: (context, constraints) {
+              var width = constraints.maxWidth;
+              var height = constraints.maxHeight;
+              var columnCount = (width / 300).round();
+              return CustomScrollView(
+                slivers: [
+                  SliverGrid(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: columnCount,
+                      childAspectRatio: 0.65,
+                    ),
+                    delegate: SliverChildListDelegate(
+                      displayProducts.sublist(
+                        min(
+                          (pageIndex - 1) * productsPerPage,
+                          displayProducts.length,
+                        ),
+                        min(
+                          pageIndex * productsPerPage,
+                          displayProducts.length,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      subcategory.toString() == 'Formals' ||
-                      subcategory.toString() == 'Casuals' ||
-                      subcategory.toString() == 'Ethnic' ?
-                      Container(
-                        height: height,
-                        child: Center(
-                          child: Text(
-                              'Coming Soon.',
-                               style: TextStyle(
-                                 fontSize: 50,
-                                 fontFamily:'AT',
-                                 color: Colors.grey.shade600
-                               ),
-                          ),
-                        ),
-                      ) :
-                      Center(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: pageButtons,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      )
-                    ],
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        subcategory.toString() == 'Formals' ||
+                                subcategory.toString() == 'Casuals' ||
+                                subcategory.toString() == 'Ethnic'
+                            ? Container(
+                                height: height,
+                                child: Center(
+                                  child: Text(
+                                    'Coming Soon.',
+                                    style: TextStyle(
+                                        fontSize: 50,
+                                        fontFamily: 'AT',
+                                        color: Colors.grey.shade600),
+                                  ),
+                                ),
+                              )
+                            : Center(
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: pageButtons,
+                                  ),
+                                ),
+                              ),
+                        SizedBox(
+                          height: 20,
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
-          },
-        ),
-        floatingActionButton: user!=null ? ChatOptions() : Container(),
+                ],
+              );
+            },
+          ),
+        ],
       ),
     );
   }
