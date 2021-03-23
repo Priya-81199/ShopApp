@@ -50,6 +50,7 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
         messageIndex < allchats.length;
         messageIndex++) {
       var chat = allchats[messageIndex];
+      print(chat['message']);
       if (chat['receiver'] == selectedUser) {
         tempmessages.add(
           ChatMessage(messageContent: chat['message'], messageType: "sender"),
@@ -101,7 +102,11 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
             width: 400,
             child: FlatButton(
               onPressed: () async{
-                selectedUser = result['username'];
+                setState(() {
+                  messages = [];
+                  messageIndex = 0;
+                  selectedUser = result['username'];
+                });
                 getMessages();
                 // var session = FlutterSession();
                 // selectedUser = await session.set('selectedUser', result['username']);
