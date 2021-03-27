@@ -1,8 +1,8 @@
-# new_app
+# lilly_app
 
 A new Flutter application.
 
-## Getting Started...
+## Getting Started
 
 This project is a starting point for a Flutter application.
 

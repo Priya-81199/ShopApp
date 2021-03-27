@@ -413,7 +413,6 @@ Widget getCard(
 
 AppBar buildAppBar(BuildContext context, Function() f) {
   return AppBar(
-    automaticallyImplyLeading: false,
     backgroundColor: Color.fromRGBO(39, 102, 120, 1),
     title: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

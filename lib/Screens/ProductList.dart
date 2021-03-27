@@ -6,6 +6,10 @@ import 'package:lilly_app/app/route.gr.dart';
 import 'package:lilly_app/mockData.dart';
 import 'dart:math';
 
+import 'package:smooth_scroll_web/smooth_scroll_web.dart';
+
+ScrollController controller = ScrollController();
+
 class ProductList extends StatefulWidget {
   static const String id = 'ProductList';
   @override
@@ -236,71 +240,81 @@ class _ProductListState extends State<ProductList> {
         ),
       ),
       appBar: buildAppBar(context, f),
-      body: Stack(
-        children: [
-          LayoutBuilder(
-            builder: (context, constraints) {
-              var width = constraints.maxWidth;
-              var height = constraints.maxHeight;
-              var columnCount = (width / 300).round();
-              return CustomScrollView(
-                slivers: [
-                  SliverGrid(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: columnCount,
-                      childAspectRatio: 0.65,
-                    ),
-                    delegate: SliverChildListDelegate(
-                      displayProducts.sublist(
-                        min(
-                          (pageIndex - 1) * productsPerPage,
-                          displayProducts.length,
-                        ),
-                        min(
-                          pageIndex * productsPerPage,
-                          displayProducts.length,
-                        ),
+      body: SmoothScrollWeb(
+        child: buildStack(displayProducts, productsPerPage, pageButtons),
+        controller: controller,
+      )
+      //buildStack(displayProducts, productsPerPage, pageButtons),
+    );
+  }
+
+  Stack buildStack(List<Widget> displayProducts, int productsPerPage, List<Widget> pageButtons) {
+    return Stack(
+      children: [
+        LayoutBuilder(
+          builder: (context, constraints) {
+            var width = constraints.maxWidth;
+            var height = constraints.maxHeight;
+            var columnCount = (width / 300).round();
+            return CustomScrollView(
+              controller: controller,
+              physics: NeverScrollableScrollPhysics(),
+              slivers: [
+                SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: columnCount,
+                    childAspectRatio: 0.65,
+                  ),
+                  delegate: SliverChildListDelegate(
+                    displayProducts.sublist(
+                      min(
+                        (pageIndex - 1) * productsPerPage,
+                        displayProducts.length,
+                      ),
+                      min(
+                        pageIndex * productsPerPage,
+                        displayProducts.length,
                       ),
                     ),
                   ),
-                  SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        subcategory.toString() == 'Formals' ||
-                                subcategory.toString() == 'Casuals' ||
-                                subcategory.toString() == 'Ethnic'
-                            ? Container(
-                                height: height,
-                                child: Center(
-                                  child: Text(
-                                    'Coming Soon.',
-                                    style: TextStyle(
-                                        fontSize: 50,
-                                        fontFamily: 'AT',
-                                        color: Colors.grey.shade600),
-                                  ),
-                                ),
-                              )
-                            : Center(
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: pageButtons,
-                                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      subcategory.toString() == 'Formals' ||
+                              subcategory.toString() == 'Casuals' ||
+                              subcategory.toString() == 'Ethnic'
+                          ? Container(
+                              height: height,
+                              child: Center(
+                                child: Text(
+                                  'Coming Soon.',
+                                  style: TextStyle(
+                                      fontSize: 50,
+                                      fontFamily: 'AT',
+                                      color: Colors.grey.shade600),
                                 ),
                               ),
-                        SizedBox(
-                          height: 20,
-                        )
-                      ],
-                    ),
+                            )
+                          : Center(
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: pageButtons,
+                                ),
+                              ),
+                            ),
+                      SizedBox(
+                        height: 20,
+                      )
+                    ],
                   ),
-                ],
-              );
-            },
-          ),
-        ],
-      ),
+                ),
+              ],
+            );
+          },
+        ),
+      ],
     );
   }
 }
