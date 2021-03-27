@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.40.6"
+  animated_text_kit:
+    dependency: "direct main"
+    description:
+      name: animated_text_kit
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.2"
   archive:
     dependency: transitive
     description:
@@ -335,13 +342,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1"
-  flutter_speed_dial:
-    dependency: "direct main"
-    description:
-      name: flutter_speed_dial
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -707,6 +707,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  smooth_scroll_web:
+    dependency: "direct main"
+    description:
+      name: smooth_scroll_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   source_gen:
     dependency: transitive
     description:

@@ -40,7 +40,8 @@ dependencies:
   carousel_slider: ^3.0.0
   scroll_to_id: ^1.4.0
   font_awesome_flutter: ^8.11.0
-  flutter_speed_dial: ^2.1.1
+  animated_text_kit: 3.1.2
+  smooth_scroll_web: ^0.0.4
 
   #state management
   stacked : ^1.2.2

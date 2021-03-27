@@ -21,6 +21,7 @@ import '../Screens/cart.dart';
 import '../Screens/chat_screen.dart';
 import '../Screens/delivery_screen.dart';
 import '../Screens/homePage.dart';
+import '../Screens/intro_screen.dart';
 import '../Screens/login.dart';
 import '../Screens/orders.dart';
 import '../Screens/register.dart';
@@ -35,7 +36,7 @@ class Routes {
   static const String productDetails = '/product-details';
   static const String welcomeScreen = '/welcome-screen';
   static const String registrationScreen = '/registration-screen';
-  static const String homePage = '/';
+  static const String homePage = '/home-page';
   static const String deliveryScreen = '/delivery-screen';
   static const String solveQueries = '/solve-queries';
   static const String cart = '/Cart';
@@ -47,6 +48,7 @@ class Routes {
   static const String adminPortal = '/admin-portal';
   static const String chatScreen = '/chat-screen';
   static const String adminChatScreen = '/admin-chat-screen';
+  static const String introPage = '/';
   static const all = <String>{
     loginScreen,
     addProductsDetails,
@@ -66,6 +68,7 @@ class Routes {
     adminPortal,
     chatScreen,
     adminChatScreen,
+    introPage,
   };
 }
 
@@ -91,6 +94,7 @@ class Router extends RouterBase {
     RouteDef(Routes.adminPortal, page: AdminPortal),
     RouteDef(Routes.chatScreen, page: ChatScreen),
     RouteDef(Routes.adminChatScreen, page: AdminChatScreen),
+    RouteDef(Routes.introPage, page: IntroPage),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -200,6 +204,12 @@ class Router extends RouterBase {
     AdminChatScreen: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => AdminChatScreen(),
+        settings: data,
+      );
+    },
+    IntroPage: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => IntroPage(),
         settings: data,
       );
     },

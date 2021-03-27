@@ -12,6 +12,7 @@ import 'package:lilly_app/Screens/cart.dart';
 import 'package:lilly_app/Screens/chat_screen.dart';
 import 'package:lilly_app/Screens/delivery_screen.dart';
 import 'package:lilly_app/Screens/homePage.dart';
+import 'package:lilly_app/Screens/intro_screen.dart';
 import 'package:lilly_app/Screens/login.dart';
 import 'package:lilly_app/Screens/orders.dart';
 import 'package:lilly_app/Screens/register.dart';
@@ -30,7 +31,7 @@ import 'package:lilly_app/main.dart';
     MaterialRoute(page: ProductDetails,),
     MaterialRoute(page: WelcomeScreen,),
     MaterialRoute(page: RegistrationScreen,),
-    MaterialRoute(page: homePage,initial: true),
+    MaterialRoute(page: homePage,),
     MaterialRoute(page: DeliveryScreen,),
     MaterialRoute(page: SolveQueries),
     MaterialRoute(page: Cart,),
@@ -42,6 +43,7 @@ import 'package:lilly_app/main.dart';
     MaterialRoute(page: AdminPortal,),
     MaterialRoute(page: ChatScreen,),
     MaterialRoute(page: AdminChatScreen,),
+    MaterialRoute(page: IntroPage,initial: true),
   ],
 )
 class $Router {
