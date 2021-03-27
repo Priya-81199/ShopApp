@@ -48,7 +48,7 @@ class _IntroPageState extends State<IntroPage> {
           Align(
             alignment: Alignment.bottomRight,
             child: RoundedButton(
-                title: 'Continue to website',
+                title: 'Continue Shopping',
                 colour: Color.fromRGBO(39, 102, 120, 1),
                 tag: 'login',
                 onPressed: (){

@@ -46,6 +46,7 @@ String getImageURL(String imageName) {
 }
 
 void uploadPhotos(PlatformFile file) async {
+  print('product_images/${file.name}');
   await storage.ref('product_images/${file.name}').putData(file.bytes);
 }
 
@@ -358,6 +359,10 @@ Widget getCard(
   var nameFontSize = width / 232 * 18;
   var priceFontSize = width / 232 * 16;
   var descriptionFontSize = width / 232 * 12;
+  if(product['price'] == "78899")
+    print("Price found!");
+  else
+    print("Price not found!");
   return FlatButton(
     onPressed: () async {
       var session = FlutterSession();

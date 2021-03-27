@@ -1,23 +1,9 @@
-// import 'package:auto_route/auto_route.dart';
-// import 'package:lilly_app/Screens/AddPhtotos.dart';
-// import 'package:lilly_app/Screens/EditSubcat.dart';
-// import 'package:lilly_app/Screens/ProductDetails.dart';
-// import 'package:lilly_app/Screens/addProducts.dart';
-// import 'package:lilly_app/Screens/new_mock_data.dart';
-// import 'package:lilly_app/Screens/send_receive.dart';
-// import 'package:lilly_app/Screens/addProduct.dart';
-// import 'package:lilly_app/Screens/ProductList.dart';
-// import 'package:lilly_app/Screens/homePage.dart';
-// import 'package:lilly_app/Screens/welcome.dart';
-// import 'package:lilly_app/Screens/login.dart';
-// import 'package:lilly_app/Screens/register.dart';
+import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:lilly_app/mockData.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'app/route.gr.dart' as rg;
 
@@ -56,17 +42,25 @@ void main() async {
     await session.set("isUserSet", false);
   // var prod_session = await session.get('prod_details');
   // if(prod_session==null)
-  session.set("prod_details", Data(productDetails: await getProductsDetails()));
-
+   getProds();
   //setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
 }
 
+void getProds() async{
+  var session = FlutterSession();
+  session.set("prod_details", Data(productDetails: await getProductsDetails()));
+
+}
+
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Timer(const Duration(seconds: 3), getProds);
+
     return MaterialApp(
       builder: ExtendedNavigator.builder<rg.Router>(
         router: rg.Router(),

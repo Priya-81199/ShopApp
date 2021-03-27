@@ -169,6 +169,7 @@ class _OrdersState extends State<Orders> {
                 child: Tooltip(
                   message: 'View',
                   child: FlatButton(
+                    hoverColor: Colors.transparent,
                     child: Icon(
                       Icons.remove_red_eye,
                       color: Colors.lightGreen,
