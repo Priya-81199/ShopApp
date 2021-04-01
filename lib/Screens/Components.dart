@@ -359,10 +359,6 @@ Widget getCard(
   var nameFontSize = width / 232 * 18;
   var priceFontSize = width / 232 * 16;
   var descriptionFontSize = width / 232 * 12;
-  if(product['price'] == "78899")
-    print("Price found!");
-  else
-    print("Price not found!");
   return FlatButton(
     onPressed: () async {
       var session = FlutterSession();

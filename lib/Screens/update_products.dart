@@ -43,6 +43,7 @@ class _UpdateProductsState extends State<UpdateProducts> {
   var addedPropertyList = [];
   var addedPointsOn = [];
   var addedPoints = [];
+  bool confirm = false;
 
   List<PlatformFile> allFiles = [];
   var previousListLen = 0;
@@ -654,60 +655,68 @@ class _UpdateProductsState extends State<UpdateProducts> {
                     children: [
                       FlatButton(
                         onPressed: () {
-                          var finalProperties = [];
-                          for (var i = 0; i < addedPropertyList.length; i++) {
-                            if (addedPropertiesOn[i]) {
-                              finalProperties.add(addedPropertyList[i]);
+                          if (confirm) {
+                            var finalProperties = [];
+                            for (var i = 0; i < addedPropertyList.length; i++) {
+                              if (addedPropertiesOn[i]) {
+                                finalProperties.add(addedPropertyList[i]);
+                              }
                             }
-                          }
-                          var finalPoints = [];
-                          for (var i = 0; i < addedPoints.length; i++) {
-                            if (addedPointsOn[i]) {
-                              finalPoints.add(addedPoints[i]);
+                            var finalPoints = [];
+                            for (var i = 0; i < addedPoints.length; i++) {
+                              if (addedPointsOn[i]) {
+                                finalPoints.add(addedPoints[i]);
+                              }
                             }
-                          }
-                          var finalImages = [];
-                          for (var i = 0; i < imageFiles.length; i++) {
-                            if (imagesSelected[i]) {
-                              finalImages.add(imageFiles[i]);
-                              if (i >= previousListLen)
-                                uploadPhotos(allFiles[i - previousListLen]);
+                            var finalImages = [];
+                            for (var i = 0; i < imageFiles.length; i++) {
+                              if (imagesSelected[i]) {
+                                finalImages.add(imageFiles[i]);
+                                if (i >= previousListLen)
+                                  uploadPhotos(allFiles[i - previousListLen]);
+                              }
                             }
+                            var productDetails = {
+                              'category': categoryDefault,
+                              'subcategory': subcategoryDefault,
+                              'name': productName,
+                              'price': price,
+                              'description': description,
+                              'properties': finalProperties,
+                              'points': finalPoints,
+                              'sizeCounts': sizeCountValues,
+                              'ageCounts': ageCountValues,
+                              'numberCounts': numberCountValues,
+                              'sizeAvailable': sizeAvailable,
+                              'ageAvailable': ageAvailable,
+                              'numberAvailable': numberAvailable,
+                              'images': finalImages,
+                            };
+                            final snackBar = SnackBar(
+                              content: Text('Product Updated!'),
+                            );
+                            _firestore
+                                .collection('productDetails')
+                                .doc(productID)
+                                .update(productDetails)
+                                .then((value) async =>
+                            {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar),
+                              updateSession(productDetails, productID),
+                              await Future.delayed(Duration(seconds: 1)),
+                            })
+                                .then(
+                                  (value) =>
+                                  ExtendedNavigator.of(context)
+                                      .popAndPush(Routes.adminProductList),
+                            );
                           }
-                          var productDetails = {
-                            'category': categoryDefault,
-                            'subcategory': subcategoryDefault,
-                            'name': productName,
-                            'price': price,
-                            'description': description,
-                            'properties': finalProperties,
-                            'points': finalPoints,
-                            'sizeCounts': sizeCountValues,
-                            'ageCounts': ageCountValues,
-                            'numberCounts': numberCountValues,
-                            'sizeAvailable': sizeAvailable,
-                            'ageAvailable': ageAvailable,
-                            'numberAvailable': numberAvailable,
-                            'images': finalImages,
-                          };
-                          final snackBar = SnackBar(
-                            content: Text('Product Updated!'),
-                          );
-                          _firestore
-                              .collection('productDetails')
-                              .doc(productID)
-                              .update(productDetails)
-                              .then((value) async => {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar),
-                                    updateSession(productDetails, productID),
-                                    await Future.delayed(Duration(seconds: 1)),
-                                  })
-                              .then(
-                                (value) => ExtendedNavigator.of(context)
-                                    .popAndPush(Routes.adminProductList),
-                              );
-                        },
+                          else{
+                              showAlertDialog(context,"update");
+                          }
+                        }
+                        ,
                         child: Container(
                           height: 50,
                           width: 120,
@@ -731,23 +740,30 @@ class _UpdateProductsState extends State<UpdateProducts> {
                       SizedBox(width: 10),
                       FlatButton(
                         onPressed: () {
-                          final snackBar = SnackBar(
-                            content: Text('Product Removed!'),
-                          );
-                          _firestore
-                              .collection('productDetails')
-                              .doc(productID)
-                              .delete()
-                              .then((value) async => {
-                                    removeProdSession(productID),
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar),
-                                    await Future.delayed(Duration(seconds: 1)),
-                                  })
-                              .then((value) => {
-                                    ExtendedNavigator.of(context)
-                                        .popAndPush(Routes.adminProductList)
-                                  });
+                          if(confirm) {
+                            final snackBar = SnackBar(
+                              content: Text('Product Removed!'),
+                            );
+                            _firestore
+                                .collection('productDetails')
+                                .doc(productID)
+                                .delete()
+                                .then((value) async =>
+                            {
+                              removeProdSession(productID),
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar),
+                              await Future.delayed(Duration(seconds: 1)),
+                            })
+                                .then((value) =>
+                            {
+                              ExtendedNavigator.of(context)
+                                  .popAndPush(Routes.adminProductList)
+                            });
+                          }
+                          else{
+                            showAlertDialog(context, "remove");
+                          }
                         },
                         child: Container(
                           height: 50,
@@ -897,6 +913,43 @@ class _UpdateProductsState extends State<UpdateProducts> {
           child: Text(value),
         );
       }).toList(),
+    );
+  }
+  showAlertDialog(BuildContext context,String action) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed:  () {
+        setState(() {
+          confirm = false;
+        });
+        ExtendedNavigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Continue to " + action),
+      onPressed:  () {
+        setState(() {
+          confirm = true;
+        });
+        ExtendedNavigator.of(context).pop();
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Confirm to "+ action + "?"),
+      content: Text("Would you like to continue?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
