@@ -126,6 +126,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         }
                       },
                     ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    InkWell(
+                      child: Text(
+                        "Already a user? Login here.",
+                        style: TextStyle(
+                          color: Colors.indigoAccent,
+                          fontFamily: 'Handlee',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                      onTap: (){
+                        ExtendedNavigator.of(context).push(Routes.loginScreen);
+                      },
+                    )
                   ],
                 ),
               ],

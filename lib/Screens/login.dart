@@ -163,6 +163,24 @@ class _LoginScreenState extends State<LoginScreen> {
                             });
                           }
                         }),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    InkWell(
+                      child: Text(
+                        "New user? Register here.",
+                        style: TextStyle(
+                          color: Colors.indigo,
+                          fontFamily: 'Handlee',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                      onTap: (){
+                        ExtendedNavigator.of(context).push(Routes.registrationScreen);
+                      },
+                    )
                   ],
                 ),
               ],
