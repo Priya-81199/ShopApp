@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:lilly_app/Screens/Components.dart';
@@ -632,7 +633,7 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
                            //ScaffoldMessenger.of(context).showSnackBar(snackBar),
                            updateSession(productDetails,value.id),
                           });
-
+                          showAlertDialog(context);
                         }
                         else{
                           // final snackBar = SnackBar(
@@ -750,6 +751,29 @@ class _AddProductsDetailsState extends State<AddProductsDetails> {
           child: Text(value),
         );
       }).toList(),
+    );
+  }
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        ExtendedNavigator.of(context).pop();
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Product Added."),
+      actions: [
+        okButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
