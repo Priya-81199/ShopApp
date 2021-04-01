@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:pinch_zoom/pinch_zoom.dart';
 import '../mockData.dart';
 import 'Components.dart' as comp;
 import 'package:lilly_app/app/route.gr.dart';
@@ -402,7 +404,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           Container(
             alignment: Alignment.topLeft,
             child: Text(
-              'Properties',
+              'Details',
               style: TextStyle(
                 fontFamily: 'Lobster',
                 fontWeight: FontWeight.bold,
@@ -572,24 +574,63 @@ class _ProductDetailsState extends State<ProductDetails> {
       );
     }
 
-    FlatButton zoomImage(height, width, fit) {
-      return FlatButton(
-        onPressed: () {
-          setState(() {
-            isImageZoomed = false;
-          });
-        },
-        child: Center(
-          child: Container(
-            color: Colors.black.withOpacity(0.5),
-            height: height * 0.95,
-            width: width * 0.95,
-            child: Image.network(
-              image,
-              fit: fit,
+    // FlatButton zoomImage(height, width, fit) {
+    //   return FlatButton(
+    //     onPressed: () {
+    //
+    //     },
+    //     child: Center(
+    //       child: Container(
+    //         color: Colors.black.withOpacity(0.1),
+    //         height: height * 0.95,
+    //         width: width * 0.95,
+    //         child: PhotoView(
+    //           imageProvider: NetworkImage(
+    //             image,
+    //             //fit: fit,
+    //           ),
+    //         ),
+    //       ),
+    //     ),
+    //   );
+    // }
+    Stack zoomImage(height, width) {
+      return Stack(
+        children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: Tooltip(
+              message: "Close",
+              child: FlatButton(
+                hoverColor: Colors.redAccent,
+                child: Icon(
+                  Icons.close,
+                ),
+                onPressed: () {
+                  setState(() {
+                    isImageZoomed = false;
+                  });
+                },
+              ),
             ),
           ),
-        ),
+          Center(
+            child: Container(
+              height: height * 0.95,
+              width: width * 0.95,
+              child: Tooltip(
+                message: "Double-click to Zoom in/out",
+                child: PhotoView(
+                  backgroundDecoration: BoxDecoration(color: Colors.black.withOpacity(0.4)),
+                  imageProvider: NetworkImage(
+                    image,
+                    //fit: fit,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       );
     }
 
@@ -630,13 +671,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       Container(
                                         height: height * 0.20,
                                         width: width / 5,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(width: 1),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15),
-                                          ),
-                                        ),
+                                        // decoration: BoxDecoration(
+                                        //   color: Colors.white,
+                                        //   border: Border.all(width: 1),
+                                        //   borderRadius: BorderRadius.all(
+                                        //     Radius.circular(15),
+                                        //   ),
+                                        // ),
                                         child: actionSection(height),
                                       ),
                                     ],
@@ -652,7 +693,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ),
                       ),
                       isImageZoomed
-                          ? zoomImage(height, width, BoxFit.fitHeight)
+                          ? zoomImage(height, width)
                           : Container(),
                     ],
                   );
@@ -669,17 +710,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                               detailSection(height, width, 4),
                               Container(
                                 height: height * 0.2,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(width: 1),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
+                                // decoration: BoxDecoration(
+                                //   color: Colors.white,
+                                //   border: Border.all(width: 1),
+                                //   borderRadius: BorderRadius.all(
+                                //     Radius.circular(15),
+                                //   ),
+                                // ),
                                 child: actionSection(height),
                               ),
                               SizedBox(
-                                height: 20,
+                                height: 10,
                               ),
                               similarProductSection(),
                             ],
@@ -687,7 +728,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ),
                       ),
                       isImageZoomed
-                          ? zoomImage(height, width, BoxFit.fitWidth)
+                          ? zoomImage(height, width)
                           : Container(),
                     ],
                   );
