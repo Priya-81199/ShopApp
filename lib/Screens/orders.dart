@@ -120,49 +120,82 @@ class _OrdersState extends State<Orders> {
       cartDetails.forEach((product) {
         cartContent.add(
           TableRow(
+            decoration: BoxDecoration(
+              // border: Border.all(
+              //
+              // )
+            ),
             children: [
-              Container(
-                //color: Colors.blue,
-                height: 180,
-                width: 180,
-                child: Image.network(product['image']),
+              FlatButton(
+                hoverColor: Colors.transparent,
+                onPressed: (){
+                  viewProduct(product);
+                },
+                child: Container(
+                  //color: Colors.blue,
+                  height: 180,
+                  width: 180,
+                  child: Image.network(product['image']),
+                ),
               ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      product['name'],
-                      style: TextStyle(
-                        fontFamily: 'Lobster',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
+              FlatButton(
+                hoverColor: Colors.transparent,
+                onPressed: (){
+                  viewProduct(product);
+                },
+                child: Container(
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          product['name'],
+                          style: TextStyle(
+                            fontFamily: 'Lobster',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          ),
+                        ),
                       ),
-                    ),
-                    Text(
-                      product['description'],
-                      style: TextStyle(
-                        fontFamily: 'Handlee',
-                        fontWeight: FontWeight.w200,
-                        fontSize: 20,
+
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          product['description'],
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontFamily: 'Handlee',
+                            fontWeight: FontWeight.w200,
+                            fontSize: 20,
+                          ),
+                        ),
                       ),
-                    ),
-                    Text(
-                      '₹' + product['price'],
-                      style: TextStyle(
-                          fontFamily: 'Lobster',
-                          fontWeight: FontWeight.w300,
-                          fontSize: 20,
-                          color: Colors.pinkAccent),
-                    ),
-                    Text(
-                      'Size : ' + product['selectedSize'],
-                      style: TextStyle(
-                          fontFamily: 'Handlee',
-                          fontWeight: FontWeight.w300,
-                          fontSize: 20,
-                          color: Colors.black87),
-                    ),
-                  ],
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '₹' + product['price'],
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontFamily: 'Lobster',
+                              fontWeight: FontWeight.w300,
+                              fontSize: 20,
+                              color: Colors.pinkAccent),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Size : ' + product['selectedSize'],
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontFamily: 'Handlee',
+                              fontWeight: FontWeight.w300,
+                              fontSize: 20,
+                              color: Colors.black87),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Container(

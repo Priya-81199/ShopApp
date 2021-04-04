@@ -124,6 +124,16 @@ class _ProductListState extends State<ProductList> {
         ),
       ),
     );
+    filters.add(
+      Text(
+        '₹0 - ₹10,000',
+        style: TextStyle(
+          fontSize: 16,
+          fontFamily: 'Handlee',
+          color: Colors.pink,
+        ),
+      ),
+    );
     filters.add(RangeSlider(
       values: _currentRangeValues,
       min: 0,
@@ -273,10 +283,10 @@ class _ProductListState extends State<ProductList> {
                             subcategory.toString() == 'Ethnic'
                             ? Container(
                           height: height,
-                          child: Center(
-                            child: Text(
+                              child: Center(
+                                child: Text(
                               'Coming Soon.',
-                              style: TextStyle(
+                                style: TextStyle(
                                   fontSize: 50,
                                   fontFamily: 'AT',
                                   color: Colors.grey.shade600),
@@ -284,11 +294,11 @@ class _ProductListState extends State<ProductList> {
                           ),
                         )
                             : Center(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: pageButtons,
-                            ),
+                              child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: pageButtons,
+                                ),
                           ),
                         ),
                         SizedBox(

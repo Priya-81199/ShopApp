@@ -110,41 +110,62 @@ class _CartState extends State<Cart> {
         cartContent.add(
           TableRow(
             children: [
-              Container(
-                  //color: Colors.blue,
-                  height: 180,
-                  width: 180,
-                  child: Image.network(product['image']),
+              FlatButton(
+                hoverColor: Colors.transparent,
+                onPressed: (){
+                  viewProduct(product);
+                },
+                child: Container(
+                    //color: Colors.blue,
+                    height: 180,
+                    width: 180,
+                    child: Image.network(product['image']),
+                ),
               ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      product['name'],
-                      style: TextStyle(
-                        fontFamily: 'Lobster',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                      ),
+              FlatButton(
+                hoverColor: Colors.transparent,
+                onPressed: (){
+                  viewProduct(product);
+                },
+                child: Container(
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment:Alignment.centerLeft,
+                        child: Text(
+                          product['name'],
+                          style: TextStyle(
+                            fontFamily: 'Lobster',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          ),
 
-                    ),
-                    Text(
-                      product['description'],
-                      style: TextStyle(
-                        fontFamily: 'Handlee',
-                        fontWeight: FontWeight.w200,
-                        fontSize:20,
-                      ),),
-                    Text(
-                      '₹' + product['price'],
-                      style: TextStyle(
-                          fontFamily: 'Lobster',
-                          fontWeight: FontWeight.w300,
-                          fontSize: 20,
-                          color: Colors.pinkAccent
+                        ),
                       ),
-                    ),
-                  ],
+                      Align(
+                        alignment:Alignment.centerLeft,
+                        child: Text(
+                          product['description'],
+                          style: TextStyle(
+                            fontFamily: 'Handlee',
+                            fontWeight: FontWeight.w200,
+                            fontSize:20,
+                          ),),
+                      ),
+                      Align(
+                        alignment:Alignment.centerLeft,
+                        child: Text(
+                          '₹' + product['price'],
+                          style: TextStyle(
+                              fontFamily: 'Lobster',
+                              fontWeight: FontWeight.w300,
+                              fontSize: 20,
+                              color: Colors.pinkAccent
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Container(

@@ -132,45 +132,60 @@ class _AdminOrdersState extends State<AdminOrders> {
               Container(
                 child: Column(
                   children: [
-                    Text(
-                      product['email'],
-                      style: TextStyle(
-                          fontFamily: 'Lobster',
-                          fontWeight: FontWeight.w300,
-                          fontSize: 20,
-                          color: Colors.pinkAccent),
-                    ),
-                    Text(
-                      product['name'],
-                      style: TextStyle(
-                        fontFamily: 'Lobster',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
+                    Align(
+                      alignment:Alignment.centerLeft,
+                      child: Text(
+                        product['email'],
+                        style: TextStyle(
+                            fontFamily: 'Lobster',
+                            fontWeight: FontWeight.w300,
+                            fontSize: 20,
+                            color: Colors.pinkAccent),
                       ),
                     ),
-                    Text(
-                      product['description'],
-                      style: TextStyle(
-                        fontFamily: 'Handlee',
-                        fontWeight: FontWeight.w200,
-                        fontSize: 20,
+                    Align(
+                      alignment:Alignment.centerLeft,
+                      child: Text(
+                        product['name'],
+                        style: TextStyle(
+                          fontFamily: 'Lobster',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
                       ),
                     ),
-                    Text(
-                      '₹' + product['price'],
-                      style: TextStyle(
-                          fontFamily: 'Lobster',
-                          fontWeight: FontWeight.w300,
-                          fontSize: 20,
-                          color: Colors.pinkAccent),
-                    ),
-                    Text(
-                      'Size : ' + product['selectedSize'],
-                      style: TextStyle(
+                    Align(
+                      alignment:Alignment.centerLeft,
+                      child: Text(
+                        product['description'],
+                        style: TextStyle(
                           fontFamily: 'Handlee',
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w200,
                           fontSize: 20,
-                          color: Colors.black87
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment:Alignment.centerLeft,
+                      child: Text(
+                        '₹' + product['price'],
+                        style: TextStyle(
+                            fontFamily: 'Lobster',
+                            fontWeight: FontWeight.w300,
+                            fontSize: 20,
+                            color: Colors.pinkAccent),
+                      ),
+                    ),
+                    Align(
+                      alignment:Alignment.centerLeft,
+                      child: Text(
+                        'Size : ' + product['selectedSize'],
+                        style: TextStyle(
+                            fontFamily: 'Handlee',
+                            fontWeight: FontWeight.w300,
+                            fontSize: 20,
+                            color: Colors.black87
+                        ),
                       ),
                     ),
                   ],

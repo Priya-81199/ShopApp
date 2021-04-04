@@ -56,91 +56,97 @@ class _AdminPortalState extends State<AdminPortal> {
 
     return Scaffold(
       appBar: buildAppBar(context, f),
-      body: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(50.0),
-          child: GridView.count(
-              crossAxisCount: 4,
-              mainAxisSpacing: 50,
-              crossAxisSpacing: 50,
-            children: [
-              FlatButton(
-                hoverColor: Colors.black38,
-                color: Color.fromRGBO(39, 102, 120, 0.8),
-                onPressed: (){
-                  ExtendedNavigator.of(context).push(Routes.adminProductList);
-                },
-                child: Container(
-                  child:Text(
-                    'All Products',
-                    style: TextStyle(
-                      fontFamily: 'RocknRoll',
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(50.0),
+              child: GridView.count(
+                  crossAxisCount: 4,
+                  mainAxisSpacing: 50,
+                  crossAxisSpacing: 50,
+                children: [
+                  FlatButton(
+                    hoverColor: Colors.black38,
+                    color: Color.fromRGBO(39, 102, 120, 0.8),
+                    onPressed: (){
+                      ExtendedNavigator.of(context).push(Routes.adminProductList);
+                    },
+                    child: Container(
+                      child:Text(
+                        'All Products',
+                        style: TextStyle(
+                          fontFamily: 'RocknRoll',
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
+                        ),
+                      )
                     ),
-                  )
-                ),
-              ),
-              FlatButton(
-                hoverColor: Colors.black38,
-                color: Color.fromRGBO(39, 102, 120, 0.8),
-                onPressed: (){
-                  ExtendedNavigator.of(context).push(Routes.adminChatScreen);
-                },
-                child: Container(
-                    child:Text(
-                      'Customer Chat',
-                      style: TextStyle(
-                          fontFamily: 'RocknRoll',
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white
-                      ),
-                    )
-                ),
-              ),
-              FlatButton(
-                hoverColor: Colors.black38,
-                color: Color.fromRGBO(39, 102, 120, 0.8),
-                onPressed: (){
-                  ExtendedNavigator.of(context).push(Routes.adminOrders);
-                },
-                child: Container(
-                    child:Text(
-                      'All Orders',
-                      style: TextStyle(
-                          fontFamily: 'RocknRoll',
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white
-                      ),
-                    )
-                ),
-              ),
-              FlatButton(
-                hoverColor: Colors.black38,
-                color: Color.fromRGBO(39, 102, 120, 0.8),
-                onPressed: (){
-                  ExtendedNavigator.of(context).push(Routes.addProductsDetails);
-                },
-                child: Container(
-                    child:Text(
-                      'Add New Product',
-                      style: TextStyle(
-                          fontFamily: 'RocknRoll',
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white
-                      ),
-                    )
-                ),
-              ),
+                  ),
+                  FlatButton(
+                    hoverColor: Colors.black38,
+                    color: Color.fromRGBO(39, 102, 120, 0.8),
+                    onPressed: (){
+                      ExtendedNavigator.of(context).push(Routes.adminChatScreen);
+                    },
+                    child: Container(
+                        child:Text(
+                          'Customer Chat',
+                          style: TextStyle(
+                              fontFamily: 'RocknRoll',
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white
+                          ),
+                        )
+                    ),
+                  ),
+                  FlatButton(
+                    hoverColor: Colors.black38,
+                    color: Color.fromRGBO(39, 102, 120, 0.8),
+                    onPressed: (){
+                      ExtendedNavigator.of(context).push(Routes.adminOrders);
+                    },
+                    child: Container(
+                        child:Text(
+                          'All Orders',
+                          style: TextStyle(
+                              fontFamily: 'RocknRoll',
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white
+                          ),
+                        )
+                    ),
+                  ),
+                  FlatButton(
+                    hoverColor: Colors.black38,
+                    color: Color.fromRGBO(39, 102, 120, 0.8),
+                    onPressed: (){
+                      ExtendedNavigator.of(context).push(Routes.addProductsDetails);
+                    },
+                    child: Container(
+                        child:Text(
+                          'Add New Product',
+                          style: TextStyle(
+                              fontFamily: 'RocknRoll',
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white
+                          ),
+                        )
+                    ),
+                  ),
 
 
-            ],
+                ],
+              ),
+            ),
+
           ),
-        ),
+          buildFooter(),
+        ],
       ),
     );
   }

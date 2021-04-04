@@ -92,6 +92,58 @@ void sendToAdmin() async {
 String adminEmail = 'princymishra10@gmail.com';
 
 //Widgets
+Column buildFooter() {
+  return Column(
+    children: [
+      SizedBox(
+        height: 50,
+      ),
+      Container(
+        height: 150,
+        color: Colors.blueGrey.shade900,
+        child: Center(
+            child: Column(
+              mainAxisAlignment:MainAxisAlignment.end,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(onTap: (){
+                        launch('https://www.google.com/');
+                      },child: FaIcon(FontAwesomeIcons.facebookSquare,color: Colors.white70,size: 30,)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(onTap: (){
+                        launch('https://www.google.com/');
+                      },child: FaIcon(FontAwesomeIcons.googlePlusSquare,color: Colors.white70,size: 30,)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(onTap: (){
+                        launch('https://www.google.com/');
+                      },
+                          child: FaIcon(FontAwesomeIcons.twitterSquare,color: Colors.white70,size: 30)),
+                    ),
+                  ],
+                ),
+                Text('Copyright ©2021, All Rights Reserved.',style: TextStyle(fontWeight:FontWeight.w300, fontSize: 16.0, color: Colors.white70),),
+                InkWell(child: Text('Powered by Nextport Solutions.',style: TextStyle(fontWeight:FontWeight.w300, fontSize: 16.0,color:Colors.blue.shade300),),
+                  onTap: (){
+                    launch('https://www.google.com/');
+                  },),
+                SizedBox(
+                  height: 15,
+                ),
+              ],
+            )
+        ),
+      )
+    ],
+  );
+}
 class ChatOptions extends StatelessWidget {
   const ChatOptions({
     Key key,

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lilly_app/Screens/Components.dart';
 import 'package:lilly_app/app/route.gr.dart';
 import 'package:lilly_app/mockData.dart';
@@ -12,6 +13,7 @@ import 'dart:math';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:scroll_to_id/scroll_to_id.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final scrollController = ScrollController();
 
@@ -536,6 +538,7 @@ class _homePageState extends State<homePage> {
                           children: newArrivalProds,
                         ),
                       ),
+                      buildFooter(),
                     ],
                   ),
                 ),
